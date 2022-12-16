@@ -1,4 +1,3 @@
-# Marsupials_Basicranium_vs_Cranium_Phylosignal
 
 Code authors: Vera Weisbecker, supported by Thomas Guillerme
 
@@ -30,7 +29,7 @@ This folder contains all R code required (in Rmarkdown format) to replicate the 
 * [01_1_Data_Preparation_MarsShapPhylo.Rmd](/Analyses/01_1_Data_Preparation_MarsShapPhylo.Rmd) This script is to read the coordinate data, phylogenies, and auxiliary files, and process them for analysis
 * [01_2_Allometry_removal.Rmd](/Analyses/01_2_Allometry_removal.Rmd) is code in which the allometry analyses are performed and pgls allometry-free residuals are created
 * [01_3_TNT_input_output.Rmd](/Analyses/01_3_TNT_input_output.Rmd) is a summary of the steps required to get R to talk to TNT
-* [02_01_Standard_PGLS_Allom_Physig_Analyses.Rmd](/Analyses/02_01_Standard_PGLS_Allom_Physig_Analyses.Rmd) performs all conventional analyses within the geomorph package (PGLS, Phylogenetic signal, PACA)
+* [02_01_Standard_Allom_Physig_Analyses.Rmd](/Analyses/02_01_Standard_Allom_Physig_Analyses.Rmd) performs all conventional analyses within the geomorph package (PGLS, Phylogenetic signal, PACA)
 * [02_02_generating_reduced_trees.Rmd](/Analyses/02_02_generating_reduced_trees.Rmd) contains the operations for obtaining successively pruned molecular reference trees and landmark dataset matching the pruned phylogenies. It also contains the code for exporting the landmark data into a format read by TNT, and the creation of 10,000 random trees.
 * [02_03_distance_computations.Rmd](/Analyses/02_03_distance_computations.Rmd)  is code to compute distances between trees (including reference, GMM, and alternative molecular trees relative to the random trees. It also contains the code for output in Figures 4 and 5 of the manuscript (it was easier to leave here for workflow reasons).
 * [02_04_cophenetic_tree_comparsions.Rmd](/Analyses/02_04_cophenetic_tree_comparsions.Rmd) has computations of co-phenetic matrix comparisons.
