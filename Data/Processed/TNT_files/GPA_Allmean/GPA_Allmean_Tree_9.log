@@ -1,0 +1,82 @@
+Reading from E:\github_Vera\Mars_skull_phylosig\Data\Processed\TNT_files\GPA_Allmean\GPA_Allmean_Tree_9.tnt 
+ 
+WARNING: 
+Re-setting data type will cause
+current data to be lost 
+ 
+Matrices will be read as continuous data 
+Matrix space: allocate for up to 32 states 
+'TNT file generated with the R function `writeland.tnt` on Tue Aug  9 09:06:40 2022.'
+Matrix (1x49, 32 states). Memory required for data: 0.06 Mbytes 
+Again reading from E:\github_Vera\Mars_skull_phylosig\Data\Processed\TNT_files\GPA_Allmean\Core_TNT_code_Allmean_4_20forfinish.run 
+Considering individual landmarks for resampling and relative supports
+ 
+   Settings for landmark optimization:  
+      Initially approximmating landmark positions with a 6x6 grid 
+      Adding terminal points to initial grid 
+      Not shrinking frame when approximmating landmark positions 
+      Not skipping cells when approximmating landmark positions 
+      Not shaking grid 
+      Nesting sankoff 1 times (window: 1.0000 cells) 
+      Using iterative-pass (max. iters. 100000, cut 0.00000100) 
+
+   Settings for searches:
+      Using a tolerance margin of 15.00% maximum.
+      Error stages:
+           - 0.00 for 0 to 15% of swapping,
+           - 5.00 from 15% to 66%,
+           - 15.00 from 66% to completion 
+      Refining first guess with incremental fermat recalculation, 5 nodes
+      from point of reinsertion, with up to 2 iterations 
+ 
+   To calculate total score, all landmarks within a character equally weighted 
+   For resampling and support, using individual landmarks 
+ 
+Taxon names is ON 
+Outgroup is taxon 42  -  Rhyncholestes_raphanurus 
+Space for 500 trees in memory 
+Repl. Algor.     Tree        Score       Best Score   Time       Rearrangs.
+50    TBR       30 of 30     ------      6.72657      6:14:27    10,765,262          
+Completed 50 random addition sequences.
+Total rearrangements examined: 10,765,262. 
+Best score hit 2 times out of 50.
+Best score (TBR): 6.72657.  1 trees retained. 
+Start swapping from 1 trees (score 6.72657)... 
+Repl. Algor.     Tree        Score       Best Score   Time       Rearrangs.
+---   TBR        0 of 1      ------      6.72657      0:01:58    41,439          
+Completed TBR branch-swapping.
+Total rearrangements examined: 41,439. 
+Best score (TBR): 6.72657.  1 trees found. 
+Tree lengths 
+       ÚÄÄÄÄÄÄÄÄ¿
+       ³    +0  ³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ´
+³     0³ 6.72657³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÙ 
+Adjusted homoplasy 
+       ÚÄÄÄÄÄÄÄÄ¿
+       ³    +0  ³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ´
+³     0³ 0.12035³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÙ 
+Tree 0, ch. 0 (score 6.726574) 
+       ÚÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄ¿
+       ³    +0  ³    +1  ³    +2  ³    +3  ³    +4  ³    +5  ³    +6  ³    +7  ³    +8  ³    +9  ³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ´
+³     0³ 0.13685³ 0.11573³ 0.16724³ 0.13847³ 0.14105³ 0.12380³ 0.14096³ 0.12376³ 0.12709³ 0.12709³
+³    10³ 0.11259³ 0.11259³ 0.12780³ 0.14292³ 0.12920³ 0.12784³ 0.14292³ 0.12920³ 0.09135³ 0.09140³
+³    20³ 0.09525³ 0.09691³ 0.10141³ 0.10002³ 0.09525³ 0.09691³ 0.10141³ 0.10002³ 0.13437³ 0.13437³
+³    30³ 0.14069³ 0.14069³ 0.18312³ 0.18312³ 0.09730³ 0.09730³ 0.09028³ 0.09028³ 0.06937³ 0.06942³
+³    40³ 0.09308³ 0.09305³ 0.10203³ 0.12215³ 0.09951³ 0.10203³ 0.12215³ 0.09951³ 0.10224³ 0.13704³
+³    50³ 0.10224³ 0.13709³ 0.11148³ 0.11148³ 0.08915³ 0.08915³ 0.12294³ 0.12294³        ³        ³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÙ 
+Reading from E:\github_Vera\Mars_skull_phylosig\Data\Processed\TNT_files\GPA_Allmean\Stats_CI.run 
+Report is ON 
+Floating point printing uses 3 digits 
+Consistency index  
+       ÚÄÄÄÄÄÄ¿
+       ³    +0³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄ´
+³     0³ 0.201³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÙ 
+Again reading from E:\github_Vera\Mars_skull_phylosig\Data\Processed\TNT_files\GPA_Allmean\Core_TNT_code_Allmean_4_20forfinish.run 

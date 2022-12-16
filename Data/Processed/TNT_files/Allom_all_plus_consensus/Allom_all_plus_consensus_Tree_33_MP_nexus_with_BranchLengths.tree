@@ -1,0 +1,7 @@
+#NEXUS
+
+begin trees; 
+tree tagged_tree = [&U] 
+(Rhyncholestes_raphanurus:0.00000,((Myrmecobius_fasciatus:0.14362,((Dromiciops_gliroides:0.13587,((Acrobates_pygmaeus:0.12134,Distoechurus_pennatus:0.10819):0.10183,((node80:0.06540,(Trichosurus_vulpecula:0.08275,(node69:0.09371,(Pseudocheirus_peregrinus:0.11274,node72:0.06241):0.03575):0.04630):0.02534):0.04390,(node76:0.08325,((Aepyprymnus_rufescens:0.06191,(Vombatus_ursinus:0.26091,Notoryctes_caurinus:0.22704):0.07853):0.08006,(Potorous_tridactylus:0.12289,Hypsiprymnodon_moschatus:0.15310):0.04798):0.03282):0.04091):0.04559):0.05742):0.05707,(node86:0.03053,(Planigale_ingrami:0.11245,(Sminthopsis_murina:0.08265,((Tarsipes_rostratus:0.31831,Thylacinus_cynocephalus:0.12562):0.08582,(Caluromys_derbianus:0.11102,node95:0.02685):0.05860):0.05636):0.05560):0.03106):0.02720):0.06168):0.06715,(Macrotis_lagotis:0.14108,node92:0.04690):0.09123):0.08322);
+
+end; 

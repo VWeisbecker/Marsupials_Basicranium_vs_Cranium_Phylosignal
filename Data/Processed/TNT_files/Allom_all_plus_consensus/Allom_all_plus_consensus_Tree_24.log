@@ -1,0 +1,82 @@
+Reading from C:\WORKSPACE\Github_Projects\Mars_skull_phylosig\Data\Processed\TNT_files\Allom_all_plus_consensus\Allom_all_plus_consensus_Tree_24.tnt 
+ 
+WARNING: 
+Re-setting data type will cause
+current data to be lost 
+ 
+Matrices will be read as continuous data 
+Matrix space: allocate for up to 32 states 
+'TNT file generated with the R function `writeland.tnt` on Thu Dec  8 19:31:13 2022.'
+Matrix (1x34, 32 states). Memory required for data: 0.04 Mbytes 
+Again reading from C:\WORKSPACE\Github_Projects\Mars_skull_phylosig\Data\Processed\TNT_files\Allom_all_plus_consensus\Allom_all_plus_consensus_21-40.run 
+Considering individual landmarks for resampling and relative supports
+ 
+   Settings for landmark optimization:  
+      Initially approximmating landmark positions with a 6x6 grid 
+      Adding terminal points to initial grid 
+      Not shrinking frame when approximmating landmark positions 
+      Not skipping cells when approximmating landmark positions 
+      Not shaking grid 
+      Nesting sankoff 1 times (window: 1.0000 cells) 
+      Using iterative-pass (max. iters. 100000, cut 0.00000100) 
+
+   Settings for searches:
+      Using a tolerance margin of 15.00% maximum.
+      Error stages:
+           - 0.00 for 0 to 15% of swapping,
+           - 5.00 from 15% to 66%,
+           - 15.00 from 66% to completion 
+      Refining first guess with incremental fermat recalculation, 5 nodes
+      from point of reinsertion, with up to 2 iterations 
+ 
+   To calculate total score, all landmarks within a character equally weighted 
+   For resampling and support, using individual landmarks 
+ 
+Taxon names is ON 
+Outgroup is taxon 32  -  Rhyncholestes_raphanurus 
+Space for 500 trees in memory 
+Repl. Algor.     Tree        Score       Best Score   Time       Rearrangs.
+50    TBR        7 of 7      ------      5.13407      2:18:38    2,022,650          
+Completed 50 random addition sequences.
+Total rearrangements examined: 2,022,650. 
+Best score hit 34 times out of 50.
+Best score (TBR): 5.13407.  1 trees retained. 
+Start swapping from 1 trees (score 5.13407)... 
+Repl. Algor.     Tree        Score       Best Score   Time       Rearrangs.
+---   TBR        0 of 1      ------      5.13407      0:01:42    13,833          
+Completed TBR branch-swapping.
+Total rearrangements examined: 13,833. 
+Best score (TBR): 5.13407.  1 trees found. 
+Tree lengths 
+       ÚÄÄÄÄÄÄÄÄ¿
+       ³    +0  ³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ´
+³     0³ 5.13407³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÙ 
+Adjusted homoplasy 
+       ÚÄÄÄÄÄÄÄÄ¿
+       ³    +0  ³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ´
+³     0³ 0.08195³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÙ 
+Tree 0, ch. 0 (score 5.134071) 
+       ÚÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄ¿
+       ³    +0  ³    +1  ³    +2  ³    +3  ³    +4  ³    +5  ³    +6  ³    +7  ³    +8  ³    +9  ³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ´
+³     0³ 0.09506³ 0.09214³ 0.13570³ 0.10982³ 0.11749³ 0.08226³ 0.11793³ 0.08272³ 0.08044³ 0.08001³
+³    10³ 0.08460³ 0.08460³ 0.09805³ 0.09082³ 0.09905³ 0.09848³ 0.09110³ 0.09946³ 0.06874³ 0.06858³
+³    20³ 0.08743³ 0.08927³ 0.08051³ 0.07715³ 0.08720³ 0.08871³ 0.08033³ 0.07680³ 0.11072³ 0.11099³
+³    30³ 0.12429³ 0.12391³ 0.14197³ 0.14213³ 0.07395³ 0.07380³ 0.06968³ 0.06869³ 0.04830³ 0.04788³
+³    40³ 0.06792³ 0.06898³ 0.06413³ 0.10337³ 0.07799³ 0.06416³ 0.10386³ 0.07765³ 0.07101³ 0.10384³
+³    50³ 0.07048³ 0.10401³ 0.08668³ 0.08639³ 0.06581³ 0.06489³ 0.08579³ 0.08634³        ³        ³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÙ 
+Reading from C:\WORKSPACE\Github_Projects\Mars_skull_phylosig\Data\Processed\TNT_files\Allom_all_plus_consensus\Stats_CI.run 
+Report is ON 
+Floating point printing uses 3 digits 
+Consistency index  
+       ÚÄÄÄÄÄÄ¿
+       ³    +0³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄ´
+³     0³ 0.266³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÙ 
+Again reading from C:\WORKSPACE\Github_Projects\Mars_skull_phylosig\Data\Processed\TNT_files\Allom_all_plus_consensus\Allom_all_plus_consensus_21-40.run 

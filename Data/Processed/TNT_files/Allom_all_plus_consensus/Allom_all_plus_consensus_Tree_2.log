@@ -1,0 +1,90 @@
+Reading from E:\github_Vera\Mars_skull_phylosig\Data\Processed\TNT_files\Allom_all_plus_consensus\Allom_all_plus_consensus_Tree_2.tnt 
+Matrices will be read as continuous data 
+Matrix space: allocate for up to 32 states 
+'TNT file generated with the R function `writeland.tnt` on Thu Dec  8 19:30:58 2022.'
+Matrix (1x56, 32 states). Memory required for data: 0.06 Mbytes 
+Again reading from E:\github_Vera\Mars_skull_phylosig\Data\Processed\TNT_files\Allom_all_plus_consensus\Allom_all_plus_consensus_2_20forfisnish.run 
+Considering individual landmarks for resampling and relative supports
+ 
+   Settings for landmark optimization:  
+      Initially approximmating landmark positions with a 6x6 grid 
+      Adding terminal points to initial grid 
+      Not shrinking frame when approximmating landmark positions 
+      Not skipping cells when approximmating landmark positions 
+      Not shaking grid 
+      Nesting sankoff 1 times (window: 1.0000 cells) 
+      Using iterative-pass (max. iters. 100000, cut 0.00000100) 
+
+   Settings for searches:
+      Using a tolerance margin of 15.00% maximum.
+      Error stages:
+           - 0.00 for 0 to 15% of swapping,
+           - 5.00 from 15% to 66%,
+           - 15.00 from 66% to completion 
+      Refining first guess with incremental fermat recalculation, 5 nodes
+      from point of reinsertion, with up to 2 iterations 
+ 
+   To calculate total score, all landmarks within a character equally weighted 
+   For resampling and support, using individual landmarks 
+ 
+Taxon names is ON 
+Outgroup is taxon 53  -  Rhyncholestes_raphanurus 
+Space for 500 trees in memory 
+Note: setting number of threads to 10 (i.e. the recommended number
+for 24 CPUs). This can be changed with "lmark threads N".
+ 
+WARNING: 
+Landmark optimization will use low-mem algorithms 
+ 
+Repl. Algor.     Tree        Score       Best Score   Time       Rearrangs.
+50    TBR       23 of 23     ------      7.22356      8:25:07    15,918,011          
+Completed 50 random addition sequences.
+Total rearrangements examined: 15,918,011. 
+Best score hit 18 times out of 50.
+Best score (TBR): 7.22356.  1 trees retained. 
+Start swapping from 1 trees (score 7.22356)... 
+Repl. Algor.     Tree        Score       Best Score   Time       Rearrangs.
+---   TBR        0 of 1      ------      7.22356      0:02:13    56,029          
+Completed TBR branch-swapping.
+Total rearrangements examined: 56,029. 
+Best score (TBR): 7.22356.  1 trees found. 
+Tree lengths 
+       ÚÄÄÄÄÄÄÄÄ¿
+       ³    +0  ³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ´
+³     0³ 7.22356³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÙ 
+ 
+WARNING: 
+Ch. 0, landmark 38, user min. set to 0.358215, but found a tree with 0.307009
+Minimum will be updated (this may affect previous calculations). 
+ 
+Adjusted homoplasy 
+       ÚÄÄÄÄÄÄÄÄ¿
+       ³    +0  ³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ´
+³     0³ 0.12428³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÙ 
+Tree 0, ch. 0 (score 7.223560) 
+       ÚÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄ¿
+       ³    +0  ³    +1  ³    +2  ³    +3  ³    +4  ³    +5  ³    +6  ³    +7  ³    +8  ³    +9  ³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ´
+³     0³ 0.14150³ 0.13461³ 0.19624³ 0.15383³ 0.14619³ 0.12601³ 0.14679³ 0.12589³ 0.13702³ 0.13686³
+³    10³ 0.12358³ 0.12308³ 0.12430³ 0.14650³ 0.15352³ 0.12439³ 0.14720³ 0.15423³ 0.09865³ 0.09967³
+³    20³ 0.10739³ 0.11069³ 0.11296³ 0.11405³ 0.10684³ 0.11009³ 0.11356³ 0.11358³ 0.14828³ 0.14851³
+³    30³ 0.16432³ 0.16329³ 0.18201³ 0.18133³ 0.10822³ 0.10813³ 0.10205³ 0.10089³ 0.07135³ 0.07174³
+³    40³ 0.09615³ 0.09772³ 0.10909³ 0.12980³ 0.10380³ 0.10896³ 0.13074³ 0.10405³ 0.10080³ 0.14179³
+³    50³ 0.10044³ 0.14137³ 0.12737³ 0.12774³ 0.09546³ 0.09405³ 0.11741³ 0.11752³        ³        ³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÙ 
+Reading from E:\github_Vera\Mars_skull_phylosig\Data\Processed\TNT_files\Allom_all_plus_consensus\Stats_CI.run 
+Macro language is ON 
+Macros: 42.7 Kb in use, 59.6 Kb free
+Report is ON 
+Floating point printing uses 3 digits 
+Consistency index  
+       ÚÄÄÄÄÄÄ¿
+       ³    +0³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄ´
+³     0³ 0.201³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÙ 
+Again reading from E:\github_Vera\Mars_skull_phylosig\Data\Processed\TNT_files\Allom_all_plus_consensus\Allom_all_plus_consensus_2_20forfisnish.run 

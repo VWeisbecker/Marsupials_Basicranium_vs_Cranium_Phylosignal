@@ -1,0 +1,82 @@
+Reading from C:\WORKSPACE\Github_Projects\Mars_skull_phylosig\Data\Processed\TNT_files\Allom_basi_plus_consensus\Allom_basi_plus_consensus_Tree_9.tnt 
+Matrices will be read as continuous data 
+Matrix space: allocate for up to 32 states 
+'TNT file generated with the R function `writeland.tnt` on Thu Dec  8 19:31:04 2022.'
+Matrix (1x49, 32 states). Memory required for data: 0.06 Mbytes 
+Again reading from C:\WORKSPACE\Github_Projects\Mars_skull_phylosig\Data\Processed\TNT_files\Allom_basi_plus_consensus\Core_TNT_code_Allom_basi_plus_consensus_15_20_forfinish.run 
+Considering individual landmarks for resampling and relative supports
+ 
+   Settings for landmark optimization:  
+      Initially approximmating landmark positions with a 6x6 grid 
+      Adding terminal points to initial grid 
+      Not shrinking frame when approximmating landmark positions 
+      Not skipping cells when approximmating landmark positions 
+      Not shaking grid 
+      Nesting sankoff 1 times (window: 1.0000 cells) 
+      Using iterative-pass (max. iters. 100000, cut 0.00000100) 
+
+   Settings for searches:
+      Using a tolerance margin of 15.00% maximum.
+      Error stages:
+           - 0.00 for 0 to 15% of swapping,
+           - 5.00 from 15% to 66%,
+           - 15.00 from 66% to completion 
+      Refining first guess with incremental fermat recalculation, 5 nodes
+      from point of reinsertion, with up to 2 iterations 
+ 
+   To calculate total score, all landmarks within a character equally weighted 
+   For resampling and support, using individual landmarks 
+ 
+Taxon names is ON 
+Outgroup is taxon 42  -  Rhyncholestes_raphanurus 
+Space for 500 trees in memory 
+Note: setting number of threads to 10 (i.e. the recommended number
+for 28 CPUs). This can be changed with "lmark threads N".
+ 
+WARNING: 
+Landmark optimization will use low-mem algorithms 
+ 
+Repl. Algor.     Tree        Score       Best Score   Time       Rearrangs.
+50    TBR       36 of 37     ------      7.05928      3:21:27    12,231,587          
+Completed 50 random addition sequences.
+Total rearrangements examined: 12,231,587. 
+Best score hit 1 times out of 50.
+Best score (TBR): 7.05928.  1 trees retained. 
+Start swapping from 1 trees (score 7.05928)... 
+Repl. Algor.     Tree        Score       Best Score   Time       Rearrangs.
+---   TBR        0 of 1      ------      7.05928      0:00:45    39,775          
+Completed TBR branch-swapping.
+Total rearrangements examined: 39,775. 
+Best score (TBR): 7.05928.  1 trees found. 
+Tree lengths 
+       ÚÄÄÄÄÄÄÄÄ¿
+       ³    +0  ³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ´
+³     0³ 7.05928³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÙ 
+Adjusted homoplasy 
+       ÚÄÄÄÄÄÄÄÄ¿
+       ³    +0  ³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ´
+³     0³ 0.20652³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÙ 
+Tree 0, ch. 0 (score 7.059282) 
+       ÚÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄ¿
+       ³    +0  ³    +1  ³    +2  ³    +3  ³    +4  ³    +5  ³    +6  ³    +7  ³    +8  ³    +9  ³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ´
+³     0³ 0.37038³ 0.36999³ 0.30097³ 0.29908³ 0.20958³ 0.21051³ 0.27470³ 0.27417³ 0.24111³ 0.31279³
+³    10³ 0.24738³ 0.23993³ 0.31347³ 0.24767³ 0.27749³ 0.41786³ 0.27761³ 0.41671³ 0.33597³ 0.33488³
+³    20³ 0.23845³ 0.23712³ 0.30682³ 0.30463³        ³        ³        ³        ³        ³        ³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÙ 
+Reading from C:\WORKSPACE\Github_Projects\Mars_skull_phylosig\Data\Processed\TNT_files\Allom_basi_plus_consensus\Stats_CI.run 
+Macro language is ON 
+Macros: 42.7 Kb in use, 59.6 Kb free
+Report is ON 
+Floating point printing uses 3 digits 
+Consistency index  
+       ÚÄÄÄÄÄÄ¿
+       ³    +0³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄ´
+³     0³ 0.201³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÙ 
+Again reading from C:\WORKSPACE\Github_Projects\Mars_skull_phylosig\Data\Processed\TNT_files\Allom_basi_plus_consensus\Core_TNT_code_Allom_basi_plus_consensus_15_20_forfinish.run 

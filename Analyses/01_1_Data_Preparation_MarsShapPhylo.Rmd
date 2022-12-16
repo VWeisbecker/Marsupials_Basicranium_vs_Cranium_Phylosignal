@@ -1,0 +1,530 @@
+---
+title: "01_Mars_Shape_Phylo_Prep"
+author: "Vera Weisbecker"
+date: "26 June 2019"
+output: html_document
+---
+
+## load required packages
+
+```{r }
+
+library(geomorph) # [github::geomorphR/geomorph] v4.0.4 
+library(plyr)     # CRAN v1.8.7 
+library(abind)    # CRAN v1.4-5 
+library(ape)      # CRAN v5.6-2
+
+# This sets the wd to local
+library(rstudioapi) # Safely Access the RStudio API
+
+setwd(dirname(getActiveDocumentContext()$path))
+
+#contains some auxiliary functions
+
+source("0_2_Utilities.r")
+
+```
+
+## Read in coordinates
+
+
+```{r }
+
+filelist <- list.files(path= "../Data/Raw/Coordinates", pattern = "*.txt")
+
+
+#Next step is to remove the Museum IDs from the specimen names   
+  
+ 
+  names <- gsub (".txt", "", filelist) # extracts names of specimens from the file name
+  filelist <- paste("../Data/Raw/Coordinates/", filelist, sep="") # rename with path
+  coords <- NULL # make empty object that will be filled with 3D array of coordinate data
+  for (i in 1:length(filelist)){
+    temp  <- read.morphologika(filelist[i]) 
+    k <- dim(temp)[1] 
+    coords <- rbind(coords, two.d.array(temp)) }
+  Data <- arrayspecs(coords, k, 3) 
+  dimnames(Data)[[3]] <- names
+  remove(i, filelist, k, coords, temp) # clean up environment
+  
+specimenList <- read.csv("../Data/Raw/Species_classifier.csv", header = TRUE, row.names = 1)
+
+length(Data[,,1])
+
+```
+
+
+#Importation of partition designations, ensure it's a factor; The landmark dataset will now be split into two partitions; basicranium and the rest of cranium 
+
+```{r}
+
+### Import the  partition map, ensure it's a factor
+part.gp=as.vector(read.csv("../Data/Raw/Partitions.csv", header=FALSE))
+part.gp=as.factor(part.gp$V1)
+
+#Subset basicranial landmarks from raw data
+Data_reskull=Data[which(part.gp==1),,]
+Data_basi=Data[which(part.gp==2),,]
+
+
+#Also read in landpair data: 
+
+Landpairs_full <- read.csv("../Data/Raw/Landpairs_All.csv", header=FALSE)
+Landpairs_basi <- read.csv("../Data/Raw/Landpairs_Basi.csv", header=FALSE)
+Landpairs_rest <- read.csv("../Data/Raw/Landpairs_Rest.csv", header=FALSE)
+
+```
+
+
+#I like using a plot of numbers to identify symmetric landmark pairs above, and we can also use colours make sure that the landmark partitions are how we watn them. Here using the Marmosa ply
+
+```{r}
+# M_murina_mean <- read.ply(file = "../Data/Raw/Marmosa_murina_MVZ197429_downsampled.ply")
+# 
+# open3d()
+# 
+# shade3d(M_murina_mean, col="grey", alpha=0.1 )
+# 
+# #spheres3d (Data[,,which(dimnames(Data)[[3]]=="Marmosa_murina_MVZ197429")], col = "hotpink", radius = 0.5)
+# 
+# #for full skull
+# #text3d(Data[,,which(dimnames(Data)[[3]]=="Marmosa_murina_MVZ197429")], texts = c(1:(length(Data[,,which(dimnames(Data)[[3]]=="Marmosa_murina_MVZ197429")])/3)), cex=2, col= "blue")
+# 
+# #for rest of skull
+# 
+# text3d(Data_reskull[,,which(dimnames(Data_reskull)[[3]]=="Marmosa_murina_MVZ197429")], texts = c(1:(length(Data_reskull[,,which(dimnames(Data_reskull)[[3]]=="Marmosa_murina_MVZ197429")])/3)), cex=2, col= "blue")
+# 
+# #for Bascranium
+# text3d(Data_basi[,,which(dimnames(Data_basi)[[3]]=="Marmosa_murina_MVZ197429")], texts = c(1:(length(Data_basi[,,which(dimnames(Data_basi)[[3]]=="Marmosa_murina_MVZ197429")])/3)), cex=2, col= "hotpink")
+
+```
+
+#GPA for all coordinates
+
+```{r}
+
+#Run GPA
+GPA_AllSpecimens <- gpagen(Data, Proj = TRUE, ProcD = FALSE)
+
+Meanspec_rawdata <- findMeanSpec(GPA_AllSpecimens$coords)
+
+#make sure dimnames of coords match with rownames of specdata file
+rownames(specimenList) == dimnames(GPA_AllSpecimens$coords)[[3]]
+
+
+
+```
+
+#using my Landm.place.check function to visualise each specimen relative to the specimen that's closest to the mean. This is to make sure there are no crossed-over lanmdarks. I am just running through all specimens in batches here. 
+#Also checking particular outlier specimens to their relatives to ensure there are no issues.
+
+```{r}
+
+
+ #Landm.place.check(51,62,Meanspec_rawdata)
+
+#Also checking some specific differences: 
+
+plotRefToTarget(
+  GPA_AllSpecimens$coords[,, which(dimnames(GPA_AllSpecimens$coords)[[3]]=="Tarsipes_rostratus_M20988")], 
+  GPA_AllSpecimens$coords[,, which(dimnames(GPA_AllSpecimens$coords)[[3]]=="Hypsiprymnodon_moschatus_JM1446")],
+  method="vector"
+)
+
+```
+
+#VW: After identifying specimens with switched landmarks in the Landm.place.check function, I fixed them in checkpoint. The notes on which specimens were fixed are in the "original with mistakes " folder. The below is just a double check
+
+```{r}
+# names(GPA_AllSpecimens$Csize)
+# 
+# plotRefToTarget(GPA_AllSpecimens$coords[,,20], GPA_AllSpecimens$coords[,,Meanspec], method = "vector", main = dimnames(GPA_AllSpecimens$coords)[[3]][20], label=TRUE,
+#                 gridPars = gridPar(pt.size = 0.5, pt.bg = "hotpink", txt.cex = "1.5" ))
+
+```
+
+#Another check that landmarks are read in OK and there are no un-checked outliers; also visually check that the landmarks are placed without any crossovers. 
+
+```{r}
+par(mfrow=c(1,1))
+
+#these checks looks ok, with Notoryctes, Tarsipes and Vombatus predictably outliers and comfortingly duplicate specimens occupy similar spaces
+
+PCA_raw <- gm.prcomp(GPA_AllSpecimens$coords)
+plot(PCA_raw$x[,2]~ PCA_raw$x[,1]  )
+text(PCA_raw$x[,2]~ PCA_raw$x[,1], labels = dimnames(GPA_AllSpecimens$coords)[[3]])
+
+# Again, Notoryctes and Vombatus. Just.
+
+plotOutliers(GPA_AllSpecimens$coords)
+
+remove(PCA_raw)
+
+```
+
+#Now, check that the centroid sizes are ok. Sometimes they are out by an order of magnitude, this is normally easy to see by GPA_AllSpecimens$Csize ~ specimenList$Body_mass_gordering the specimens by size and checking that they match what you expect.
+
+#Thylacinus cynocephalus has a very large centroid size, but this specimen as well as another I have from elsewhere is 21 cms long, while the wombat and kangaroo specimens are only 15 cms. This realisation has led me to write a whole other paper on Thylacine - watch this space!
+
+```{r}
+
+#pdf(file="../Figures/SuppFX_centroid_size_checks.pdf",width = 14, height = 14)
+
+par(mfrow=c(2,1))
+
+cexes=0.6
+
+Csize_ordered <- GPA_AllSpecimens$Csize[order(GPA_AllSpecimens$Csize)]
+
+plot( Csize_ordered ~ seq(1:length(Csize_ordered)),pch=19, col="maroon1", xlab= "Specimens ordered by centroid size", ylab = "Centroid size", main = "Specimens ordered by centroid size")
+text( Csize_ordered ~ seq(1:length(Csize_ordered)), label = names(Csize_ordered), cex = cexes)
+
+#plot(log(GPA_AllSpecimens$Csize) ~ log (specimenList$Body_mass_g))
+#text(log(GPA_AllSpecimens$Csize) ~ log (specimenList$Body_mass_g), labels=rownames(specimenList), cex = cexes)
+
+plot((GPA_AllSpecimens$Csize) ~  (specimenList$Body_mass_g), pch=19, col="maroon1", xlab = "Body mass (g)", ylab = "Centroid sizes", main = " Centroid size plotted against body mass")
+text((GPA_AllSpecimens$Csize) ~  (specimenList$Body_mass_g), labels=rownames(specimenList), cex = cexes)
+
+#dev.off()
+
+remove(cexes, Csize_ordered)
+
+```
+
+
+#Make a list of species as the basis for the classifier file. I only ran this once, then filled in the remaining data (e.g. diet/loco) manually. This just guarantees that the specimen classifier file and specimens landmarked are definitely the same.
+
+```{r}
+
+
+#speclist <- matrix(unlist (strsplit(gsub(".txt", "", filelist), "_" )), ncol=3, byrow = TRUE )
+#rownames(speclist) <- gsub(".txt", "", filelist); colnames(speclist) <- c("Genus", "Species", "Museum_ID")
+
+#write.csv(speclist, file = "../Data/Raw/Species_classifier.csv")
+
+specimenList$spname <- paste (substr(specimenList$Genus,1,1), substr(specimenList$Species, 1,3), sep = "")
+
+specimenList$Genus_species <- paste (specimenList$Genus, specimenList$Species, sep = "_")
+
+#make sure the specimens and the classifiers are in the same order - this all has to be TRUE
+dimnames(GPA_AllSpecimens$coords)[[3]] == rownames (specimenList)
+
+#And average according to species immediately because we don't really need individual values
+
+specieslist <- ddply (specimenList, .(Genus_species), summarize, spname = unique(spname), Genus=unique(Genus), Species = unique(Species), Order=unique(Order), Body_mass_g = mean(Body_mass_g), Locomotion = unique(Locomotion), Diet = unique(Diet))
+rownames(specieslist) <- specieslist$Genus_species
+
+#Take away doubled up genus-species designation
+specieslist <- specieslist[,-1]
+
+```
+
+#Read in phylogeny (needs to be done here so species orders are OK throughout)
+
+```{r}
+
+
+raw_tree=read.nexus("../Data/Raw/Reference_Phylogeny/Phylogeny_Phillips_merged.nex")
+
+#Changing a few placeholder names on the phylogeny with the species name sampled in reality (for these species, only DNA data from close relatives were available)
+
+raw_tree$tip.label[which(raw_tree$tip.label == "Caluromys_philander")] <- "Caluromys_derbianus"
+raw_tree$tip.label[which(raw_tree$tip.label == "Dendrolagus_dorianus")] <- "Dendrolagus_inustus"
+raw_tree$tip.label[which(raw_tree$tip.label == "Notoryctes_typhlops")] <- "Notoryctes_caurinus"
+
+namecheck <- geiger::name.check(raw_tree, specieslist)
+
+#Removing all species in the tree that is not apart of the study
+tree=drop.tip(raw_tree,namecheck$tree_not_data)
+
+#check that tree and species list are congruent using geiger's name.check
+geiger::name.check(tree, specieslist)
+
+
+#Checking to see if the species coordinates and the species on the tree match and there are no NAs, matchtest length must be 0
+Matchtest <- match(tree$tip.label,rownames(specieslist))
+length(which(is.na (Matchtest)))
+
+save(tree, file = "../Data/Processed/Tree_processed.rda")
+
+remove(namecheck, raw_tree, Matchtest)
+
+```
+
+#Making sure species list is in the right order for the tree - this can then flow on to the other lists
+
+```{r}
+
+specieslist <- specieslist[match(tree$tip.label,rownames(specieslist)),]
+
+tree$tip.label == rownames(specieslist)
+
+
+```
+
+
+#averaging multiple species and removing symmetry
+
+```{r}
+
+# shape data
+ind.coords <- aggregate(two.d.array(GPA_AllSpecimens$coords) ~ specimenList$Genus_species, FUN=mean)[,-1]
+
+rownames(ind.coords) <- unique(specimenList$Genus_species)
+ind.coords <- arrayspecs(ind.coords, p=ncol(ind.coords)/3, k=3)
+#Making sure the coords match up with species lists match up with the phylogeny.
+ind.coords <- ind.coords[,,match( rownames(specieslist), dimnames(ind.coords)[[3]])]
+
+dimnames(ind.coords)[[3]] == rownames(specieslist)
+
+#Also just out of paranoia, check a couple of configurations to ensure each species name is allocated to the correct species: 
+
+open3d()
+mfrow3d(2,2, sharedMouse=TRUE)
+
+next3d()
+plot3d(ind.coords[,,which(dimnames(ind.coords)[[3]]=="Tarsipes_rostratus")], aspect = FALSE,  xlab = "", ylab = "", zlab = "")
+decorate3d(main = "Tarsipes - long nose")
+
+next3d()
+plot3d(ind.coords[,,which(dimnames(ind.coords)[[3]]=="Vombatus_ursinus")], aspect = FALSE, xlab = "", ylab = "", zlab = "")
+decorate3d(main = "Wombat - short nose")
+
+next3d()
+plot3d(ind.coords[,,which(dimnames(ind.coords)[[3]]=="Macrotis_lagotis")], aspect = FALSE, xlab = "", ylab = "", zlab = "" )
+decorate3d(main = "Bilby - long nose")
+
+next3d()
+plot3d(ind.coords[,,which(dimnames(ind.coords)[[3]]=="Petaurus_australis")], aspect = FALSE)
+decorate3d( main= "Sugar glider - wide head")
+
+#Now remove asymmetry
+
+GPASymm <- bilat.symmetry(ind.coords, ind=dimnames(ind.coords)[[3]], side=NULL, replicate=NULL, object.sym=TRUE, land.pairs =Landpairs_full)
+dimnames(GPASymm$symm.shape)[[3]] <- dimnames(ind.coords)[[3]] # rename
+
+#Are we removing a lot of variation by removing shape? No.
+ GPASymm$shape.anova
+
+# Moving on with just the symmetric shape component
+ind.coords <- GPASymm$symm.shape 
+
+
+#Just once, visually making sure the averaging of duplicate specimesn really works - using v. ursinus as an example - looks ok 
+
+#(GPA_AllSpecimens$coords[,,62] + GPA_AllSpecimens$coords[,,61]) /2
+
+### Bilateral symmetry GPA on averaged specimens
+
+
+# centroid size data, means for multiple specimens
+ind.Csize <- as.vector(aggregate(GPA_AllSpecimens$Csize ~ specimenList$Genus_species, FUN=mean)[,-1])
+names(ind.Csize) <- unique(specimenList$Genus_species)
+
+ind.Csize <- ind.Csize[match(rownames(specieslist), names(ind.Csize))]
+
+
+
+#manually checking just a value for proper averaging, picking V. ursinus and OK 
+
+mean (c(GPA_AllSpecimens$Csize[62], GPA_AllSpecimens$Csize[61])) == ind.Csize[which(names(ind.Csize)=="Vombatus_ursinus")]
+
+
+
+#Turning into gdf frame and giving names
+GPA_Allmean <- geomorph.data.frame(coords=ind.coords, Csize=ind.Csize)
+
+#We need consensus shapes for later
+GPA_allmean_consensus <- GPA_AllSpecimens$consensus
+
+
+#a few combinations of checks for alignment of species list, phylogeny, csize, and coords. 
+
+dimnames(GPA_Allmean$coords)[[3]] == tree$tip.label;names(GPA_Allmean$Csize) == rownames(specieslist);tree$tip.label == dimnames(GPA_Allmean$coords)[[3]];names(ind.Csize)== tree$tip.label
+
+
+#Outliers still plot the same - Notoryctes, Vombatus, Tarsipes. Just an additional safety check that the averaging has all worked
+plotOutliers(GPA_Allmean$coords)
+
+
+
+
+```
+
+
+#GPA for basicranial landmarks
+```{r}
+#Subset basicranial landmarks from raw data
+Data_basi=Data[which(part.gp==2),,]
+#double-check that the correct number of landmarks has been subtracted
+attributes(Data_basi)
+
+#GPA
+GPA_basi <- gpagen(Data_basi, Proj = TRUE)
+
+
+#AVERAGING MULTIPLE SPECIMENS OF ONE SPECIES
+
+# shape data
+basi_coords <- aggregate(two.d.array(GPA_basi$coords) ~ specimenList$Genus_species, FUN=mean)[,-1]
+rownames(basi_coords) <- unique(specimenList$Genus_species)
+basi_coords <- arrayspecs(basi_coords, p=ncol(basi_coords)/3, k=3)
+
+basi_coords <- basi_coords[,,match( rownames(specieslist), dimnames(basi_coords)[[3]])]
+
+
+#Now remove asymmetry
+GPASymm_basi <- bilat.symmetry(basi_coords, ind=dimnames(basi_coords)[[3]], side=NULL, replicate=NULL, object.sym=TRUE, land.pairs =Landpairs_basi)
+dimnames(GPASymm_basi$symm.shape)[[3]] <- dimnames(ind.coords)[[3]] # rename
+
+# replace with new symm.shape
+basi_coords <- GPASymm_basi$symm.shape 
+
+
+# centroid size data
+basi_Csize <- as.vector(aggregate(GPA_basi$Csize ~ specimenList$Genus_species, FUN=mean)[,-1])
+names(basi_Csize) <- unique(specimenList$Genus_species)
+basi_Csize <- basi_Csize[match(rownames(specieslist), names(basi_Csize))]
+
+#are dimnames identical i.e. will the aligned properly?
+dimnames(GPA_basi$coords)[[3]]==names(GPA_basi$Csize)
+
+dimnames(basi_coords)[[3]]==rownames(specieslist)
+
+#Turning into gdf frame and giving names
+GPA_Basimean <-geomorph.data.frame(coords=basi_coords, Csize=basi_Csize)
+
+#Keeping the consensus just for later plotting of residuals, if required
+GPA_Basimean_consensus <-GPA_basi$consensus
+
+
+#a few combinations of checks for alignment of species list, phylogeny, csize, and coords. 
+dimnames(GPA_Basimean$coords)[[3]] == tree$tip.label;names(GPA_Basimean$Csize) == rownames(specieslist);tree$tip.label == dimnames(GPA_Basimean$coords)[[3]];names(ind.Csize)== tree$tip.label; dimnames(GPA_Basimean$coords)[[3]]==dimnames(GPA_Allmean$coords)[[3]]
+
+
+#Just checking - Interesteing that Notoryctes doesn't show up here 
+plotOutliers(GPA_Basimean$coords)
+
+remove(basi_Csize, basi_coords, GPASymm_basi)
+
+```
+
+
+
+#GPA for the Rest of Skull
+
+
+```{r}
+
+#Subset the rest of the skull's landmarks lms
+Data_reskull=Data[which(part.gp==1),,]
+
+#double-check that the correct number of landmarks has been subtracted
+attributes(Data_reskull)
+
+#GPA
+
+GPA_reskull <- gpagen(Data_reskull,Proj = TRUE)
+
+
+#AVERAGING MULTIPLE SPECIMENS OF ONE SPECIES
+
+# shape data
+rest_coords <- aggregate(two.d.array(GPA_reskull$coords) ~ specimenList$Genus_species, FUN=mean)[,-1]
+rownames(rest_coords) <- unique(specimenList$Genus_species)
+rest_coords <- arrayspecs(rest_coords, p=ncol(rest_coords)/3, k=3)
+
+rest_coords <- rest_coords[,,match( rownames(specieslist), dimnames(rest_coords)[[3]])]
+
+#Now remove asymmetry
+
+GPASymm_rest <- bilat.symmetry(rest_coords, ind=dimnames(rest_coords)[[3]], side=NULL, replicate=NULL, object.sym=TRUE, land.pairs =Landpairs_rest)
+dimnames(GPASymm_rest$symm.shape)[[3]] <- dimnames(rest_coords)[[3]] # rename
+
+# replace with new symm.shape
+
+rest_coords <- GPASymm_rest$symm.shape 
+
+
+# centroid size data
+rest_Csize <- as.vector(aggregate(GPA_reskull$Csize ~ specimenList$Genus_species, FUN=mean)[,-1])
+names(rest_Csize) <- unique(specimenList$Genus_species)
+
+rest_Csize <- rest_Csize[match(rownames(specieslist), names(rest_Csize))]
+# rest_Csize - These are the individuals Csize data for plotting specimen allometry graphs
+
+#are dimnames identical i.e. will the aligned properly?
+dimnames(GPA_reskull$coords)[[3]]==names(GPA_reskull$Csize)
+
+dimnames(rest_coords)[[3]]==rownames(specieslist)
+
+#Turning into gdf frame and giving names
+GPA_Restmean <-geomorph.data.frame(coords=rest_coords, Csize=rest_Csize)
+
+
+GPA_Restmean_consensus <- GPA_reskull$consensus
+
+
+#a few combinations of checks for alignment of species list, phylogeny, csize, and coords. 
+
+dimnames(GPA_Restmean$coords)[[3]] == tree$tip.label;names(GPA_Restmean$Csize) == rownames(specieslist);tree$tip.label == dimnames(GPA_Restmean$coords)[[3]];names(ind.Csize)== tree$tip.label;dimnames(GPA_Restmean$coords)[[3]]==dimnames(GPA_Allmean$coords)[[3]]
+
+
+#Just checking
+plotOutliers(GPA_Restmean$coords)
+
+
+remove(GPASymm_rest, rest_coords, rest_Csize)
+
+
+
+```
+
+
+#Creating a ply file for the mean shape - this takes a long time and is not necessary after running it once, so it is commented out here. 
+
+```{r}
+# #mean specimen is Marmosa murina - a ply file for plotting is in Data/Raw
+findMeanSpec(GPA_Allmean$coords)
+# 
+# #Make mean shape that the points can be plotted on
+MeanShapeCoords=mshape(GPA_Allmean$coords)
+
+#Reference coordinates for warping
+RefCoords <- Data[,,which(dimnames(Data)[[3]]=="Marmosa_murina_MVZ197429")]
+ 
+# #Warp the mesh and its coordinates to the mean shape of GPA-aligned coordinates
+# 
+# refmesh <- warpRefMesh(M_murina_mean,RefCoords, MeanShapeCoords, centered = FALSE )
+# 
+# #Check if it worked:
+# open3d()
+# shade3d(refmesh)
+# spheres3d(MeanShapeCoords, col = "purple", radius = 0.005)
+# 
+# 
+# open3d()
+# shade3d(refmesh)
+# 
+# #This is a huge file
+# writePLY(  "../Figures/refmesh_mean_shape.ply", format = "ascii" )
+
+
+```
+
+
+#Save everything except for a bunch of things not needed any more
+
+```{r}
+#cleaning up everything else
+remove(names,  Landpairs_basi, Landpairs_full, Landpairs_rest, specimenList, Data_basi, Data, Data_reskull, Meanspec_rawdata, GPA_AllSpecimens, ind.Csize, ind.coords, GPASymm)
+
+
+save.image( file = "../Data/Processed/processed_data_read_in_coordinates_phylo.rda")
+
+
+```
+
+
+
+

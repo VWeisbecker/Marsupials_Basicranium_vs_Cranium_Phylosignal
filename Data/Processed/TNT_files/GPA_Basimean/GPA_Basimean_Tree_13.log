@@ -1,0 +1,79 @@
+Reading from C:\WORKSPACE\Github_Projects\Mars_skull_phylosig\Data\Processed\TNT_files\GPA_Basimean\GPA_Basimean_Tree_13.tnt 
+ 
+WARNING: 
+Re-setting data type will cause
+current data to be lost 
+ 
+Matrices will be read as continuous data 
+Matrix space: allocate for up to 32 states 
+'TNT file generated with the R function `writeland.tnt` on Tue Aug  9 09:06:44 2022.'
+Matrix (1x45, 32 states). Memory required for data: 0.05 Mbytes 
+Again reading from C:\WORKSPACE\Github_Projects\Mars_skull_phylosig\Data\Processed\TNT_files\GPA_Basimean\Core_TNT_code_Basimean_4_20.run 
+Considering individual landmarks for resampling and relative supports
+ 
+   Settings for landmark optimization:  
+      Initially approximmating landmark positions with a 6x6 grid 
+      Adding terminal points to initial grid 
+      Not shrinking frame when approximmating landmark positions 
+      Not skipping cells when approximmating landmark positions 
+      Not shaking grid 
+      Nesting sankoff 1 times (window: 1.0000 cells) 
+      Using iterative-pass (max. iters. 100000, cut 0.00000100) 
+
+   Settings for searches:
+      Using a tolerance margin of 15.00% maximum.
+      Error stages:
+           - 0.00 for 0 to 15% of swapping,
+           - 5.00 from 15% to 66%,
+           - 15.00 from 66% to completion 
+      Refining first guess with incremental fermat recalculation, 5 nodes
+      from point of reinsertion, with up to 2 iterations 
+ 
+   To calculate total score, all landmarks within a character equally weighted 
+   For resampling and support, using individual landmarks 
+ 
+Taxon names is ON 
+Outgroup is taxon 36  -  Rhyncholestes_raphanurus 
+Space for 500 trees in memory 
+Repl. Algor.     Tree        Score       Best Score   Time       Rearrangs.
+50    TBR       37 of 37     ------      6.56078      2:49:25    8,869,272          
+Completed 50 random addition sequences.
+Total rearrangements examined: 8,869,272. 
+Best score hit 2 times out of 50.
+Best score (TBR): 6.56078.  1 trees retained. 
+Start swapping from 1 trees (score 6.56078)... 
+Repl. Algor.     Tree        Score       Best Score   Time       Rearrangs.
+---   TBR        0 of 1      ------      6.56078      0:00:49    33,135          
+Completed TBR branch-swapping.
+Total rearrangements examined: 33,135. 
+Best score (TBR): 6.56078.  1 trees found. 
+Tree lengths 
+       ÚÄÄÄÄÄÄÄÄ¿
+       ³    +0  ³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ´
+³     0³ 6.56078³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÙ 
+Adjusted homoplasy 
+       ÚÄÄÄÄÄÄÄÄ¿
+       ³    +0  ³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ´
+³     0³ 0.19681³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÙ 
+Tree 0, ch. 0 (score 6.560785) 
+       ÚÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄ¿
+       ³    +0  ³    +1  ³    +2  ³    +3  ³    +4  ³    +5  ³    +6  ³    +7  ³    +8  ³    +9  ³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ´
+³     0³ 0.31862³ 0.31862³ 0.25360³ 0.25360³ 0.20372³ 0.20372³ 0.26990³ 0.27031³ 0.24611³ 0.31052³
+³    10³ 0.24653³ 0.24606³ 0.31050³ 0.24653³ 0.25229³ 0.36504³ 0.25229³ 0.36504³ 0.29061³ 0.29061³
+³    20³ 0.22665³ 0.22698³ 0.29648³ 0.29648³        ³        ³        ³        ³        ³        ³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÙ 
+Reading from C:\WORKSPACE\Github_Projects\Mars_skull_phylosig\Data\Processed\TNT_files\GPA_Basimean\Stats_CI.run 
+Report is ON 
+Floating point printing uses 3 digits 
+Consistency index  
+       ÚÄÄÄÄÄÄ¿
+       ³    +0³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄ´
+³     0³ 0.208³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÙ 
+Again reading from C:\WORKSPACE\Github_Projects\Mars_skull_phylosig\Data\Processed\TNT_files\GPA_Basimean\Core_TNT_code_Basimean_4_20.run 

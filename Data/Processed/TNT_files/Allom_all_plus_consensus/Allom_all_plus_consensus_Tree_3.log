@@ -1,0 +1,87 @@
+Reading from E:\github_Vera\Mars_skull_phylosig\Data\Processed\TNT_files\Allom_all_plus_consensus\Allom_all_plus_consensus_Tree_3.tnt 
+ 
+WARNING: 
+Re-setting data type will cause
+current data to be lost 
+ 
+Matrices will be read as continuous data 
+Matrix space: allocate for up to 32 states 
+'TNT file generated with the R function `writeland.tnt` on Thu Dec  8 19:30:59 2022.'
+Matrix (1x55, 32 states). Memory required for data: 0.06 Mbytes 
+Again reading from E:\github_Vera\Mars_skull_phylosig\Data\Processed\TNT_files\Allom_all_plus_consensus\Allom_all_plus_consensus_2_20forfisnish.run 
+Considering individual landmarks for resampling and relative supports
+ 
+   Settings for landmark optimization:  
+      Initially approximmating landmark positions with a 6x6 grid 
+      Adding terminal points to initial grid 
+      Not shrinking frame when approximmating landmark positions 
+      Not skipping cells when approximmating landmark positions 
+      Not shaking grid 
+      Nesting sankoff 1 times (window: 1.0000 cells) 
+      Using iterative-pass (max. iters. 100000, cut 0.00000100) 
+
+   Settings for searches:
+      Using a tolerance margin of 15.00% maximum.
+      Error stages:
+           - 0.00 for 0 to 15% of swapping,
+           - 5.00 from 15% to 66%,
+           - 15.00 from 66% to completion 
+      Refining first guess with incremental fermat recalculation, 5 nodes
+      from point of reinsertion, with up to 2 iterations 
+ 
+   To calculate total score, all landmarks within a character equally weighted 
+   For resampling and support, using individual landmarks 
+ 
+Taxon names is ON 
+Outgroup is taxon 51  -  Rhyncholestes_raphanurus 
+Space for 500 trees in memory 
+Repl. Algor.     Tree        Score       Best Score   Time       Rearrangs.
+50    TBR       21 of 21     ------      7.14989      8:32:15    13,724,723          
+Completed 50 random addition sequences.
+Total rearrangements examined: 13,724,723. 
+Best score hit 22 times out of 50.
+Best score (TBR): 7.14989.  1 trees retained. 
+Start swapping from 1 trees (score 7.14989)... 
+Repl. Algor.     Tree        Score       Best Score   Time       Rearrangs.
+---   TBR        0 of 1      ------      7.14989      0:04:12    53,795          
+Completed TBR branch-swapping.
+Total rearrangements examined: 53,795. 
+Best score (TBR): 7.14989.  1 trees found. 
+Tree lengths 
+       ÚÄÄÄÄÄÄÄÄ¿
+       ³    +0  ³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ´
+³     0³ 7.14989³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÙ 
+ 
+WARNING: 
+Ch. 0, landmark 38, user min. set to 0.358215, but found a tree with 0.303719
+Minimum will be updated (this may affect previous calculations). 
+ 
+Adjusted homoplasy 
+       ÚÄÄÄÄÄÄÄÄ¿
+       ³    +0  ³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ´
+³     0³ 0.12324³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÙ 
+Tree 0, ch. 0 (score 7.149890) 
+       ÚÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄ¿
+       ³    +0  ³    +1  ³    +2  ³    +3  ³    +4  ³    +5  ³    +6  ³    +7  ³    +8  ³    +9  ³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ´
+³     0³ 0.14190³ 0.13032³ 0.19514³ 0.15325³ 0.14480³ 0.12572³ 0.14590³ 0.12536³ 0.13691³ 0.13647³
+³    10³ 0.12347³ 0.12325³ 0.12389³ 0.14858³ 0.15009³ 0.12398³ 0.14895³ 0.15106³ 0.09628³ 0.09737³
+³    20³ 0.10688³ 0.10973³ 0.11296³ 0.11305³ 0.10648³ 0.10917³ 0.11360³ 0.11240³ 0.14897³ 0.14942³
+³    30³ 0.16102³ 0.16022³ 0.17866³ 0.17796³ 0.10725³ 0.10706³ 0.10059³ 0.09950³ 0.07059³ 0.07112³
+³    40³ 0.09302³ 0.09454³ 0.10745³ 0.12862³ 0.10179³ 0.10733³ 0.12951³ 0.10235³ 0.09931³ 0.14013³
+³    50³ 0.09849³ 0.13980³ 0.12460³ 0.12496³ 0.09382³ 0.09255³ 0.11605³ 0.11625³        ³        ³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÙ 
+Reading from E:\github_Vera\Mars_skull_phylosig\Data\Processed\TNT_files\Allom_all_plus_consensus\Stats_CI.run 
+Report is ON 
+Floating point printing uses 3 digits 
+Consistency index  
+       ÚÄÄÄÄÄÄ¿
+       ³    +0³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄ´
+³     0³ 0.201³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÙ 
+Again reading from E:\github_Vera\Mars_skull_phylosig\Data\Processed\TNT_files\Allom_all_plus_consensus\Allom_all_plus_consensus_2_20forfisnish.run 

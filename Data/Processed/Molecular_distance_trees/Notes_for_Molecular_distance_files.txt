@@ -1,0 +1,14 @@
+Zipped file 1: 3D GM analysis -TNT 
+•	all the 3D datasets in TNT format
+•	the TNT batch file
+•	the stats_ci.run macro file
+•	the output treefiles
+
+Zipped file 2: UPGMA of DNA data
+•	PAUP matrix with search commands
+•	PAUP screenlog with distance matrices
+•	PAUP treefiles (3)
+
+Zipped file 3: Parsimony analysis of DNA data
+•	TNT matrix with search commands
+•	Treefile

@@ -1,0 +1,418 @@
+---
+title: "Marsupial shape and phylogenetics"
+author: "Vera Weisbecker"
+date: "22 January 2019"
+output: html_document
+---
+
+
+# load required libraries
+
+
+```{r}
+
+library(phytools) # CRAN v1.2-0 
+library(geomorph) # [github::geomorphR/geomorph] v4.0.4 # CRAN v4.0.4 
+library(geiger)   # CRAN v2.0.10   
+library(mvMORPH)  # CRAN v1.1.6
+
+#this sets the directory to the source directory without having to manually click your way there
+library(rstudioapi) # Safely Access the RStudio API
+setwd(dirname(getActiveDocumentContext()$path))
+
+load (file = "../Data/Processed/processed_data_incl_allometry.rda")
+
+#The analyses here are easiest to do if the coordinates are all in one list (because GPA objects also have Csizes with them, so then you have to do GPA$coords for the original GPAs but the allometric residues are just the coords).
+
+
+list_of_coords <- list(GPA_Allmean$coords,Allom_all_plus_consensus ,
+GPA_Basimean$coords ,
+Allom_basi_plus_consensus ,
+GPA_Restmean$coords ,
+Allom_rest_plus_consensus, 
+log(GPA_Allmean$Csize))
+
+```
+
+
+
+# Does phylogenetic signal differ?
+```{r}
+
+#It takes longer to type up the loop than to just paste this here ;-)
+
+physig_temp <- list()
+
+
+Physignal_table <- matrix(ncol=2,nrow= length(list_of_coords))
+rownames(Physignal_table) <- c("Full configuration","Full config. residuals " ,"Basicranium" ,"Basicranium residuals ","Rest of cranium" , "Rest of cranium residuals", "log Centroid size" )
+colnames(Physignal_table) <- c("Kmult", "p")
+
+for (i in 1:length(list_of_coords)){
+  
+  coords_temp <- list_of_coords[[i]]
+  physig_temp <- physignal (coords_temp, tree)
+  
+  Physignal_table[i,1] <- round (physig_temp$phy.signal, 3)
+  Physignal_table[i,2] <- round (physig_temp$pvalue, 3)
+  
+}
+
+Physignal_table
+
+write.csv (Physignal_table, file = "../Results/Phylosig_table.csv")
+
+```
+
+Comparing morhpological disparity of the partitions within the same GPA alignment
+
+```{r}
+
+morphol.disparity(GPA_Allmean$coords~1)
+morphol.disparity(GPA_Allmean$coords[which(part.gp==1),,]~1)
+morphol.disparity(GPA_Allmean$coords[which(part.gp==2),,]~1)
+
+#Just checking. Checking is important.
+spheres3d(GPA_Allmean$coords[which(part.gp==1),,5], asp=FALSE, radius = 0.001)
+
+```
+
+
+#PGLS for Diet and Locomotion (look at all three GPAs+ residuals)
+#We were asked to use mvMorph by one of the reviewers, but I thought I'd leave the pgls code here if anyone is unconvinced. The results are nearly entirely the same.
+
+```{r}
+
+# 
+# #One can never be too sure - checking that species list and coords order line up. Should return all TRUE
+# 
+# dimnames(GPA_Allmean$coords)[[3]] == rownames(specieslist)
+# dimnames(Allom_rest_plus_consensus)[[3]] == rownames(specieslist)
+# 
+# #Preparation of all the different lm data frames
+# DietLoco_All <- geomorph.data.frame(GPA_Allmean$coords, specieslist$Diet, specieslist$Locomotion)
+# DietLoco_Basi<- geomorph.data.frame(GPA_Basimean$coords, specieslist$Diet, specieslist$Locomotion)
+# DietLoco_Rest<- geomorph.data.frame(GPA_Restmean$coords, specieslist$Diet, specieslist$Locomotion)
+# DietLoco_All_res <- geomorph.data.frame(Allom_all_plus_consensus, specieslist$Diet, specieslist$Locomotion)
+# DietLoco_Basi_res<- geomorph.data.frame(Allom_basi_plus_consensus, specieslist$Diet, specieslist$Locomotion)
+# DietLoco_Rest_res<- geomorph.data.frame(Allom_rest_plus_consensus, specieslist$Diet, specieslist$Locomotion)
+# 
+# 
+# # Prepare for pgls output loop. this is nearly as much code as just running each analysis separately :-). There is probably a better way to do it using the apply family. 
+# PGLS_list <- list(DietLoco_All=DietLoco_All, DietLoco_All_res=DietLoco_All_res, DietLoco_Basi=DietLoco_Basi, DietLoco_Basi_res=DietLoco_Basi_res, DietLoco_Rest=DietLoco_Rest, DietLoco_Rest_res=DietLoco_Rest_res)
+# pgls_temp <- list()
+# pgls_outputs <- list( Locomotion=list(names (PGLS_list)), Diet = list(names (PGLS_list)) )
+# 
+# 
+# for (i in (1:length(PGLS_list))){
+#   
+#   #pgls_temp <- PGLS_list[i]
+#   
+#   pgls_outputs$Diet[[i]] <- summary(procD.pgls(PGLS_list[[i]][[1]] ~ PGLS_list[[i]][[2]] , tree, data = PGLS_list [[i]]))
+#    pgls_outputs$Locomotion[[i]] <- summary(procD.pgls(PGLS_list[[i]][[1]] ~ PGLS_list[[i]][[3]] , tree, data = PGLS_list [[i]]))
+#   
+#   
+#   }
+# 
+# names(pgls_outputs$Locomotion) <- names (PGLS_list)
+# names(pgls_outputs$Diet) <- names (PGLS_list)
+# 
+# 
+# pgls_outputs
+# 
+# #extract table with Rsq, F, P, with loco and diet, hence names (PGLS_list)*2, and then two empty columns so loco and diet outputs can be differentiated hence +2
+# 
+# Diet_Loco_output_table <- matrix(ncol=3,nrow= (length(names (PGLS_list))*2)+2)
+# rownames(Diet_Loco_output_table) <- c("Locomotion", "Full configuration","Full config. residuals " ,"Basicranium" ,"Basicranium residuals ","Rest of cranium" , "Rest of cranium residuals","Diet","Full configuration","Full config. residuals " ,"Basicranium" ,"Basicranium residuals ","Rest of cranium" , "Rest of cranium residuals" )
+# colnames(Diet_Loco_output_table) <- c(  "RSq (pgls)", "F (pgls)", "p (pgls)")
+# 
+# 
+# 
+# #Somehow the outputs have to be in matrix form to be feed-able into the table, no idea why
+# 
+# for (Dataset in (1: length(names(PGLS_list)))) {
+#     
+#     #Loco outputs    
+#     Diet_Loco_output_table[Dataset+1,] <-  as.matrix(pgls_outputs$Locomotion[[Dataset]]$table[1,c(4,5,7)])
+#     # Diet outputs
+#     Diet_Loco_output_table[8+Dataset,] <-  as.matrix(pgls_outputs$Diet[[Dataset]]$table[1,c(4,5,7)])
+#     
+#   }
+#   
+# #Always a good idea to go back to the first analysis and cross check the values in a random spot check.
+# 
+# summary(procD.pgls(GPA_Allmean$coords ~ specieslist$Diet , tree)) #OK
+# 
+# summary(procD.pgls(Allom_basi_plus_consensus ~ specieslist$Locomotion , tree)) #OK
+# 
+# write.csv(Diet_Loco_output_table, file = "../Results/PGLS_tables.csv")
+
+```
+
+
+#Setting up mvMorph analyses
+```{r}
+
+#preparation of mvmorph datasets. This is awful, sorry
+
+DietLoco_All <- list( array=two.d.array(GPA_Allmean$coords), Diet= as.factor(specieslist$Diet), Locomotion =as.factor(specieslist$Locomotion), Size= GPA_Allmean$Csize, tree=tree)
+DietLoco_Basi<- list( array=two.d.array(GPA_Basimean$coords), Diet= as.factor(specieslist$Diet), Locomotion =as.factor(specieslist$Locomotion),Size= GPA_Allmean$Csize, tree=tree)
+DietLoco_Rest<- list( array=two.d.array(GPA_Restmean$coords), Diet= as.factor(specieslist$Diet), Locomotion =as.factor(specieslist$Locomotion),Size= GPA_Allmean$Csize, tree=tree)
+DietLoco_All_res <- list( array=two.d.array(Allom_all_plus_consensus), Diet= as.factor(specieslist$Diet), Locomotion =as.factor(specieslist$Locomotion), Size= GPA_Allmean$Csize,tree=tree)
+DietLoco_Basi_res<- list( array=two.d.array(Allom_basi_plus_consensus), Diet= as.factor(specieslist$Diet), Locomotion =as.factor(specieslist$Locomotion),Size= GPA_Allmean$Csize, tree=tree)
+DietLoco_Rest_res<- list( array=two.d.array(Allom_rest_plus_consensus), Diet= as.factor(specieslist$Diet), Locomotion =as.factor(specieslist$Locomotion),Size= GPA_Allmean$Csize, tree=tree)
+
+
+# Prepare for  output loop. this is nearly as much code as just running each analysis separately :-). There is probably a better way to do it using the apply family. 
+MV_list <- list(DietLoco_All=DietLoco_All, DietLoco_All_res=DietLoco_All_res, DietLoco_Basi=DietLoco_Basi, DietLoco_Basi_res=DietLoco_Basi_res, DietLoco_Rest=DietLoco_Rest, DietLoco_Rest_res=DietLoco_Rest_res)
+
+#This contains nonsensical analyses of the residuals vs csize, but I just wanted the loop to run through. 
+MV_temp_Size <- list(DietLoco_All=list(), DietLoco_All_res=list(), DietLoco_Basi=list(), DietLoco_Basi_res=list(), DietLoco_Rest=list(), DietLoco_Rest_res=list())
+
+MV_temp_Diet <- list(DietLoco_All=list(), DietLoco_All_res=list(), DietLoco_Basi=list(), DietLoco_Basi_res=list(), DietLoco_Rest=list(), DietLoco_Rest_res=list())
+
+MV_temp_Loco <- list(DietLoco_All=list(), DietLoco_All_res=list(), DietLoco_Basi=list(), DietLoco_Basi_res=list(), DietLoco_Rest=list(), DietLoco_Rest_res=list())
+
+MV_outputs <- list( Locomotion=list(names (MV_list)), Diet = list(names (MV_list)) )
+
+```
+
+# Which evolutionary mode is best?
+```{r}
+
+Evo_mode <- c("BM", "OU", "EB" )
+
+
+
+  for (Partition in (1:length(MV_list))){
+    
+    for (Evomode in (1:length(Evo_mode))){
+  
+              #there's no difference if I use either penalty term, letting it default
+      MV_temp_Size [[Partition]][Evomode] <- (GIC(mvgls(array ~ log(Size) , tree, data = MV_list [[Partition]],model=Evo_mode[Evomode] , method="PL-LOOCV")))$GIC 
+      
+      MV_temp_Diet [[Partition]][Evomode] <- (GIC(mvgls(array ~ Diet , tree, data = MV_list [[Partition]],model=Evo_mode[Evomode] , method="PL-LOOCV")))$GIC
+      
+      MV_temp_Loco [[Partition]][Evomode] <- (GIC(mvgls(array ~ Locomotion , tree, data = MV_list [[Partition]],model=Evo_mode[Evomode] , method="PL-LOOCV")))$GIC
+       
+       
+     }
+ 
+ }
+
+#From this table, the residuals vs size analyses need deleting 
+#Note that here we don't consider the residuals ~ size calculations, hence the slightly complicated size matrix of just 3 rows      
+Model_comps <- rbind(c(NA, NA, NA), 
+                     matrix (unlist(MV_temp_Size)[c(1:3,7:9, 13:15)], nrow=length(MV_list)/2, ncol=length(Evo_mode), byrow = TRUE),
+                     c(NA,NA,NA), 
+                     matrix (unlist(MV_temp_Loco), nrow=length(MV_list), ncol=length(Evo_mode), byrow = TRUE),
+                     c(NA,NA,NA), 
+                     matrix (unlist(MV_temp_Diet), nrow=length(MV_list), ncol=length(Evo_mode), byrow = TRUE))                     
+
+rownames(Model_comps) <- c( "Size", "Full configuration","Basicranium" ,"Rest of cranium" , "Locomotion", "Full configuration","Full config. residuals " ,"Basicranium" ,"Basicranium residuals ","Rest of cranium" , "Rest of cranium residuals","Diet","Full configuration","Full config. residuals " ,"Basicranium" ,"Basicranium residuals ","Rest of cranium" , "Rest of cranium residuals")
+colnames(Model_comps) <- Evo_mode
+
+#Interesting how size has a much stronger OU signal for rest of cranium only, not full, not rest.
+
+write.csv(Model_comps, file="../Results/Evomodels.csv")
+
+
+remove(Model_comps,MV_temp_Diet,MV_temp_Loco,MV_temp_Size, Evo_mode)
+
+
+
+```
+
+
+#The models are all much of a muchness, but I will here use the lowest-valued model which is always OU.  This takes a long time, I run this loop on the fastest of my computers. Run this chunk only once then load the output for making the table later. 
+  
+```{r}  
+
+#The outputs take a long time, therefore only running the MANOVA if the output isn't there. 
+if(!("MV_outputs_DietLoco.rda" %in% list.files("../Results/"))) {
+
+    for (i in (1:length(MV_list))){
+    
+    
+      MV_temp_Diet <- mvgls(array ~ Diet , tree, data = MV_list [[i]],model="OU" , method="PL-LOOCV")
+    
+      MV_temp_Loco <- mvgls(array ~ Locomotion , tree, data = MV_list [[i]],model="OU", method="PL-LOOCV")
+    
+      MV_outputs$Diet [[i]]   <- manova.gls(MV_temp_Diet, nperm=10000, test="Pillai", verbose=TRUE)
+    
+      MV_outputs$Locomotion[[i]] <- manova.gls(MV_temp_Loco, nperm=10000, test="Pillai", verbose=TRUE)
+      
+      names(MV_outputs$Locomotion) <- names (MV_list)
+      names(MV_outputs$Diet) <- names (MV_list)
+
+
+      save(MV_outputs, file = "../Results/MV_outputs_DietLoco.rda")
+    
+    }
+  
+} else {
+  
+      load(file = "../Results/MV_outputs_DietLoco.rda")
+}
+
+
+```
+
+
+#extract table with Rsq, F, P, with loco and diet, hence names (MV_list)*2, and then two empty columns so loco and diet outputs can be differentiated hence +2
+
+```{r}
+
+#Load relevant outputs
+load("../Results/MV_outputs_DietLoco.rda")
+load("../Results/MANOVA_OU_outputs_size.rda")
+
+
+#making a table with all outputs plus six rows to include size outputs
+Diet_Loco_output_table <- matrix(ncol=2,nrow= (length (names(MV_outputs$Locomotion))*2)+6)
+
+#It's important to keep the row names in the same order as the MV_list. In retrospect, I should have made it more easy to just pull the names out of that. 
+rownames(Diet_Loco_output_table) <- c("Size", "Full configuration", "Basicranium", "Rest of Cranium",  "Locomotion", "Full configuration","Full config. residuals " ,"Basicranium" ,"Basicranium residuals ","Rest of Cranium" , "Rest of Cranium residuals","Diet","Full configuration","Full config. residuals" ,"Basicranium" ,"Basicranium residuals ","Rest of Cranium" , "Rest of Cranium residuals" )
+
+colnames(Diet_Loco_output_table) <- c(  "Pillai Statistic", "p")
+
+
+
+#Somehow the outputs have to be in matrix form to be feed-able into the table, no idea why. This has a lot of hard coding as to which rows the outputs go into, but is for that it's less complicated to code
+
+
+
+#Size outputs for the first few rows (one blank, three with results) 
+
+for (Dataset in (1:3)){
+  
+     Diet_Loco_output_table[Dataset+1,] <-  c(MV_outputs_Size[[Dataset]]$stat, MV_outputs_Size[[Dataset]]$pvalue)
+}
+
+#The Diet/locomotion on rows 4 onwards
+for (Dataset in (1: length(names(MV_outputs$Locomotion)))) {
+    
+    
+    #Loco outputs    
+    Diet_Loco_output_table[Dataset+5,] <-  c(MV_outputs$Locomotion[[Dataset]]$stat, MV_outputs$Locomotion[[Dataset]]$pvalue)
+    # Diet outputs
+    Diet_Loco_output_table[Dataset+12,] <-  c(MV_outputs$Diet[[Dataset]]$stat,MV_outputs$Diet[[Dataset]]$pvalue)
+    
+  }
+  
+#Always a good idea to go back to the first analysis and cross check the values in a random spot check. done for a bunch of outputs, they are all ok.
+
+
+write.csv(Diet_Loco_output_table, file = "../Results/MV_tables.csv")
+
+
+
+
+```
+
+
+
+#To check if it's phylogenetic confoundment of locomotion and diet, we run a procD.lm
+
+
+```{r}
+
+
+# Prepare for lm output loop. this is nearly as much code as just running each analysis separately :-). There is probably a better way to do it using the apply family. 
+
+
+#One can never be too sure - checking that species list and coords order line up. Should return all TRUE
+
+dimnames(GPA_Allmean$coords)[[3]] == rownames(specieslist)
+dimnames(Allom_rest_plus_consensus)[[3]] == rownames(specieslist)
+
+#Preparation of all the different lm data frames
+DietLoco_All <- geomorph.data.frame(GPA_Allmean$coords, specieslist$Diet, specieslist$Locomotion)
+DietLoco_Basi<- geomorph.data.frame(GPA_Basimean$coords, specieslist$Diet, specieslist$Locomotion)
+DietLoco_Rest<- geomorph.data.frame(GPA_Restmean$coords, specieslist$Diet, specieslist$Locomotion)
+DietLoco_All_res <- geomorph.data.frame(Allom_all_plus_consensus, specieslist$Diet, specieslist$Locomotion)
+DietLoco_Basi_res<- geomorph.data.frame(Allom_basi_plus_consensus, specieslist$Diet, specieslist$Locomotion)
+DietLoco_Rest_res<- geomorph.data.frame(Allom_rest_plus_consensus, specieslist$Diet, specieslist$Locomotion)
+
+#Grabbing also the allometry data from the previous rmd file and making dataframe
+Allometry_lm_table <- as.data.frame(rbind(summary(allom_all_lm)$table[1,c(2,4,5,7)], summary(allom_basi_lm)$table[1,c(2,4,5,7)],summary(allom_rest_lm)$table[1,c(2,4,5,7)]))
+
+
+rownames(Allometry_lm_table)<- c("Full configuration","Basicranium" ,"Rest of cranium")
+
+
+lm_list <- list(DietLoco_All=DietLoco_All, DietLoco_All_res=DietLoco_All_res, DietLoco_Basi=DietLoco_Basi, DietLoco_Basi_res=DietLoco_Basi_res, DietLoco_Rest=DietLoco_Rest, DietLoco_Rest_res=DietLoco_Rest_res)
+lm_temp <- list()
+lm_outputs <- list( Locomotion=list(names (lm_list)), Diet = list(names (lm_list)) )
+
+
+for (i in (1:length(lm_list))){
+  
+  #lm_temp <- lm_list[i]
+  
+  lm_outputs$Diet[[i]] <- summary(procD.lm(lm_list[[i]][[1]] ~ lm_list[[i]][[2]], data = lm_list [[i]]))
+   lm_outputs$Locomotion[[i]] <- summary(procD.lm(lm_list[[i]][[1]] ~ lm_list[[i]][[3]] , data = lm_list [[i]]))
+  
+  
+  }
+
+names(lm_outputs$Locomotion) <- names (lm_list)
+names(lm_outputs$Diet) <- names (lm_list)
+
+
+lm_outputs
+
+```
+
+
+Now make a lovely one-stop-shop table for all the gls and lm analyses
+
+```{r}
+
+Diet_Loco_output_table_lm <- matrix(ncol=4,nrow= (length(names (lm_list))*2)+6)
+rownames(Diet_Loco_output_table_lm) <- c("Size","Full configuration" ,"Basicranium", "Rest of cranium","Locomotion", "Full configuration","Full config. residuals " ,"Basicranium" ,"Basicranium residuals ","Rest of cranium" , "Rest of cranium residuals","Diet","Full configuration","Full config. residuals " ,"Basicranium" ,"Basicranium residuals ","Rest of cranium" , "Rest of cranium residuals" )
+colnames(Diet_Loco_output_table_lm) <- c( "SS", "RSq (lm)", "F (lm)", "p (lm)")
+
+
+
+#Somehow the outputs have to be in matrix form to be feed-able into the table, no idea why
+
+Diet_Loco_output_table_lm[2:4,] <- as.matrix (Allometry_lm_table)
+
+for (Dataset in (1: length(names(lm_list)))) {
+    
+
+    #Loco outputs    
+    Diet_Loco_output_table_lm[Dataset+5,] <-  as.matrix(lm_outputs$Locomotion[[Dataset]]$table[1,c(2,4,5,7)])
+    # Diet outputs
+    Diet_Loco_output_table_lm[Dataset+12,] <-  as.matrix(lm_outputs$Diet[[Dataset]]$table[1,c(2,4,5,7)])
+    
+  }
+  
+#Separately adding the three rows from the allometry table which does not have residuals
+
+
+
+
+#Always a good idea to go back to the first analysis and cross check the values
+
+summary(procD.lm(GPA_Allmean$coords ~ specieslist$Diet )) #OK
+
+summary(procD.lm(Allom_basi_plus_consensus ~ specieslist$Locomotion )) #OK
+
+
+#combine lm and pgls table, round appropriately to conveniently cut and paste everything
+
+All_Diet_Loco_tables <- cbind(Diet_Loco_output_table, Diet_Loco_output_table_lm)
+
+All_Diet_Loco_tables [,c(1,3,4,5)] <- round(All_Diet_Loco_tables[,c(1,3,4,5)],2)
+All_Diet_Loco_tables [,c(2,6)] <- round(All_Diet_Loco_tables[,c(2,6)],3)
+
+
+
+
+write.csv(All_Diet_Loco_tables, file = "../Results/Diet_loco_tables.csv")
+
+```
+
+#None of all this gets saved because any non-saved outputs are not required later

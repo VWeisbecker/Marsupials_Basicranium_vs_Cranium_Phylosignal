@@ -1,0 +1,49 @@
+---
+title: "TNT input file creation from R and processing of output for reading in R"
+author: "Vera Weisbecker"
+date: "06/05/2021"
+output: html_document
+---
+
+
+```{r}
+
+library(geomorph) # Geometric Morphometric Analyses of 2D/3D Landmark Data
+
+
+#library(landvR)
+
+# My rmd file for some reason won't recognise it s local file, so this sets the wd to local
+library(rstudioapi) # Safely Access the RStudio API
+setwd(dirname(getActiveDocumentContext()$path))
+
+source("0_2_Utilities.r")
+
+load (file = "../Data/Processed/processed_data_incl_allometry.rda")
+
+
+
+
+writeland.tnt(GPA_Allmean$coords, file= "../Data/Results/Full_config_GPA.tnt")
+writeland.tnt(GPA_Basimean$coords, file= "../Data/Results/Basi_config_GPA.tnt")
+writeland.tnt(GPA_Restmean$coords, file= "../Data/Results/Rest_config_GPA.tnt")
+
+
+
+
+
+```
+
+#TNT outputs files that have two spaces befor a semicolon and this prevents read.nex to read them. Use the ReplaceInFiles addin every time before you attempt to read in the TNT output in R.
+
+#FIRST you need to remove spaces before the semi-colons in teh output files using the ReplaceInFiles algorithm. First look for trees ; and replace with trees;, then for end ; and same. You can do this at a high level (all TNT files) and just stipulate the files endings you want affected (e.g. *with_NodeLabels.tree)
+
+#Afterwards, the files need saving. It is better to do this separately so only the tree files get saved.
+
+
+```{r setup, include=FALSE}
+
+devtools::install_github("skranz/ReplaceInFiles")
+
+
+```

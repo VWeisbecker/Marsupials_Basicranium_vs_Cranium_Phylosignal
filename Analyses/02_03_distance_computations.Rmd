@@ -1,0 +1,722 @@
+---
+title: "Distance comparisons"
+author: "Vera weisbecker"
+date: '2022-06-16'
+output: html_document
+---
+
+```{r}
+library(geomorph) # [github::geomorphR/geomorph] v4.0.4 # CRAN v4.0.4 
+library(ape)      # CRAN v5.6-2 
+library(phytools) # CRAN v1.2-0 
+library(phangorn) # Bioconductor v2.9.0 # CRAN v2.9.0 
+library(abind)    # CRAN v1.4-5 
+library(stringr)  # CRAN v1.4.1 
+library(ips)      # CRAN v0.0.11
+library(TreeDist) # CRAN v2.5.0 
+library(vegan)    # CRAN v2.6-2
+
+# My rmd file for some reason won't recognise it s local file, so this sets the wd to local
+library(rstudioapi) # Safely Access the RStudio API
+setwd(dirname(getActiveDocumentContext()$path))
+
+
+source(file="0_2_Utilities.r")
+
+load(file="../Data/Processed/Trees_collapsed.Rda")
+
+seed <- 42
+
+```
+
+#now make comparison of random trees with "true" tree, including density distribution of differences; save in a list of Phylo[[1]] <- real trees, Phylo [[2]] <- density distribution of distance with random trees (We don't need the actual random trees in the end)
+
+# You can use any tree distances here but I think the results are alwasy the same. The treedist function returns four distances, the first one of which is the Robinson-Foulds distance (called "symmetric" here). 
+
+```{r}
+#The below takes a while so I'm just running it once and then loading it
+if(!("tree_distances_random.rda" %in% list.files("../Data/Processed/"))) {
+
+# Now compute the tree distances for each phylogeny from full to smallest (a total of i phylogenies) for each of the randomly generated trees (a total of j random trees)
+
+    temp <- vector(length = length(Random_trees[[1]]))
+    tree_distances_random <- list()
+
+    #for each phylogeny
+    for (i in 1:length(reduced_tree_list)) {
+
+      #for each random tree associated with that phylogeny
+    for (j in 1: length ( Random_trees[[1]])) {
+
+      #if using phangorn's treedist function, add , check.labels = TRUE to the function
+      temp [j] <- TreeDistance( Random_trees[[i]] [[j]] , reduced_tree_list[[i]] )
+
+      tree_distances_random [[i]] <- temp
+
+        }
+
+    }
+
+    save(tree_distances_random, file = "../Data/Processed/tree_distances_random.rda")
+    remove(temp)
+
+
+} else {
+    load(file = "../Data/Processed/tree_distances_random.rda") 
+}
+
+
+# #Just a manual check:
+# RF.dist(Random_trees[[1]][[1]], Full_tree)
+# 
+
+
+
+```
+
+#Now produce a list of tree distance density distributions for each number of tips, for just one metric (i.e. a list of many vectors ) or several. Needed for later plotting if using tree comparison metrics that are not RF (i.e. have more gradual frequencies).
+
+```{r}
+
+ Density_apply_function <- function (tree_distance_list) {
+
+  if (is.vector(tree_distance_list)){
+
+   density(tree_distance_list)
+
+}
+
+    else {
+
+       apply (tree_distance_list, 2, density)
+
+
+      }
+
+}
+
+
+#use Lapply to run the density results for each density measure for each phylogeny
+Density_dists_random <- lapply(tree_distances_random, Density_apply_function)
+
+#And again a quick check - this need checking from the global environment. Looking just like the first output of densities for the first position in density_dists_random.
+
+ab<- density (tree_distances_random[[1]])
+
+remove(ab)
+
+
+```
+
+
+#Next: Make distances
+
+#First, the "reference" molecular - based UPGMA and TNT trees, distances to reference phylogeny, for the full dataset
+
+```{r}
+
+tree_distances_Mol_based_trees <- list()
+
+dist_temp <- list()
+
+
+for (i in 1: length(Mol_based_trees)){
+  
+  
+  tree_distances_Mol_based_trees[[i]] <- TreeDistance(Mol_based_trees[[i]], reduced_tree_list [[1]])
+  
+  
+}
+
+#Note that these trees do not have their tips in the same order, unlike the UPMGA/NJ trees. Their co-phenetic matrices need re-ordering during the co-phenetic matrix comparison step below.
+Mol_based_trees$Molecular_TNT_raw$tip.label==Full_tree$tip.label
+
+
+#Note that the TNT tree is identical to the reference tree if it was re-rooted so R. raphanurus and L. inca were sister groups. That explains why one clade of the "true" tree is not retrieved in the TNT tree and the RF distance is still the same.
+
+#par(mfrow=c(1,2))
+#plot(Mol_based_trees$Molecular_TNT_raw)
+#plot(reduced_tree_list[[1]])
+
+#comparePhylo(Mol_based_trees$Molecular_TNT_raw, reduced_tree_list[[1]])
+#comparePhylo(Full_tree, Full_tree)
+
+
+
+```
+
+#Distances of the morph trees using just RF relative to the "true" molecular phylogeny. 
+#Experimenting with TreeDistance instead of RF
+
+```{r}
+
+tree_distances_morph <- list()
+
+Partition_dist_temp <- list()
+
+Cluster_dists_in_run <- list()
+
+Tree_dists_in_run <- list()
+
+for (i in (1:(Ntip(Full_tree)- Tip_number_left))){ 
+
+    for (j in 1: length(c("UPGMA", "NJ"))){
+
+        for (k in (1:length(Partitions))){
+  
+  #Note that the distances can be played with here. it can be TreeDist from the phangorm package, in which case you get for different metrics (no. 1 is symmetric or Robinson-Foulds etc.); 
+  Partition_dist_temp <- TreeDistance(reduced_morph_clusters[[i]][[j]][[k]], reduced_tree_list [[i]])#, check.labels = TRUE #if using TreeDist
+  
+  Cluster_dists_in_run [[k]] <- Partition_dist_temp
+  names(Cluster_dists_in_run)[[k]] <- names(Partitions)[[k]]
+
+        }
+      
+      
+      Tree_dists_in_run [[j]] <- Cluster_dists_in_run
+      names(Tree_dists_in_run)[[j]] <- c("UPGMA", "NJ")[[j]]
+      
+    }
+  
+  tree_distances_morph[[i]] <- Tree_dists_in_run
+}
+
+
+
+#manual check, compare with first and sixth position of 1st position of reduced morph clusters -works
+
+TreeDistance(reduced_morph_clusters[[1]][[1]][[1]], Full_tree) == tree_distances_morph[[1]][[1]][[1]]
+TreeDistance(reduced_morph_clusters[[20]][[1]][[6]], reduced_tree_list[[20]]) == tree_distances_morph [[20]][[1]][[6]]
+
+
+```
+
+
+
+#Distances of the TNT trees using  RF relative to the reference molecular phylogeny. 
+
+
+```{r}
+
+
+tree_distances_TNT <- list()
+
+Partition_dist_temp <- list()
+
+Tree_dists_in_run <- list()
+
+for (i in (1:(length(reduced_tree_list)))){ 
+
+
+        for (k in (1:length(Partitions))){
+  
+  #Make sure this matches the distances for the morph clusters above
+  Partition_dist_temp[[k]] <- TreeDistance(reduced_TNT_trees[[i]][[k]], reduced_tree_list [[i]])
+  
+         }
+      
+  
+  tree_distances_TNT[[i]] <- Partition_dist_temp
+  
+  names(tree_distances_TNT [[i]])  <- names(Partitions)
+}
+
+
+
+#manual check, compare with first and sixth position of 1st position of reduced morph clusters -works
+
+TreeDistance(reduced_TNT_trees[[1]][[1]], Full_tree)
+TreeDistance(reduced_TNT_trees[[20]][[6]], reduced_tree_list[[20]])
+
+remove( Partition_dist_temp, Tree_dists_in_run)
+
+```
+
+#Distances of all the multi-state trees from the reference tree pruned to the tips of the discrete phylogeny.
+```{r}
+
+Multitree_dists<- vector()
+
+#Tree_dists_in_run <- list()
+
+
+# the for loop starts with 2, e because the first tree in the discrete_comparisons object is the reference tree
+
+for (i in (2:(length(discrete_comparisons)))){ 
+
+               Multitree_dists <- c(Multitree_dists, TreeDistance(discrete_comparisons[[1]], discrete_comparisons [[i]]))
+  
+         }
+      
+ 
+  names(Multitree_dists)  <- names(discrete_comparisons)[2:16]
+
+
+
+```
+
+
+
+#Full dataset (all tip) comparison of the random and molecular trees, with the differences of the different clustering trees summarized as a mean as they are really similar in this case. 
+
+#if using raw Rf, 108 is the maximum distance these trees can have and then every now and then it hits the odd clade just by chance.
+
+#Main Figure
+
+```{r, echo=TRUE}
+
+
+#Needed to make the fonts at right angles, can be used in  in combination with putting adj(x= Number, y=Number) into the text line
+
+
+y0=5
+y1=0
+label =15
+lwd = 5
+#This just plots so I need to let it plot and then open a new mfrow plot below
+par(mfrow=c(1,1))
+freq = hist(tree_distances_random[[1]])
+dev.off()
+cexes = 2
+arrowlength = 0.4
+
+
+png("../Figures/Distplots.png", width = 1600, height=1400 )
+
+par(mfrow=c(2,1), mar=c(5,5,2,0.5))
+
+#Make sure this matches the order of partitions in the tree distance lists, otherwise the figure will be mis-labelled!
+Partition_names <- c("Whole cranium", "Basicranium", "Rest of cranium")
+
+
+#draw empty plot (x/y need changing according to what metric and whether using distance frequency histogram (hist) or polygon)
+plot( 1, type="n",
+     xlim = c(0, 1),
+     ylim= c(0,summary(Density_dists_random[[1]]$y)[6] ),
+     main="",
+     cex.axis = cexes,
+     cex.lab=cexes,
+     xlab = "Generalised RF distance", 
+     ylab = "Density of RF distance between random/reference trees",
+     col="mediumorchid")
+
+text(0.41,30, labels=substitute(paste(bold("a)    Distances of molecular and GMM-based trees from reference phylogeny"))), cex=cexes)
+
+#If using a more continuous method than RF
+polygon(Density_dists_random[[1]], col="mediumorchid", border="mediumorchid")
+
+
+par(srt = 90)
+
+#The below for loop start is just because this figure is either for full data (1-3) or size-adjusted data (4-6), which is easiest to do this way and then switching on or off i <- i+3 depending on whether we do the figure or supplementary figure.
+
+for (i in 1:(length(Partition_names))){
+  
+  
+  #Sorry it gets a bit complicated here, but if using the four-entry list generated by TreeDist rather than a single tree distance metric , there needs to be a 4th bracket in the tree distances i.e. tree_distances_morph [[1]][[1]][[i]][[number_of_comparison_chosen]]
+  arrows(x0 = tree_distances_morph [[1]][[1]][[i]], x1 = tree_distances_morph[[1]][[1]][[i]] , y0 = y0, y1=y1, col="midnightblue", lwd = lwd, angle = 15, length = arrowlength)
+      #NJ and UPGMA Basicranial trees overlap, so adjusting it a bit here
+      if (Partition_names[i]=="Basicranium"){
+        
+          text( x = tree_distances_morph[[1]][[1]][[i]]-0.019 , y = label, paste(Partition_names[i], "(UPGMA)", sep=" "), pos=3, cex=cexes )
+      
+        } else {
+    
+      text( x = tree_distances_morph[[1]][[1]][[i]] , y = label, paste(Partition_names[i], "(UPGMA)", sep=" "), pos=3, cex=cexes )  
+}
+  }
+
+      
+  
+
+for (i in 1:(length(Partition_names))){
+  
+ 
+  
+  arrows(x0 = tree_distances_morph [[1]][[2]][[i]], x1 = tree_distances_morph[[1]][[2]][[i]] [[1]], y0 = y0, y1=y1, col="orange", lwd = lwd, angle = 15, length = arrowlength, )
+  
+  #i+1 separates All and Restmean distances, which are the same
+  text( x = tree_distances_morph[[1]][[2]][[i]] [[1]] , y = label, paste(Partition_names[i], "(NJ)", sep=" "), pos=3 , cex=cexes)
+
+}
+
+
+for (i in 1:((length(Partition_names)))){
+  
+
+  
+  arrows(x0 = tree_distances_TNT[[1]][[i]], x1 = tree_distances_TNT[[1]][[i]] , y0 = y0, y1=y1, col="skyblue1", lwd = lwd, angle = 15, length = arrowlength)
+
+   #Parsimony and UPGMA  trees overlap, so adjusting it a bit here
+      if (Partition_names[i]=="Rest of cranium"){
+        
+          text( x = tree_distances_TNT[[1]][[i]]-0.02 , y = label, paste(Partition_names[i], "(Parsimony)", sep=" "), pos=3 , cex=cexes )
+      
+        } else {
+    
+       text( x = tree_distances_TNT[[1]][[i]] , y = label, paste(Partition_names[i], "(Parsimony)", sep=" "), cex=cexes )
+}
+  
+  
+}
+
+
+
+
+for (i in 1: (length(Mol_based_trees))){
+  
+  arrows(x0 = tree_distances_Mol_based_trees[[i]], x1 = tree_distances_Mol_based_trees[[i]] , y0 = y0, y1=y1, col="seagreen", lwd = lwd, angle = 15, length = arrowlength)
+  
+  text( x = tree_distances_Mol_based_trees [[2]]-0.01 , y = label, "Molecular trees (UPGMA)", cex=cexes) 
+  text( x = tree_distances_Mol_based_trees [[1]] , y = label, "Molecular trees (Parsimony)", cex=cexes) 
+
+}
+
+
+
+
+
+
+#Last not least, compare multi-state and molecular trees pruned to each other. For this, I didn't re-create the random distribution because I think we get the point.
+
+
+y0=5
+y1=0
+label =15
+
+
+#draw empty plot (x/y need changing according to what metric and whether using distance frequency histogram (hist) or polygon)
+plot( 1, type="n",
+     xlim = c(0, 1),
+     ylim= c(0,30 ),
+     yaxt = "n",
+     main="",
+     cex.axis = cexes,
+     xlab = "Generalised RF distance", 
+     ylab = "",
+     cex.lab=cexes,
+     col="mediumorchid")
+par(srt = 0)
+text(0.494,29, labels=substitute(paste(bold("b)    Distances of discrete and pruned GMM-based trees from pruned reference phylogeny"))), cex=cexes)
+
+#Here I am also making some clearer label names:
+labelnames<- c("All, (discrete, pruned & subset)", "","Basicr. (discrete, pruned & subset) ", "", "Non-Basicranial (discrete, pruned)", "Non-Basicranial (discrete, subset)", "All (UPGMA/NJ), Rest (Pars.) ", "Basicranium (UPGMA, Pars.)", "Rest of Cranium (UPGMA)", "", "Basicranium (NJ)", "Rest of Cranium (NJ)","All (Parsimony)", "", ""   )
+
+#The below makes sure I'm not mislabelling
+cbind (names(Multitree_dists), labelnames)
+
+#And a nice colour vector: red mignightblue is upgma, oragne is NJ, skyblue is TNT 
+
+colours <- c(rep("red", 6), rep("midnightblue", 3), rep ("orange", 3), rep("skyblue", 3))
+
+par(srt = 90)
+
+#The below for loop start is just because this figure is either for full data (1-3) or size-adjusted data (4-6), which is easiest to do this way and then switching on or off i <- i+3 depending on whether we do the figure or supplementary figure.
+
+ #UPGMA
+
+for (i in 1:(length(Multitree_dists))){
+  
+  arrows(x0 = Multitree_dists[i], x1 = Multitree_dists[i] , y0 = y0, y1=y1, col=colours[i], lwd = lwd, angle = 15, length = arrowlength)
+     
+    
+      text( x = Multitree_dists[i] , y = label, labelnames[i], pos=3, cex=cexes )  
+
+  }
+
+
+
+dev.off()
+
+
+```
+
+
+
+
+#Supplementary Figure, using size residuals
+
+
+```{r supp dists, echo=TRUE}
+
+par(mfrow=c(1,1))
+#Needed to make the fonts at right angles, can be used in  in combination with putting adj(x= Number, y=Number) into the text line
+
+
+
+y0=5
+y1=0
+label =15
+lwd = 5
+#This just plots so I need to let it plot and then open a new mfrow plot below
+par(mfrow=c(1,1))
+freq = hist(tree_distances_random[[1]])
+dev.off()
+cexes = 2
+arrowlength = 0.4
+
+png("../Figures/Distplots_supp_residuals.png", width = 1800, height=1000 )
+
+par(mfrow=c(1,1), mar=c(5,5,2,1))
+#Make sure this matches the order of partitions in the tree distance lists, otherwise the figure will be mis-labelled!
+Partition_names <- c("Whole cranium", "Basicranium", "Rest of cranium","Whole cranium", "Basicranium", "Rest of cranium")
+
+
+#draw empty plot (x/y need changing according to what metric and whether using distance frequency histogram (hist) or polygon)
+plot( 1, type="n",
+     xlim = c(0, 1),
+     ylim= c(0,summary(Density_dists_random[[1]]$y)[6] ),
+     main="",
+     cex.axis = cexes,
+     cex.lab=cexes,
+     xlab = "Generalised RF distance", 
+     ylab = "Density of RF distance between random/reference trees",
+     col="mediumorchid")
+
+text(0.41,30, labels=substitute(paste(bold("Distances of molecular and GMM residual-based trees from reference phylogeny"))), cex=cexes)
+
+
+#If using a more continuous method than RF
+polygon(Density_dists_random[[1]], col="mediumorchid", border="mediumorchid")
+
+
+par(srt = 90)
+
+#The below for loop start is just because this figure is either for full data (1-3) or size-adjusted data (4-6), which is easiest to do this way and then switching on or off i <- i+3 depending on whether we do the figure or supplementary figure.
+
+ #UPGMA
+
+for (i in 1:(length(Partition_names)/2)){
+  
+  #for supplementary materials (targeting the size residuals)
+  i <- i+3
+  
+ 
+  arrows(x0 = tree_distances_morph [[1]][[1]][[i]], x1 = tree_distances_morph[[1]][[1]][[i]] , y0 = y0, y1=y1, col="midnightblue", lwd = lwd, angle = 15, length = 0.15)
+     
+    
+      text( x = tree_distances_morph[[1]][[1]][[i]] , y = label, paste(Partition_names[i], "(UPGMA)", sep=" "), pos=3, cex=cexes )  
+
+  }
+
+      
+# NJ   
+
+for (i in 1:(length(Partition_names)/2)){
+  
+  #for supplementary materials (targeting the size residuals)
+  i <- i+3
+  
+  arrows(x0 = tree_distances_morph [[1]][[2]][[i]], x1 = tree_distances_morph[[1]][[2]][[i]] [[1]], y0 = y0, y1=y1, col="orange", lwd = lwd, angle = 15, length = 0.15, )
+  
+  #i+1 separates All and Restmean distances, which are the same
+  text( x = tree_distances_morph[[1]][[2]][[i]] [[1]] , y = label, paste(Partition_names[i], "(NJ)", sep=" "), pos=3 , cex=cexes)
+
+}
+
+#Parsimony
+
+for (i in 1:((length(Partition_names)/2))){
+  
+  #for supplementary materials (targeting the size residuals)
+  i <- i+3
+  
+  arrows(x0 = tree_distances_TNT[[1]][[i]], x1 = tree_distances_TNT[[1]][[i]] , y0 = y0, y1=y1, col="skyblue1", lwd = lwd, angle = 15, length = 0.15)
+
+  #NJ and TNT whole and rest of skull overlap, so adjusting it a bit here
+      if (Partition_names[i]=="Basicranium"){
+        
+          text( x = tree_distances_TNT[[1]][[i]], y = label, paste(Partition_names[i], "(Parsimony)", sep=" "), pos=3, cex=cexes )
+      
+        } else if (Partition_names[i]=="Rest of cranium") {
+    
+      text( x = tree_distances_TNT[[1]][[i]] , y = label, paste(Partition_names[i], "(Parsimony)", sep=" "), pos=3, cex=cexes )  
+        } else {
+          
+          text( x = tree_distances_TNT[[1]][[i]] , y = label, paste(Partition_names[i], "(Parsimony)", sep=" "), pos=3, cex=cexes )  
+          
+          
+        }
+  
+         
+  
+  
+}
+
+
+#Molecular trees
+
+for (i in 1: (length(Mol_based_trees))){
+  
+  arrows(x0 = tree_distances_Mol_based_trees[[i]], x1 = tree_distances_Mol_based_trees[[i]] , y0 = y0, y1=y1, col="seagreen", lwd = lwd, angle = 15, length = 0.15)
+  
+  text( x = tree_distances_Mol_based_trees [[2]]-0.01 , y = label, "Molecular trees (NJ)", cex=cexes) 
+  text( x = tree_distances_Mol_based_trees [[1]] , y = label, "Parsimony-based molecular trees", cex=cexes) 
+
+}
+
+dev.off()
+
+
+```
+
+
+
+
+
+# Assessing for each distance value of trees  A) how much greater the minimum simulated distances is and B) outside the 95% confidence interval of simulated trees (lower tail tested here, hence 97.5, although the random trees are likely to contain the "worst" tree and therefore the morphological distances cannot be worse; but with RF, 2.5 also makes little sense).
+
+
+
+```{r}
+
+#Prepare the lists. I will make this more elegant later by reducing the list number and adding a level to the lists, but right now I want to know if it works. 
+tree_min_quant_comp_morph <- list()
+tree_min_quant_comp_TNT <- list()
+Part_tree_comps_morph <- list()
+Part_tree_comps_TNT <- list()
+Comparisons_for_each_tree_size_morph <- list()
+Comparisons_for_each_tree_size_TNT <- list()
+
+
+    
+    #Number of trees
+    for (TreeRuns in (1:(length(reduced_tree_list)-1))){ 
+     
+         #number of partitions
+          for (Parts in (1:length(Partitions))) {
+            
+            
+              #How close is each tree for each partition, compared to the minimum distance or 2.5% tail between random trees and the known tree? 1 or greater means that the morphological tree distance is within the overall spread of random distances
+              #morph - change tree_distances_morph[[TreeRuns]] [[2]] [[Parts]]  to [[1]] for UPGMA
+              tree_min_quant_comp_morph <-
+                c( Rel_to_min_random_tree_dist =
+                  tree_distances_morph[[TreeRuns]] [[2]] [[Parts]]  / min(tree_distances_random[[TreeRuns]]+0.000000001),
+                   Rel_to_2_5_percentile =
+                  tree_distances_morph[[TreeRuns]][[2]]  [[Parts]]  /
+                    (quantile (tree_distances_random[[TreeRuns]], 0.025)+0.000000001)
+                )
+              
+              
+              Part_tree_comps_morph[[Parts]] <- tree_min_quant_comp_morph
+            
+              
+
+            #TNT
+            tree_min_quant_comp_TNT <-
+                c( Rel_to_min_random_tree_dist =
+                  tree_distances_TNT[[TreeRuns]]  [[Parts]]  / min(tree_distances_random[[TreeRuns]]+0.000000001),
+                   Rel_to_2_5_percentile =
+                  tree_distances_TNT[[TreeRuns]]  [[Parts]]  /
+                    (quantile (tree_distances_random[[TreeRuns]], 0.025)+0.000000001)
+                )
+
+
+            
+            Part_tree_comps_TNT [[Parts]] <- tree_min_quant_comp_TNT
+            
+            
+          }
+          
+          names(Part_tree_comps_morph) <- names(Partitions)
+          names(Part_tree_comps_TNT) <- names(Partitions)
+      
+      
+      Comparisons_for_each_tree_size_morph[[TreeRuns]]  <-  Part_tree_comps_morph
+       Comparisons_for_each_tree_size_TNT[[TreeRuns]]  <-  Part_tree_comps_TNT
+    }
+
+
+
+
+```
+
+
+#Plotting the distances to the reference phylogeny as we eat our way through the code
+#For supplementary size-adjusted figure, replace the comparisons_for_each_tree_ size with the residual "address"
+
+```{r}
+
+
+
+#par(.pardefault)
+
+
+
+cexes = 2
+
+#Hamfisted way of making y axis title.
+Comptypes <- c("Rel. to min. random-reference RF distance","Rel. to lowest 2.5% random-reference tree distance")
+
+Comp=2
+
+png("../Figures/pruned_trees.png", width = 1600, height=1400 )
+
+par(mfrow = c(2,1), mar = c(5, 5, 4, 2))
+  
+plot(1, type = "n", 
+     xlim=c(length(Full_tree$tip.label),7), 
+     ylim = c(0,2.5), 
+     xlab = "GMM-based NJ trees - Number of tree tips", 
+     ylab = paste(Comptypes[Comp]) ,
+     xaxt = "n",
+     cex.axis = cexes,
+     cex.lab = cexes
+
+)
+     
+
+    axis(1, at = c(1:length(Full_tree$tip.label)), cex.axis = cexes )
+     abline(h=1, col="gray50", lwd=2)
+    
+        for (i in (1:length(Comparisons_for_each_tree_size_morph))){
+         
+               
+          
+          
+          points(length(reduced_tree_list[[i]]$tip.label), Comparisons_for_each_tree_size_morph[[i]]$GPA_Allmean [Comp] , pch=70, col = "olivedrab", cex=cexes) 
+          
+          points(length(reduced_tree_list[[i]]$tip.label), Comparisons_for_each_tree_size_morph[[i]]$GPA_Basimean [Comp] , pch=66, col = "orange", cex=cexes)
+            
+          points(length(reduced_tree_list[[i]]$tip.label), Comparisons_for_each_tree_size_morph[[i]]$GPA_Restmean [Comp] , pch=82, col = "slateblue", cex=cexes)  
+          
+          
+        }
+
+
+    
+  
+plot(1, type = "n", 
+     xlim=c(length(Full_tree$tip.label),7), 
+     ylim = c(0,2.5), 
+     xlab = "Parsimony trees - Number of tree tips", 
+     ylab = paste(Comptypes[Comp]) ,
+     xaxt = "n",
+       cex.axis = cexes,
+     cex.lab = cexes
+
+
+)
+     
+
+    axis(1, at = c(1:length(Full_tree$tip.label)), cex.axis = cexes )
+    abline(h=1, col="gray50", lwd=2)
+    
+        for (i in (1:length(Comparisons_for_each_tree_size_TNT))){
+
+
+
+
+          points(length(reduced_tree_list[[i]]$tip.label), Comparisons_for_each_tree_size_TNT[[i]]$GPA_Allmean [Comp] , pch=70, col = "olivedrab", cex=cexes)
+
+          points(length(reduced_tree_list[[i]]$tip.label), Comparisons_for_each_tree_size_TNT[[i]]$GPA_Basimean [Comp] , pch=66, col = "orange", cex=cexes)
+
+          points(length(reduced_tree_list[[i]]$tip.label), Comparisons_for_each_tree_size_TNT[[i]]$GPA_Restmean [Comp] , pch=82, col = "slateblue", cex=cexes)
+
+
+        }
+    
+dev.off()
+
+
+```

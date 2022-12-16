@@ -1,0 +1,832 @@
+---
+title: "generating reduced trees"
+author: "Vera Weisbecker with advice from Thomas Guillerme"
+date: "27 June 2019"
+output: html_document
+---
+
+```{r}
+
+library (geomorph)# [github::geomorphR/geomorph] v4.0.4 # CRAN v4.0.4 
+library(ape)      # CRAN v5.6-2
+library(phangorn) # Bioconductor v2.9.0 # CRAN v2.9.0
+
+library (stringr) #CRAN v1.4-5
+library (ips)   #CRAN v0.0.11
+library (geiger) #CRAN v2.0.10
+library (abind) #CRAN v1.4-5
+
+# We need this later for fixing TNT files:
+#Complicated but important - make sure the addin installs where it should
+#withr::with_libpaths(new = "C:/Program Files/R/R-4.0.4/library", install_github("skranz/ReplaceInFiles"))
+
+
+# My rmd file for some reason won't recognise it s local file, so this sets the wd to local
+library(rstudioapi) # Safely Access the RStudio API
+setwd(dirname(getActiveDocumentContext()$path))
+
+#Load data
+load (file = "../Data/Processed/processed_data_incl_allometry.rda")
+
+source(file="0_2_Utilities.r")
+
+#A list of landmark partitions to be run, note that non-residual data needs to have the coords address because these are in a gdf with their respective Csizes
+
+Partitions <- list(GPA_Allmean= GPA_Allmean$coords, GPA_Basimean = GPA_Basimean$coords, GPA_Restmean = GPA_Restmean$coords, Allom_all_plus_consensus = Allom_all_plus_consensus, Allom_basi_plus_consensus  = Allom_basi_plus_consensus , Allom_rest_plus_consensus  = Allom_rest_plus_consensus )
+
+
+#this is just preparing for the function.
+Full_tree <- tree
+
+#Here I'm giving node labels so we can later figure out which ones were collapsed. These start with "58" because, by convention, the first edge numbers represent tips (57 species i.e. 57 tips. So the first node is number 58). I find that easier to remember for later. The numbering is a bit complicated though - it starts from all species plus one and ends at all edges plus one. but ultimately it doesn't matter what the nodes are called
+Full_tree$node.label <- paste0("node", c((length(Full_tree$tip.label)+1):(length(Full_tree$edge[,1])+1)))
+plot(Full_tree, show.node.label = TRUE )
+
+#It does not make sense to run these analyses with tiny trees (and TNT at times won't analyse them). Hence limiting the analyses to 6 tips
+Tip_number_left <- 6
+
+#Making sure all is replicable with my favourite number
+set.seed (42)
+```
+
+
+#Giving this an extra chunk because this sets the analyses to either collapse by averaged time or by depth of node. Depth of node collapses everything to fast though and is not reported in the ms.
+
+```{r}
+Type_of_analysis <- "Time collapse"
+
+
+```
+
+# Make reduced trees - Collapsed by branch length or node depth.
+
+```{r}
+
+
+reduced_tree_list <- list()
+
+Names_of_collapsed_nodes <- list()
+
+edges_of_terminal_sisters <- list()
+tmptree_sister_means <- vector()
+
+#For now, the first tree needs to be loaded into the list before the loop can start. 
+reduced_tree_list[[1]] <- Full_tree
+
+ if (Type_of_analysis=="Time collapse") {
+
+
+        for ( i in 1: (Ntip(Full_tree)- Tip_number_left)) {
+
+              #for the last tree that was computed
+
+              tmptree <- reduced_tree_list[[length(reduced_tree_list)]]
+
+              #The below only works if the tree is  ultrametric, so not using it here.
+             # Min_branch_time_node <- which(branching.times(tmptree) == min(branching.times(tmptree)))
+              
+              #find sister pair using ips package 
+              Terminal_sisters <- terminalSisters(tmptree, labels = FALSE)
+              
+             # print(terminalSisters(tmptree, labels = TRUE))
+              
+                      for (j in 1:length(Terminal_sisters)) {
+                       
+                        edges_of_terminal_sisters [[j]] <- c (which(tmptree$edge[,2] == Terminal_sisters[[j]][1]), which(tmptree$edge[,2] == Terminal_sisters[[j]][2]) )
+                        
+                        
+#edge length is all edges - we need to have only the edges of tips. note we are dealing in position of edge numbers here, not edge numbers themselves, which makes it confusing. I bet there's a better way to do this but I can't think of it!
+                      tmptree_sister_means [j] <- mean(tmptree$edge.length[edges_of_terminal_sisters [[j]]])
+                     
+                      }
+              #Now bring this back to which tips we're dropping - first find the right edge positions. In i=1, it is edges number 108 and 109 leading to tips 54 and 55, manually I can confirm this is correct.
+             
+  #########only using the first set of edges in case that more than one edge has the same mean, which makes Min_edges more than one and throws the code. This is arbitrary but simple and doesn't happen all that often########
+              Min_edges <- edges_of_terminal_sisters[[which(tmptree_sister_means == min(tmptree_sister_means))[1]]]
+              
+              #find the tips associated with these edges - 
+              
+              Min_branch_time_tips <- tmptree$edge[Min_edges[1:2],2]
+              
+          
+              #Drop theses min branch time tips.
+              reduced_tree_list[[i+1]] <- drop.tip(tmptree, Min_branch_time_tips, trim.internal = FALSE)
+
+             #the items that get overwritten each time need to be set to NULL otherwise they muck up the code
+              edges_of_terminal_sisters <- NULL
+              tmptree_sister_means <- NULL
+             
+         }
+
+
+
+
+} else if (Type_of_analysis=="Node collapse") {
+
+        ######Here collapse tree according to node depth instead
+
+
+
+        for ( i in 1: (Ntip(Full_tree)- Tip_number_left)) {
+
+              #for the last tree that was computed
+
+              tmptree <- reduced_tree_list[[length(reduced_tree_list)]]
+
+              if (Ntip(tmptree)==3)  break
+
+
+              #These are the species pairs i.e. they have node depth 2 - this only works if we have at least one species pair in the phylogeny, which should be the case though.
+              Nodes_at_same_depth <- which (node.depth(tmptree) == 2)
+
+              ## TG: Visualising if the right cherries are picked
+               #plot(tmptree, cex = 0.5)
+              # nodelabels(tmptree$node.label, cex = 0.5, bg = c("pink", "purple")[(1:Nnode(tmptree)) %in% (Nodes_at_same_depth - Ntip(tree)) + 1])
+              ## TG: good job!
+              
+
+              #The names for these nodes are "hard" (fixed) so this can go into the list of deletions per iterations, which we may need for ancestral state assignment of new tips.
+             # Names_of_collapsed_nodes[[i]]  <- tmptree$node.label[which (node.depth(tmptree)[-c(1:Ntip(tmptree))]== 2)]
+
+
+              #This needs to be twice the number of nodes
+              Min_branch_time_tips <- tmptree$edge[,2] [which (tmptree$edge[,1] %in% Nodes_at_same_depth)]
+
+              ##TG: this could be simplified as follow (but does the same thing, just not using which() which can be a bit slow at times)
+              # Min_branch_time_tips <- tmptree$edge[tmptree$edge[,1] %in% Nodes_at_same_depth, 2]
+
+
+
+              reduced_tree_list[[i+1]] <- drop.tip(tmptree, tip = Min_branch_time_tips, trim.internal = FALSE)
+
+
+        }
+
+
+}
+
+
+#Just checking
+plot(reduced_tree_list[[4]])
+
+```
+
+#reduced_tree_list cannot easily be written into any file because of the differen tips. It's easier to just keep it either in the rdata file or re-create it each time. But the below code documents each tree:
+
+
+```{r}
+
+#Make movie out of phylogenies. It needs to be tiff because the others somehow come out with a colour in imageJ. I can't get imageMagick to work on my computer unfortunately.
+
+## Automatically create the Movie/ folder if missing 
+# if(!("../Figures/Movie" %in% list.dirs("../Figures"))) {
+#   dir.create("../Figures/Movie")
+# }
+# 
+# for (i in 1: length (reduced_tree_list)){
+# 
+#   tiff(filename=paste("../Figures/Movie/Tree_movie_", Type_of_analysis , i, ".tiff"), width = 1000, height=1000, pointsize = 14, bg = "white")
+# 
+#   plot(reduced_tree_list[[i]])
+# 
+#  dev.off()
+# 
+# }
+
+
+```
+
+
+#Generate ancestral shapes for each node, and order these according to how nodes are dropped
+
+
+```{r echo=FALSE}
+
+Prcomp_temp <- list()
+Ancstates <- vector(mode = "list", length = length(Partitions))
+names(Ancstates) <- names(Partitions)
+
+#this makes a list of branching times - remember, the most recent of these are at the tips. The names of these branching times correspond to the node names for each branching time. Therefore, ordering them sorts the node names in the order that their tip pairs are being dropped in the tree reduction step above (reduced_tree_list). This is important to later link up the ancestral states to the correct node
+
+branchtimes_recent_to_past<- sort (branching.times(tree), decreasing = FALSE)
+#  
+#  
+for (i in 1: length(Ancstates)){
+
+      temp <- gm.prcomp(Partitions[[i]], phy = tree, align.to.phy = TRUE )
+
+      Prcomp_temp[[i]] <- temp
+
+
+      #Sorting the the ancestors according to most recent branch times (see comment on the branchtimes object above). This sorts ancestral shapes in the order in which tips are dropped; I visually tested this  by comparing with the phylogeny outputs and that was correct).
+
+
+      Ancstates[[i]] <- Prcomp_temp[[i]]$ancestors[names(branchtimes_recent_to_past),]
+
+      #Now we have ancestors sorted and in order of youngest to oldest branching time, we name them in the same sequence as dropped tip            nodes appear in the above tree reduction code.
+      rownames(Ancstates[[i]])  <-  paste ("A", c(1:tree$Nnode), sep = "")
+
+      }
+
+#remove(Prcomp_temp)
+
+#now turn all these ancestral shapes into a 3D array that can be added to the partitions datasets. $dim[1] is the number of landmarks (58,24, and 34 respectively for all, basi, rest), 3 is the number of dimensions
+
+for (i in 1:length(Partitions)) {
+
+Ancstates[[i]] <- arrayspecs(Ancstates[[i]], attributes(Partitions[[i]])$dim[1],3)
+
+}
+
+
+
+
+
+##################The below derives ancestral states for each node through geomorph's phylogenetic PCA function. It then allocates the node label name at which each ancestral configuration is computed. This is important later when the ancestral nodes are used as tips for analyses on collapsed trees. 
+
+for (i in 1: length(Ancstates)){
+  
+
+      temp <- gm.prcomp(Partitions[[i]], phy = Full_tree, align.to.phy = TRUE)
+
+      Prcomp_temp[[i]] <- temp
+      
+
+      Ancstates[[i]] <- Prcomp_temp[[i]]$ancestors
+     
+      #Testing that each ancestral state according to the node it is associated with. This is just for peace of mind and should print out a big bunch of TRUES
+      print (rownames(Ancstates[[i]] ) ==str_remove(Full_tree$node.label, "node") )
+      
+      #then rename ancstates with node names for matching later
+      rownames(Ancstates[[i]] ) <- Full_tree$node.label
+      
+}
+
+rownames(Ancstates[[1]])
+
+remove(Prcomp_temp)
+
+#Turn into array so it can later be added to reduced partition datasets
+
+for (i in 1:length(Partitions)) {
+  
+Ancstates[[i]] <- arrayspecs(Ancstates[[i]], attributes(Partitions[[i]])$dim[1],3)
+
+}
+
+open3d()
+
+
+
+#just a few double checks - many higher nodes nodes should be visually distinctive as their clade. 
+#Node 92 should be long-nosed like peramelemorphians tend to be
+plot3d(Ancstates$GPA_Allmean[,,which (dimnames(Ancstates$GPA_Allmean)[[3]] =="node92")], asp = FALSE )
+#compare to what clearly looks like a petauroid possum
+plot3d(Ancstates$GPA_Allmean[,,which (dimnames(Ancstates$GPA_Allmean)[[3]] =="node70")], asp = FALSE )
+#or paucituberculatans with super long noses as well
+plot3d(Ancstates$GPA_Allmean[,,which (dimnames(Ancstates$GPA_Allmean)[[3]] =="node113")], asp = FALSE )
+
+
+```
+
+#Create partition datasets where the tips lost per reduction run are replaced by the ancestral state of the relevant node. 
+
+#Run the entire chunk to avoid conflicts within the loops - all lists must be brought back to the default
+
+
+```{r echo=FALSE}
+
+
+
+
+#As with tree reduction code, start the list off with the full dataset, then whittle down
+Reduced_partition_list <- list()
+Reduced_partition_list [[1]] <- Partitions
+Reduced_partitions_in_run <- list()
+Partition_to_be_reduced <- list()
+
+#This starts from the first reduced tree, which is reduced_tree_list minus the first, full tree.
+  for (i in c(1: (length(reduced_tree_list)-1))) {
+
+    for (j in 1:length(Partitions)){
+      
+    Partition_to_be_reduced <- Reduced_partition_list[[i]][[j]]
+    
+     
+    Reduced_partitions_in_run [[j]] <- Partition_to_be_reduced [,, c ( which( dimnames (Partition_to_be_reduced) [[3]] %in% reduced_tree_list[[i+1]]$tip.label))]
+   
+    #When only 1 ancstate is left, Ancstates[[j]] does not behave like a 3d array any more but only has two dimensions. It can be appended but loses its name, hence below there is a condition for that.
+    Append_Ancstates <- Ancstates[[j]][,,which(dimnames (Ancstates[[j]])[[3]] %in% reduced_tree_list[[i+1]]$tip.label & !dimnames (Ancstates[[j]])[[3]] %in% dimnames (Reduced_partitions_in_run[[j]])[[3]] )]
+    
+    
+    Reduced_partitions_in_run [[j]] <- abind(Reduced_partitions_in_run [[j]], Append_Ancstates)
+    
+          #condition so that when the last ancstate, which is single, gets appended, it still keeps its name
+          
+          if (length(dim(Append_Ancstates))==2){
+            
+            #Name the last item the name of the relevant Ancstate node. This is the most complicated way I have ever had to write a single number!
+           dimnames(Reduced_partitions_in_run[[j]]) [[3]] [dim(Reduced_partitions_in_run[[j]])[3]] <- dimnames(Ancstates[[j]]) [[3]] [which(dimnames (Ancstates[[j]])[[3]] %in% reduced_tree_list[[i+1]]$tip.label & !dimnames (Ancstates[[j]])[[3]] %in% dimnames (Reduced_partitions_in_run[[j]])[[3]] )]
+            
+          }
+          
+       print( dimnames (Reduced_partitions_in_run [[j]]) [[3]] == reduced_tree_list[[i+1]]$tip.label)
+      
+       
+    }
+    Reduced_partition_list [[i+1]]   <- Reduced_partitions_in_run
+    
+    names(Reduced_partition_list [[i+1]]) <- names(Partitions)
+   
+  }
+
+
+
+
+#Checks    
+    
+# same number of species in the reduced partition list entries as number of tips in the equivalent reduced_tree_list entry
+length(dimnames(Reduced_partition_list[[7]][[2]])[[3]]) == Ntip(reduced_tree_list[[7]])
+
+# Species/ancestor names are the same in each tree for each list entry of tree and partition list
+dimnames(Reduced_partition_list[[7]][[2]])[[3]] %in% (reduced_tree_list[[7]]$tip.label)
+
+dimnames(Reduced_partition_list[[7]][[2]])[[3]] == (reduced_tree_list[[7]]$tip.label)
+
+#Again, random checks that the ancestral state coordinates have been allocated correctly, same species as above. Based on reduced tree 33: 
+plot(reduced_tree_list[[33]])
+
+
+Ancstates$GPA_Allmean[,,which (dimnames(Ancstates$GPA_Allmean)[[3]] =="node92")] == Reduced_partition_list[[33]][[1]][,,which (dimnames(Reduced_partition_list[[33]][[1]])[[3]] =="node92")]
+
+Ancstates$GPA_Allmean[,,which (dimnames(Ancstates$GPA_Allmean)[[3]] =="node72")] == Reduced_partition_list[[33]][[1]][,,which (dimnames(Reduced_partition_list[[33]][[1]])[[3]] =="node72")]
+
+#one of the smaller trees
+Ancstates$GPA_Allmean[,,which (dimnames(Ancstates$GPA_Allmean)[[3]] =="node113")] == Reduced_partition_list[[40]][[1]][,,which (dimnames(Reduced_partition_list[[40]][[1]])[[3]] =="node113")]
+
+```
+
+#Write LMs to TNT - requires the writeland function from the supp. materials 8 of Ascarrunz, E., Claude, J., & Joyce, W. G. (2019). Estimating the phylogeny of geoemydid turtles (Cryptodira) from landmark data: an assessment of different methods. PeerJ, 7, e7476. https://doi.org/10.7717/peerj.7476. 
+
+#The function is in "utilities"
+
+```{r write TNT}
+
+#the defined outgroup in TNT is "Rhyncholestes raphanurus". This becomes a problem when the paucituberculatan clade is collapsed to node 113. The best way of dealing with this that I can think of is replacing the node 113 value with the rhyncho value in R, then taking it back in R as well.
+# 
+# 
+# Reduced_partition_list_TNT <- Reduced_partition_list
+# 
+# for (i in 1:length(Reduced_partition_list_TNT)){
+# 
+# 
+#   for (j in 1: length(Reduced_partition_list_TNT[[i]])){
+# 
+# 
+#     if ("Rhyncholestes_raphanurus" %in% reduced_tree_list[[i]]$tip.label==FALSE) {
+# 
+#       dimnames (Reduced_partition_list_TNT[[i]][[j]]) [[3]] [which(dimnames (Reduced_partition_list_TNT[[i]][[j]])[[3]] == "node113")]    <- "Rhyncholestes_raphanurus"
+# 
+# 
+# 
+# }
+#   }
+# }
+# 
+# #Now write to files
+# 
+# 
+# 
+# 
+# for (i in 1:length(Reduced_partition_list_TNT)){
+# 
+#   for (j in 1: length(Reduced_partition_list_TNT[[i]])){
+# 
+#     writeland.tnt( Reduced_partition_list_TNT [[i]][[j]], file= paste ("../Data/processed/TNT_files/", names(Reduced_partition_list_TNT [[i]][j]), "/",names(Reduced_partition_list_TNT [[i]][j]), "_Tree", "_", i , ".tnt", sep=""))
+# 
+#       }
+# 
+#   }
+# 
+
+
+```
+
+
+###Compute clusters for each reduced partition. 
+
+#Also note that the orders here is first all data with size in, then all data with size residuals. Which is switched to the gls analyses, not a big issue but potential cause for confusion.
+
+
+```{r, echo=TRUE}
+
+
+#Set up loop requires manual input or the partitions to be treated could go at the beginning of the document. 
+
+#this is for holding NJ and UPGMA
+reduced_morph_clusters <- vector(mode = "list", length = length(reduced_tree_list))
+
+Euclidean_list_temp <- list( GPA_Allmean= list(), GPA_basi = list(), GPA_Restmean = list(), Allom_all_plus_consensus = list(),  Allom_basi_plus_consensus = list(), Allom_rest_plus_consensus = list() )
+
+UPGMA_trees_temp <- list( GPA_Allmean= list(), GPA_basi = list(), GPA_Restmean = list(), Allom_all_plus_consensus = list(),  Allom_basi_plus_consensus = list(), Allom_rest_plus_consensus = list() )
+
+NJ_trees_temp <- list( GPA_Allmean= list(), GPA_basi = list(), GPA_Restmean = list(), Allom_all_plus_consensus = list(),  Allom_basi_plus_consensus = list(), Allom_rest_plus_consensus = list() )
+
+Dists_in_run <- list(UPGMA=list(), NJ = list())
+
+# 2 is hard coded here as the two clustering methods. remember if adding another method!
+
+
+#With Tip_number_left <- 6, this spits out only 51 clusters as opposed to 52 trees for the molecular tree reduction; and that last tree has 7 tips. That's because the reduced molecular tree list starts with a full tree + 51, making the list 52 long. 
+
+for (i in (1:(Ntip(Full_tree)- Tip_number_left+1))){ 
+  
+    for (j in 1:length(Partitions)){
+    
+      #compute euclidean distances
+      Euclidean_list_temp [[j]] <- dist(two.d.array(Reduced_partition_list[[i]] [[j]]), method = "euclidean")
+      
+      #use euclidean distances in upgma
+     UPGMA_trees_temp [[j]] <-  upgma(Euclidean_list_temp[[j]])
+    
+      NJ_trees_temp [[j]]    <- NJ(Euclidean_list_temp[[j]])
+     
+    Dists_in_run  <- list(UPGMA=UPGMA_trees_temp, NJ= NJ_trees_temp)
+  
+}
+  reduced_morph_clusters [[i]]<- Dists_in_run 
+ 
+    }
+
+
+remove(NJ_trees_temp, UPGMA_trees_temp, Euclidean_list_temp, Dists_in_run)
+
+#Just to re-cap: in reduched_morph_clusters, 
+#- the first position is the number of taxa reduced one by one, i.e. [[1]] is full set of taxa, [[2]] is set of taxa plus one ancestor as per the pruned full tree
+#The second position is whether it is UPGMA [[1]] or NJ [[2]]
+#The third position is the partition from [[1]] to [[6]]
+
+
+#Testing that this is all correct. 
+
+Ntip(reduced_morph_clusters[[5]]$NJ$GPA_Allmean) == Ntip(reduced_morph_clusters[[5]]$UPGMA$GPA_Restmean)
+Ntip(reduced_morph_clusters[[5]][[2]][[1]]) == Ntip(reduced_morph_clusters[[5]][[1]][[2]])
+
+Ntip(reduced_morph_clusters[[4]][[2]][[1]]) == Ntip(reduced_tree_list[[4]])
+
+#same species names?
+
+reduced_morph_clusters[[5]][[1]][[1]]$tip.label %in% reduced_morph_clusters[[5]][[2]][[2]]$tip.label
+
+reduced_tree_list[[5]]$tip.label %in% reduced_morph_clusters[[5]][[2]][[2]]$tip.label
+
+reduced_tree_list[[5]]$tip.label == reduced_morph_clusters[[5]][[2]][[2]]$tip.label
+
+#Checks
+
+par(mfrow=c(3,1))
+
+plot(reduced_morph_clusters[[5]][[2]][[1]])
+
+plot(reduced_morph_clusters[[5]][[1]][[2]])
+
+plot(reduced_tree_list[[5]])
+
+#I am noticing that the NJ trees always have the same number of tips but one node less. Plotting this shows that this is because of a basal polytomy
+
+#In the next RMD file, I run cophenetic trees of the UPGMA and NJ clusters and their co-phenetic matrices. I noticed that the matrices are ordered the same way as the trees. This struck me as strange because the species are clustered differently. But it looks like the clustering retains the original order of specimens from the Euclidean distance matrix, despite the different relationships between species in the various cluster "trees"
+
+reduced_tree_list[[1]]$tip.label == reduced_morph_clusters[[1]]$UPGMA$GPA_basi$tip.label
+Full_tree$tip.label == reduced_morph_clusters[[1]]$NJ$Allom_rest_plus_consensus$tip.label
+
+
+par(mfrow=c(3,1))
+
+plot(reduced_tree_list[[1]], main = "Reference")
+# A UPGMA tree
+plot(reduced_morph_clusters[[1]]$UPGMA$GPA_basi, main = "UPGMA")
+#An NJ tree
+plot(reduced_morph_clusters[[1]]$NJ$Allom_rest_plus_consensus, main = "NJ")
+
+
+
+```
+
+#Read TNT trees;  
+
+#FIRST you need to remove spaces before the semi-colons in the output files using the ReplaceInFiles addin.  First look for trees ;, then for end ; . You can do this at a high level (all TNT files) and just stipulate the files endings you want affected (e.g. *with_NodeLabels.tree)
+
+#Afterwards, the files need saving (File-Save all files) 
+#Here is how it works:
+
+```{r}
+# test <- read.nexus (file= "../Data/Processed/TNT_files/GPA_Basimean/GPA_Basimean_Tree_45_MP_nexus_with_BranchLengths.tree")
+# 
+# plot(test)
+# 
+# remove(test)
+
+```
+
+#Now make tree lists of all the TNT trees just like the morph trees. Note that TNT analysis does not like to compute very small numbers of specimens, resulting in slightly shorter lists.
+
+```{r}
+
+reduced_TNT_trees <- vector(mode = "list", length = length(reduced_tree_list))
+
+TNT_list_temp <- list( GPA_Allmean= list(), GPA_basi = list(), GPA_Restmean = list(), Allom_all_plus_consensus = list(),  Allom_basi_plus_consensus = list(), Allom_rest_plus_consensus = list() )
+
+
+for (Treenumber in (1:(length(reduced_tree_list)) )){ 
+
+for (Partition in 1: length(Partitions)) {
+
+          #Here we need a list for each partition for each tree size. So it's 6 trees in this temp object per run
+      
+      TNT_list_temp [[Partition]] <- read.nexus (file= paste ("../Data/Processed/TNT_files/", names(Partitions)[Partition],"/", names(Partitions)[Partition],"_Tree_",Treenumber,"_MP_nexus_with_BranchLengths.tree", sep = ""))
+      
+} 
+  
+  reduced_TNT_trees[[Treenumber]] <- TNT_list_temp
+}
+
+remove(TNT_list_temp)
+
+#aaaaaand, drumroll, do they match up?
+
+#YES!
+
+Ntip(reduced_TNT_trees[[40]][[2]]) == Ntip (reduced_morph_clusters[[40]][[1]][[2]])
+
+reduced_TNT_trees[[40]][[2]]$tip.label
+
+#At some point, when the Paucituberculatans were collapsed to node 113, I had replaced the node with the Rhyncholestes name because TNT needed it as a named outgroup (see above). So, for example, originally reduced TNT_trees 40 has "node113" but the reduced tree list still has Rhyncholestes
+reduced_TNT_trees[[24]][[2]]$tip.label %in% reduced_tree_list[[24]]$tip.label
+
+#Step 1 - replace Rhyncholestes with "node113"
+
+ for (Treenumber in (1:(length(reduced_tree_list)) )){ 
+
+      for (Partition in 1: length(Partitions)) {
+        
+        #This is a really long-winded way of asking if the TNT tree tip labels are contained in the collapsed tip labels, and if not, replace "node113" with "Rhyncholestes. "
+        
+        if (("FALSE" %in% (reduced_TNT_trees[[Treenumber]][[Partition]]$tip.label %in% reduced_tree_list[[Treenumber]]$tip.label)) == "TRUE" ){
+           
+          reduced_TNT_trees[[Treenumber]][[Partition]]$tip.label[which (reduced_TNT_trees[[Treenumber]][[Partition]]$tip.label == "Rhyncholestes_raphanurus")] <- "node113"
+          
+          }
+        
+      }
+        
+}
+
+
+#Testing this now - should return FALSE because the tip labels  of the TNT trees are now contained in both reduced and UPGMA tree (this asks if the FALSE is part of the output of whether tip labels of the two trees are containd within each other)
+
+"FALSE" %in% (reduced_TNT_trees[[40]][[2]]$tip.label %in% reduced_tree_list[[40]]$tip.label)
+
+"FALSE" %in% (reduced_TNT_trees[[40]][[2]]$tip.label %in% reduced_morph_clusters[[40]][[2]][[2]]$tip.label) 
+
+
+#comparing trees visually - wow, the UPGMA trees are massively biased towards collapsed nodes!
+
+par(mfrow=c(3,1))
+
+plot (reduced_TNT_trees[[34]][[2]])
+
+plot(reduced_morph_clusters[[4]][[2]]$GPA_basi)
+
+plot(reduced_tree_list[[34]])
+
+
+
+```
+
+#Create 10000 random trees for each pruned tree so we can later compare the distribution of distances from the full tree to all the random trees at each pruning level, and afterwards compare the distances from the various other trees to that full/random distance distribution (see methods in manuscript). I am using 10,000 here (instead of usual 100) because earlier analyses showed that random trees that aren't maximally divergent from the true tree are very rare. I just wanted to increase the random sample to capture the rare occasions where a random tree is a bit closer.
+
+#One thing I learned here is that the else statement has to be in the same line as the closing bracket of the if statement, else it doesn't work
+
+```{r}
+
+if(!("Random_trees.rda" %in% list.files("../Data/Processed/"))) {
+
+    Random_trees <- list()
+    
+    Number_of_random_trees <- 10000
+    
+    #First make a set of random trees of the length of each of the whittled-down phylogenies by looping through the tree list. Making as many random trees as there are reduced trees (i.e. Ntip(Full_tree)- Tip_number_left)
+    
+    for (i in 1: length(reduced_tree_list)) {
+    
+    Random_trees[[i]] <- rmtree(Number_of_random_trees, Ntip(reduced_tree_list[[i]]), rooted = TRUE, tip.label = reduced_tree_list[[i]]$tip.label, br = runif)
+    
+    }
+    
+    save(Random_trees, file="../Data/Processed/Random_trees.rda")
+
+} else {
+  
+  load("../Data/Processed/Random_trees.rda")
+  
+  }
+
+
+
+
+
+#Making sure that the random and reduced trees match up - this should be TRUE
+Ntip(Random_trees[[10]][[1]]) == Ntip(reduced_tree_list[[10]])
+
+
+
+
+```
+
+#Import the trees made from the molecular data using UPGMA clustering in PAUP and TNT. In all cases, two species for which no DNA data were present were manually merged into the tree (P. mimicus, P. australis) - see manuscript. TNT produced two near-identical tree with only a single switch in position within the petauroide possums, so we are using just one of these. 
+
+#Run this whole loop in one go because it overwrites the trees list. 
+
+```{r}
+
+
+Molecular_TNT_raw <- read.nexus (file= "../Data/Processed/Molecular_distance_trees/DNA_tnt/marsmb5_Vera_3RY_all_MPTs_possums_added.treeT2")
+#Molecular_TNT_raw <- read.nexus (file= "../Data/Processed/Molecular_distance_trees/DNA_tnt/marsmb5_Vera_3RY_all_MPTs.tree")
+#Molecular_TNT_raw<-Molecular_TNT_raw$tnt_1
+
+#read in the three different UPGMA trees
+Molecular_Rawdist_tree <- read.nexus (file= "../Data/Processed/Molecular_distance_trees/UPGMA_distances_PAUP/marsmb5_Vera_3RY_GT_RawDistances.tre")
+
+Molecular_GTR_tree <- read.nexus (file= "../Data/Processed/Molecular_distance_trees/UPGMA_distances_PAUP/marsmb5_Vera_3RY_GT.tre")
+
+Molecular_GTRig_tree <- read.nexus (file= "../Data/Processed/Molecular_distance_trees/UPGMA_distances_PAUP/marsmb5_Vera_3RY_GTRig.tre")
+
+Mol_based_trees <- list (Molecular_TNT_raw=Molecular_TNT_raw, Molecular_Rawdist_tree=Molecular_Rawdist_tree, Molecular_GTR_tree=Molecular_GTR_tree, Molecular_GTRig_tree=Molecular_GTRig_tree)
+
+names(Mol_based_trees)
+
+temp_namecheck <- vector()
+Matchtest <- c()
+
+for (i in 1: length(Mol_based_trees)){
+  
+  #Re-name the tips
+  Mol_based_trees[[i]]$tip.label[which(Mol_based_trees[[i]]$tip.label == "Caluromys_philander")] <- "Caluromys_derbianus"
+  Mol_based_trees[[i]]$tip.label[which(Mol_based_trees[[i]]$tip.label == "Dendrolagus_dorianus")] <- "Dendrolagus_inustus"
+  Mol_based_trees[[i]]$tip.label[which(Mol_based_trees[[i]]$tip.label == "Notoryctes_typhlops")] <- "Notoryctes_caurinus"
+  
+  temp_namecheck <- name.check(Mol_based_trees[[i]], specieslist)
+                
+  #This if statement drops tips that aren't in the dataset, or sends a notification if you have species in you dataset that aren't in your tree (i.e. namecheck$data_not_tree) is not empty)
+                if (length(temp_namecheck[[2]])==0){
+          
+                  #Removing all species in the tree that is not apart of the study
+          Mol_based_trees[[i]]=drop.tip(Mol_based_trees[[i]],temp_namecheck$tree_not_data)
+     
+          }  else {
+            
+            print(paste ("There are species in the dataset that ARE NOT represented in", names(Mol_based_trees)[[i]]))
+            
+                  
+          }
+  
+  #Double check if the tree and your list of species names match
+  Matchtest=match(Mol_based_trees[[i]]$tip.label,rownames(specieslist))
+  
+  if (length(which(is.na (Matchtest)))==0){
+                  
+                  print(paste(names(Mol_based_trees[i]),"and the 3D dataset now contain EXACTLY THE SAME species"))
+
+                  } else {
+                    
+                  print(paste(names(Mol_based_trees[i]),"and the 3D dataset DO NOT contain the same species"))
+                  }
+  
+  
+             }
+remove(Molecular_TNT_raw, Molecular_GTR_tree, Molecular_GTRig_tree, Molecular_Rawdist_tree, Matchtest, temp_namecheck)
+
+# Visualising and Checking
+par(mfrow=c(1,2)) 
+
+plot(Mol_based_trees[[1]])
+plot(reduced_tree_list[[1]])
+
+```
+
+#reading in the multi-state morphological trees and creating a matching dataset of all the other trees
+
+```{r}
+discrete_trees <- read.nexus(file="../Data/Raw/discrete_phylogeny/BEA22_trees.nex")
+
+#plot(discrete_trees$BEA22_all_chrs_all_tax_MP_LE50_pruned)
+
+#which species of the original tree aren't in the discrete tree, and what are their names?
+which(!(tree$tip.label  %in% discrete_trees$BEA22_all_chrs_all_tax_MP_LE50_pruned$tip.label   ))
+tree$tip.label[which(!(tree$tip.label  %in% discrete_trees$BEA22_all_chrs_all_tax_MP_LE50_pruned$tip.label   ))]
+
+#are there any species in the discrete tree that aren't in the reference tree - Perameles gunnii should be nasuta, and O. robustus should be O. rufus:
+discrete_trees[[2]]$tip.label[which(!(discrete_trees[[2]]$tip.label  %in% tree$tip.label   ))]
+
+#So all these discrete trees need re-naming: 
+
+for (i in (1:length(discrete_trees))){
+  
+discrete_trees[[i]]$tip.label[which(!(discrete_trees[[i]]$tip.label  %in% tree$tip.label   ))]<-c("Perameles_nasuta", "Osphranter_rufus")
+
+}
+
+#now it's OK:
+discrete_trees$BEA22_all_chrs_all_tax_MP_LE50_pruned$tip.label[which(!(discrete_trees$BEA22_all_chrs_all_tax_MP_LE50_pruned$tip.label  %in% tree$tip.label   ))]
+
+#Now we drop the tips from the reference phylogeny that are not in the discrete trees: 
+
+RefTree_for_discrete <- drop.tip(tree,which(!(tree$tip.label  %in% discrete_trees[[1]]$tip.label   )) )
+
+#Now the reference tree has the same tips as the discrete trees.I checked manually as well :-)
+RefTree_for_discrete$tip.label %in% discrete_trees[[6]]$tip.label
+
+#Now doing the same for UPGMA, NJ and TNT trees
+
+trees_for_pruning <- list(UGPMA= reduced_morph_clusters[[1]]$UPGMA, NJ = reduced_morph_clusters[[1]]$NJ, TNT <- reduced_TNT_trees[[1]] )
+
+pruned_trees_temp <- list()
+pruned_trees <- list(UPGMA=list(), NJ = list(), TNT = list())
+
+#I am here just focussing on the dataset with "size in" to make it simpler. 
+
+for (i in 1 : length(trees_for_pruning)){
+  
+  for(j in 1: (length(Partitions)/2)){
+  
+      pruned_trees_temp[[j]] <- drop.tip(trees_for_pruning[[i]][[j]],which(!(trees_for_pruning[[i]][[j]]$tip.label  %in% discrete_trees[[1]]$tip.label   )) )
+      
+  }
+  
+    names(pruned_trees_temp) <- names(Partitions[1:3])
+    pruned_trees[[i]] <- pruned_trees_temp
+
+}
+
+
+remove(pruned_trees_temp)
+
+#Did it work? manually checked all three, it's working.
+
+pruned_trees$UPGMA$GPA_Restmean$tip.label %in% discrete_trees[[1]]$tip.label
+
+
+#Package it all up so it can be plotted easily later. It is really useful to put all trees at the same list level!
+
+discrete_comparisons <- append(RefTree_for_discrete, discrete_trees)
+
+
+treetemp <- list()
+
+for (i in (1: length(pruned_trees))){
+  
+  for (j in (1: length(pruned_trees$UPGMA))){
+    
+    treetemp <- pruned_trees[[i]][[j]]
+
+     discrete_comparisons <- append(discrete_comparisons, treetemp)
+    
+  }
+  
+  
+  
+}
+
+#Fiddling the names out of the cluster tree lists
+Clustertree_names <- vector()
+
+for (i in (1:length(pruned_trees))){
+  
+  Clustertree_names <- c(Clustertree_names, paste(names(pruned_trees)[[i]], names(pruned_trees[[i]]), sep="_"))
+  
+  
+}
+
+names(discrete_comparisons) <- c("Reference", names(discrete_trees), Clustertree_names )
+
+remove(treetemp, Clustertree_names)
+
+
+```
+
+
+#Save the whole lot. It gets too much to list everything
+
+```{r}
+remove(tmptree, temp)
+
+save.image(file="../Data/Processed/Trees_collapsed.Rda")
+
+```
+
+
+
+
+
+
+

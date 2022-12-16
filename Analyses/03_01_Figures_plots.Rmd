@@ -1,0 +1,441 @@
+---
+title: "All non-distance related figures"
+author: "Vera Weisbecker"
+date: "27 June 2019"
+output: html_document
+---
+
+
+```{r}
+
+#this sets the directory to the source directory without having to manually click your way there
+library(rstudioapi) # Safely Access the RStudio API
+setwd(dirname(getActiveDocumentContext()$path))
+
+
+#Note that lib needs specifying if it's not the default, and updates need to go through installR so the libraries for updating can be specified.
+#BiocManager::install(version ='3.15')
+
+#BiocManager::install("ggtree", lib= "C:/Program Files/R/R-4.0.4/library")
+
+library(ggplot2) #v.3.3.6
+library(ggtree) #  v3.4.0
+library(geomorph)       # [github::geomorphR/geomorph] v4.0.4 # CRAN v4.0.4
+library(ClassDiscovery) # Bioconductor v3.4.0 # CRAN v3.4.0 
+
+load("../Data/Processed/processed_data_incl_allometry.rda")
+load(file="../Data/Processed/Trees_collapsed.Rda")
+
+
+
+```
+
+
+#PACA analysis
+
+#The below runs the PCA with phylogenetic alignment, Collyer and Adams (2021). A loop is nearly the same amount of text and would make the PCA figures harder to plot.
+
+
+```{r}
+
+
+PCA_phylomorpho_all <- gm.prcomp(GPA_Allmean$coords, phy = tree, align.to.phy = TRUE)
+PCA_phylomorpho_basi <- gm.prcomp(GPA_Basimean$coords, phy = tree, align.to.phy = TRUE)
+PCA_phylomorpho_rest <- gm.prcomp(GPA_Restmean$coords, phy = tree, align.to.phy = TRUE)
+
+PCA_phylomorpho_all_res <- gm.prcomp(Allom_all_plus_consensus, phy = tree, align.to.phy = TRUE)
+PCA_phylomorpho_basi_res <- gm.prcomp(Allom_basi_plus_consensus, phy = tree, align.to.phy = TRUE)
+PCA_phylomorpho_rest_res <- gm.prcomp(Allom_rest_plus_consensus, phy = tree, align.to.phy = TRUE)
+
+
+#Summaries of RV coefficients are presented in the figures
+
+```
+
+#Preparatory code for colour scheme, thanks to Emma Sherratt :-)!
+
+```{r }
+
+
+cols <-   c("cornflowerblue", "slateblue2", "orangered1", "aquamarine4", "deeppink3", "navy","darkgoldenrod1" )
+
+
+
+# specific colours for clades, use hex values or real names
+names(cols) <- levels(as.factor(specieslist$Order)) # assign levels to colours
+col.gp <- cols[match(as.factor(specieslist$Order), names(cols))] 
+head(col.gp) # see the result
+```
+
+
+
+#Phylogeny figure using the ggtree package. It is complicated but beautiful.
+
+```{r Phylogeny figure}
+
+
+
+specieslist_for_phylo <- data.frame(taxa = rownames(specieslist), Order=specieslist$Order, Diet =as.factor( specieslist$Diet), Locomotion = specieslist$Locomotion, gen_sp = paste(substr( specieslist$Genus, start = 1, stop = 1), ". ", substr( specieslist$Species, start = 1, stop = 4), ".", sep = "") )
+                                    
+row.names(specieslist_for_phylo) <- NULL
+
+#ggtree also expects node labels and will tell you it is missing them. I am here just designating all node label positions to be white dots. Can't be helped, the alternative, ti.point, I couldn't get to work
+col.gp_ggtree <- c(col.gp, rep("white", 57))
+col.gp_ggtree <- col.gp_ggtree[-113]
+length(col.gp_ggtree)
+
+
+gensp <- c(specieslist_for_phylo$gen_sp, rep(".", 57) )
+gensp <- gensp[-113]
+length(col.gp_ggtree)
+
+ 
+p <- ggtree(tree, layout = "circular", lwd = 0.9)
+
+
+#Man I'm not sure if I'm a fan. But "label" is "taxa", and angle is required to make the species radiate from the tips.
+p <- p %<+% specieslist_for_phylo +
+  geom_text(aes( label=gensp,angle = angle, fontface = 3),  size = 4, hjust=-0.7 , colour = col.gp_ggtree ) +
+  geom_tippoint(aes(shape=Locomotion), size = 4,color="Black") +
+  #It expects 113 labels. So the node labels just get a blank
+  geom_text(aes(label= c(specieslist_for_phylo$Diet, rep(" ", 56)), colour=Diet, angle=angle), size = 4,  hjust = -1.5 ) +
+  theme( legend.margin = margin(rep(10,1)), legend.position = c(0.8,-0.1), legend.text = element_text( size=8), legend.title = element_text(size=8), legend.box =   "horizontal") 
+#theme(plot.margin = unit(c(10,16,10,10), "mm" ),
+     
+
+ 
+
+pdf(file =    "../figures/FigX_Phylo.pdf", width= 500, height=200, paper = "a4")
+
+print(p)
+
+dev.off()
+
+```
+
+
+#Landmarking protocol & Partitions
+
+
+
+```{r Landmarking protocol prep}
+
+
+
+#read ply
+M_murina_mean <- read.ply("../Data/Raw/Marmosa_murina_MVZ197429_downsampled.ply")
+M_murina_mean$material$color <- M_murina_mean$it
+M_murina_mean$material$color <- "grey"
+
+
+#colouring partition spheres 
+
+ #provides the numbers of the parts
+  PartLevels = unique(part.gp[])
+  
+  Part=list()
+  ##subset the landmarks according to the partitions so they can be colourised differentially
+  for(i in 1:length(PartLevels)){
+    Part[[i]]<-which (part.gp[] == PartLevels[[i]])
+  }
+  
+
+
+##Creating a bunch of position matrices of the mesh skull so they can later be screen-shotted. Thanks again to Em Sherratt
+
+
+#FOV = 0 # sets parallel projection, rather than orthogonal
+#open3d(); view3d(fov=0);shade3d(M_murina_mean) # open a mesh on rgl
+# set by hand in rgl window, adjust specimen into dorsal positon then:
+#usrMat_dorsal <- par3d()$userMatrix # save position matrix
+#write.csv(usrMat_dorsal, "../Figures/Usrmats/Mean_species_usrMat_dorsal.csv",row.names=F) # write to WD for later
+#usrMat_lateral <- par3d()$userMatrix # again, adjust specimen into lateral positon then save
+#write.csv(usrMat_lateral, "../Figures/Usrmats/Mean_species_usrMat_lateral.csv",row.names=F)
+#usrMat_ventral <- par3d()$userMatrix
+#write.csv(usrMat_ventral, "../Figures/Usrmats/Mean_species_usrMat_ventral.csv",row.names=F)
+
+# Then you can import for use like:
+usrMat_dorsal <- as.matrix(read.csv("../Figures/Usrmats/Mean_species_usrMat_dorsal.csv", header = T))
+usrMat_lateral <- as.matrix(read.csv("../Figures/Usrmats/Mean_species_usrMat_lateral.csv", header = T))
+usrMat_ventral <- as.matrix(read.csv("../Figures/Usrmats/Mean_species_usrMat_ventral.csv", header = T))
+```
+
+#Creating position matrices of the mean shape skull that was warped from the marmosa skull above 
+
+```{r read refmesh and usrMats}
+refmesh <- read.ply("../Figures/refmesh_mean_shape.ply")
+#refmesh$material$color <-refmesh$it
+#refmesh$material$color <- "grey"
+
+#Again, setting up orientation matrices for the first time is as below, afterwards you just load them
+# FOV = 0 # sets parallel projection, rather than orthogonal
+# open3d(); view3d(fov=0);shade3d(refmesh) # open a mesh on rgl
+# # set by hand in rgl window, adjust specimen into dorsal positon then:
+# usrMat_dorsal_mshape <- par3d()$userMatrix # save position matrix
+# write.csv(usrMat_dorsal_mshape, "../Figures/Usrmats/usrMat_dorsal_mshape.csv",row.names=F) # write to WD for later
+# usrMat_lateral_mshape <- par3d()$userMatrix # again, adjust specimen into lateral positon then save
+# write.csv(usrMat_lateral_mshape, "../Figures/Usrmats/usrMat_lateral_mshape.csv",row.names=F)
+# usrMat_ventral_mshape <- par3d()$userMatrix
+# write.csv(usrMat_ventral_mshape, "../Figures/Usrmats/usrMat_ventral_mshape.csv",row.names=F)
+
+# Then you can import for use like:
+usrMat_dorsal_mshape <- as.matrix(read.csv("../Figures/Usrmats/usrMat_dorsal_mshape.csv", header = T))
+usrMat_lateral_mshape <- as.matrix(read.csv("../Figures/Usrmats/usrMat_lateral_mshape.csv", header = T))
+usrMat_ventral_mshape <- as.matrix(read.csv("../Figures/Usrmats/usrMat_ventral_mshape.csv", header = T))
+```
+
+# Landmarking protcol figure. Doing it here with the mean shape and mshape coords, but can also be done with the marmosa specimen and associated raw coords, this just requires user matrix change-over. 
+
+```{r Landmarking protcol figure}
+
+#mesh and sphere colouration
+#Sphere
+  Colours <- c("maroon1", "purple")
+#Mesh
+  Meshcol <- "antiquewhite"
+#ball radius
+  Radius  <- 0.009
+
+pdf(file="../Figures/Protocol.pdf", width = 8, height = 16)
+  #Overall image specs
+
+open3d(FOV=0,windowRect=c(0,0,1600,1200), zoom=0.48 )
+
+#set up image with three subscenes in one column
+
+mfrow3d(2,1)
+par(mar = c(0,0,0,0))
+par(oma = c(0,0,0,0))
+
+#Now do 2 plots, each with a different orientation (Initially three but there wasn't enough space in the paper)
+
+# shade3d (refmesh, col= Meshcol, tran = par3d(userMatrix=usrMat_dorsal_mshape ), alpha=0.5) # for a dorsal view
+# 
+#  for (i in 1:length(PartLevels)){
+#     spheres3d( MeanShapeCoords[(Part[[i]]),], col=Colours[i], lit=TRUE, radius = Radius, asp=F)
+#     
+#   }
+
+  
+  
+  next3d()
+
+shade3d (refmesh, col= Meshcol, tran = par3d(userMatrix=usrMat_ventral_mshape ),alpha=0.5)# for a ventral view
+
+ for (i in 1:length(PartLevels)){
+    spheres3d( MeanShapeCoords[(Part[[i]]),], col=Colours[i], lit=TRUE, radius = Radius, asp=F)
+    
+  }
+
+  
+  
+  next3d()
+  
+ shade3d (refmesh, col= Meshcol, tran = par3d(userMatrix=usrMat_lateral_mshape ),alpha=0.5)# for a lateral view
+
+ for (i in 1:length(PartLevels)){
+    spheres3d( MeanShapeCoords[(Part[[i]]),], col=Colours[i], lit=TRUE, radius = Radius, asp=F)
+    
+  }
+
+
+ 
+rgl.snapshot(filename = "../Figures/FigX_Lm_protocol.png")
+
+
+```
+
+
+#Creating meshes of the mean specimen warped to the minima and maxima of the principal components. This only needs running once and takes a very long time. It is here run with PACA-based shapes (i.e. aligned to phylogeny), but it can also be run on the conventional PCA. Takes a long time so run only once!
+
+```{r}
+
+# PACA1min_ply <- plotRefToTarget(MeanShapeCoords, PCA_phylomorpho_all$shapes$shapes.comp1$min, method="surface", mesh = refmesh, mag=1)
+# open3d()
+# shade3d(PACA1min_ply, col="grey")
+# writePLY("../Figures/PC_warps/PACA/PACA1min.ply",  withColors = F,  format = "ascii" )
+# 
+# PACA1max_ply <- plotRefToTarget(MeanShapeCoords, PCA_phylomorpho_all$shapes$shapes.comp1$max, method="surface", mesh = refmesh, mag=1)
+# open3d()
+# shade3d(PACA1max_ply, col = "grey")
+# writePLY("../Figures/PC_warps/PACA/PACA1max.ply",  withColors = F,  format = "ascii" )
+# 
+# PACA2min_ply <- plotRefToTarget(MeanShapeCoords, PCA_phylomorpho_all$shapes$shapes.comp2$min, method="surface", mesh = refmesh, mag=1)
+# open3d()
+# shade3d(PACA2min_ply)
+# writePLY("../Figures/PC_warps/PACA/PACA2min.ply",  withColors = F,  format = "ascii" )
+# 
+# PACA2max_ply <- plotRefToTarget(MeanShapeCoords, PCA_phylomorpho_all$shapes$shapes.comp2$max, method="surface", mesh = refmesh, mag=1)
+# open3d()
+# shade3d(PACA2max_ply)
+# writePLY("../Figures/PC_warps/PACA/PACA2max.ply",  withColors = F,  format = "ascii" )
+
+
+
+```
+
+#After the PC meshes have been created, they can just be loaded as below
+
+```{r load PC meshes}
+
+#remove(PC1min_ply,PC1max_ply,PC2min_ply,PC2max_ply)
+
+filelist <- list.files("../Figures/PC_warps/PACA")
+
+#Read in the warps. The "assign" line involves chopping the .ply file extension off the mesh
+for (i in (1:length(filelist))){
+  
+  tmp<-read.ply(paste("../Figures/PC_warps/PACA/",filelist[i], sep = ""))
+  
+  tmp$material$color <- tmp$it
+  
+  tmp$material$color <- "antiquewhite" 
+ 
+  assign(paste( sub(".ply", "_ply",filelist[i]),sep=""), tmp)
+  
+}
+
+shade3d(PACA1max_ply)
+
+
+```
+
+
+
+## Plotting meshes and saving a screenshot of each This loop saves all PCs and views to wd/Figures/Fig_parts
+
+```{r plot meshes and make images}
+views <- c("dorsal", "ventral", "lateral")
+PCs <- c("PACA1min", "PACA1max", "PACA2min", "PACA2max")
+for(i in PCs){
+  for(j in views){
+    open3d(FOV=0, userMatrix=as.name(paste("usrMat", j, "mshape", sep="_")), windowRect=c(0,0,1200,1200))
+    shade3d(get(paste(i,"_ply",sep="")), alpha=1, lit = T, shininess = 128.0, specular=49)
+    options(warn = 0)
+    rgl.snapshot(paste("../Figures/Collections_of_sub_images/","Mesh_",i,"_",j,".png", sep=""), 
+                 fmt="png", top=TRUE)
+    rgl.close()
+  }} 
+
+
+```
+
+#making Phylomorpho space PCA, as taught to me by Emma Sherratt
+
+```{r PCA figure plot}
+
+
+pdf("../Figures/PCA_Plot_pipeline/FigX_PCA.pdf",width = 8, height = 10)
+
+PCA_type <- list(Cranium = PCA_phylomorpho_all, Basicranium = PCA_phylomorpho_basi,Rest = PCA_phylomorpho_rest)
+names(PCA_type) <- c("Full Configuration", "Basicranium", "Rest of cranium")
+
+#Or if you want to plot residual results:
+#png("../Figures/PCA_Plot_pipeline/FigX_PCA_residuals.png",width = 1040, height = 1400, units = "px", pointsize = 24)
+
+#PCA_type <- list(Cranium = PCA_phylomorpho_all_res, Basicranium = PCA_phylomorpho_basi_res,Rest = PCA_phylomorpho_rest_res)
+#names(PCA_type) <- c("Full Configuration residuals", "Basicranium residuals", "Rest of cranium residuals")
+
+
+#Prepare a vector for labels
+
+Some_species_labels <- c("Apyg","Ncau", "Tcyn","Tros", "Vurs" )
+#making some common names in the order in which the species appear in the score matrix of the PCA
+Common_names_for_labels <- c("Feathertail glider", "Honey possum","Common wombat",  "Tasmanian tiger","Marsupial mole" )
+
+Label_these <- which(  specieslist$spname %in% Some_species_labels)
+
+plot.new()
+
+
+par(mfrow=c(3,1))
+
+for (PCA_partition in 1:3){
+
+    plot(PCA_type[[PCA_partition]], phylo = TRUE,  cex = 1.5, pch=19, cex.axis=1.3, cex.lab=1.3, col = col.gp, bg = col.gp, phylo.par = list(edge.color="black", node.cex=NULL,  tip.labels = FALSE, node.labels = FALSE, edge.color = "gray10"),bty="n",asp=T, main=names(PCA_type[PCA_partition]), xlab= paste("Component 1, RV =",round (PCA_type[[PCA_partition]]$RV[1], 2) ), ylab = paste("Component 2, RV =",round (PCA_type[[PCA_partition]]$RV[2], 2) ) )
+  
+   text(PCA_type[[PCA_partition]]$x[Label_these,2] ~ PCA_type[[PCA_partition]]$x[Label_these,1], labels = specieslist$spname[Label_these], pos=1 )
+   
+  
+  
+      # Add coloured polygons for the following clades:
+      clades <- levels(as.factor(specieslist$Order))[c(1,2,3,7)]
+      for(i in clades){
+        
+        tmp <- which(specieslist$Order == i )
+        EP <- rownames(PCA_type[[PCA_partition]]$x[tmp,])[chull(PCA_type[[PCA_partition]]$x[tmp, c(1,2)])] 
+        polygon(PCA_type[[PCA_partition]]$x[EP,c(1,2)], col=adjustcolor(cols[which(names(cols) == i)],
+                                                          alpha.f = 0.1), border=cols[which(names(cols) == i)]) 
+        
+        if (PCA_partition==3){
+          
+          legend(x=0.27, y=0.1,
+       legend=levels(as.factor(specieslist$Order)),
+       pch = 19,
+        col=cols,
+        #bg=unique(col.gp),
+       bty = "n",
+       ncol=1,
+       cex = 1.2,
+       y.intersp = 0.8)
+          
+        }
+        
+      }
+}
+
+
+
+dev.off()
+
+#clean up
+remove(Some_species_labels, Label_these,PCA_type)
+
+
+```
+
+#Visualising the trees that are retrieved by TNT/UPGMA
+
+```{r}
+
+
+Full_UPGMA <- reduced_morph_clusters[[1]]$UPGMA
+Full_TNT <- reduced_TNT_trees[[1]]
+
+col_clusterlabels <- col.gp
+names(col_clusterlabels) <- rownames(specieslist)
+
+#Fig 5, just UPGMA
+
+pdf(file= "../Figures/Fig5_UPGMA_trees.pdf", width=12, height=8 )
+
+
+par(mfrow=c(1,2), mar=c(0,0,1,0), oma=c(0,0,0,0) )
+
+plot(Full_UPGMA$GPA_Restmean, tip.color = col_clusterlabels[ match(Full_UPGMA$GPA_Restmean$tip.label,names(col_clusterlabels))], main = "Rest of Cranium - UPGMA", direction = "rightwards")
+
+
+plot(Full_UPGMA$GPA_basi, tip.color = col_clusterlabels[ match(Full_UPGMA$GPA_basi$tip.label,names(col_clusterlabels))], main = "Basicranium - UPGMA", direction = "leftwards")
+
+dev.off()
+
+```
+
+```{r}
+
+#supplementary figure, full plots
+plot.new
+
+par(mfrow=c(2,2), mar=c(1,1,1,1) )
+
+plot(Full_TNT$GPA_Restmean, tip.color = col_clusterlabels[ match(Full_TNT$GPA_Restmean$tip.label,names(col_clusterlabels))],use.edge.length = FALSE, main = "Rest of Cranium - Parsimony")
+
+plot(Full_UPGMA$GPA_Restmean, tip.color = col_clusterlabels[ match(Full_UPGMA$GPA_Restmean$tip.label,names(col_clusterlabels))], main = "Rest of Cranium - UPGMA", direction = "rightwards")
+
+plot(Full_TNT$GPA_basi, tip.color = col_clusterlabels[ match(Full_TNT$GPA_basi$tip.label,names(col_clusterlabels))], use.edge.length = FALSE, main = "Basicranium - Parsimony")
+
+plot(Full_UPGMA$GPA_basi, tip.color = col_clusterlabels[ match(Full_UPGMA$GPA_basi$tip.label,names(col_clusterlabels))], main = "Basicranium - UPGMA", direction = "leftwards")
+
+
+
+```

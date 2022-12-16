@@ -1,0 +1,9 @@
+#NEXUS
+
+begin trees ; 
+tree tagged_tree = [&U] 
+(Rhyncholestes_raphanurus,((Myrmecobius_fasciatus,((Dromiciops_gliroides,((Acrobates_pygmaeus,Distoechurus_pennatus)30,((Trichosurus_vulpecula,(node80,((Dactylopsila_trivirgata,node70)36,(Pseudocheirus_peregrinus,(Petauroides_volans,Hemibelideus_lemuroides)41)42)37)38)39,(node76,((Aepyprymnus_rufescens,(Vombatus_ursinus,Notoryctes_caurinus)52)48,(Potorous_tridactylus,Hypsiprymnodon_moschatus)51)49)50)40)31)32,(node86,(Planigale_ingrami,(Sminthopsis_murina,((Tarsipes_rostratus,Thylacinus_cynocephalus)43,(node101,(node102,(Caluromys_derbianus,node97)54)55)56)44)45)46)47)33)34,(Macrotis_lagotis,node92)53)35)29;
+tree tnt_1 = [&U] 
+(Rhyncholestes_raphanurus ,((Myrmecobius_fasciatus ,((Dromiciops_gliroides ,((Acrobates_pygmaeus ,Distoechurus_pennatus ),((Trichosurus_vulpecula ,(node80 ,((Dactylopsila_trivirgata ,node70 ),(Pseudocheirus_peregrinus ,(Petauroides_volans ,Hemibelideus_lemuroides ))))),(node76 ,((Aepyprymnus_rufescens ,(Vombatus_ursinus ,Notoryctes_caurinus )),(Potorous_tridactylus ,Hypsiprymnodon_moschatus )))))),(node86 ,(Planigale_ingrami ,(Sminthopsis_murina ,((Tarsipes_rostratus ,Thylacinus_cynocephalus ),(node101 ,(node102 ,(Caluromys_derbianus ,node97 ))))))))),(Macrotis_lagotis ,node92 )));
+
+end ; 

@@ -1,0 +1,19 @@
+"","Pillai Statistic","p","SS","RSq (lm)","F (lm)","p (lm)"
+"Size",NA,NA,NA,NA,NA,NA
+"Full configuration",0.95,0,0.14,0.12,7.4,0.001
+"Basicranium",0.88,0,0.15,0.09,5.31,0.001
+"Rest of Cranium",0.99,0.001,0.22,0.12,7.15,0.001
+"Locomotion",NA,NA,NA,NA,NA,NA
+"Full configuration",2.74,0.844,0.19,0.15,2.35,0.001
+"Full config. residuals ",2.83,0.756,0.17,0.15,2.37,0.001
+"Basicranium",2.32,0.443,0.24,0.14,2.05,0.001
+"Basicranium residuals ",2.43,0.253,0.23,0.14,2.15,0.002
+"Rest of Cranium",2.59,0.668,0.33,0.17,2.75,0.001
+"Rest of Cranium residuals",2.67,0.552,0.29,0.17,2.63,0.001
+"Diet",NA,NA,NA,NA,NA,NA
+"Full configuration",2.2,0.511,0.12,0.1,5.9,0.001
+"Full config. residuals",2.2,0.583,0.11,0.1,6.36,0.001
+"Basicranium",1.89,0.174,0.16,0.09,5.64,0.001
+"Basicranium residuals ",1.82,0.284,0.16,0.1,6.25,0.001
+"Rest of Cranium",2.26,0.043,0.22,0.12,7.24,0.001
+"Rest of Cranium residuals",2.25,0.069,0.16,0.09,5.56,0.001

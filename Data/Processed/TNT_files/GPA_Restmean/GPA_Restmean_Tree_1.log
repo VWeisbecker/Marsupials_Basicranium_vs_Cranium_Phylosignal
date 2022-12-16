@@ -1,0 +1,93 @@
+Reading from C:\WORKSPACE\Github_Projects\Mars_skull_phylosig\Data\Processed\TNT_files\GPA_Restmean\GPA_Restmean_Tree_1.tnt 
+Matrices will be read as continuous data 
+Matrix space: allocate for up to 32 states 
+'TNT file generated with the R function `writeland.tnt` on Wed Jun 23 14:18:56 2021.'
+Matrix (1x57, 32 states). Memory required for data: 0.06 Mbytes 
+Again reading from C:\WORKSPACE\Github_Projects\Mars_skull_phylosig\Data\Processed\TNT_files\GPA_Restmean\Core_TNT_code_Restmean_1_20.run 
+Considering individual landmarks for resampling and relative supports
+ 
+   Settings for landmark optimization:  
+      Initially approximmating landmark positions with a 6x6 grid 
+      Adding terminal points to initial grid 
+      Not shrinking frame when approximmating landmark positions 
+      Not skipping cells when approximmating landmark positions 
+      Not shaking grid 
+      Nesting sankoff 1 times (window: 1.0000 cells) 
+      Using iterative-pass (max. iters. 100000, cut 0.00000100) 
+
+   Settings for searches:
+      Using a tolerance margin of 15.00% maximum.
+      Error stages:
+           - 0.00 for 0 to 15% of swapping,
+           - 5.00 from 15% to 66%,
+           - 15.00 from 66% to completion 
+      Refining first guess with incremental fermat recalculation, 5 nodes
+      from point of reinsertion, with up to 2 iterations 
+ 
+   To calculate total score, all landmarks within a character equally weighted 
+   For resampling and support, using individual landmarks 
+ 
+Taxon names is ON 
+Outgroup is taxon 55  -  Rhyncholestes_raphanurus 
+Space for 500 trees in memory 
+Note: setting number of threads to 10 (i.e. the recommended number
+for 28 CPUs). This can be changed with "lmark threads N".
+ 
+WARNING: 
+Landmark optimization will use low-mem algorithms 
+ 
+Repl. Algor.     Tree        Score       Best Score   Time       Rearrangs.
+50    TBR        8 of 8      ------      7.10363      3:59:40    12,152,687          
+Completed 50 random addition sequences.
+Total rearrangements examined: 12,152,687. 
+Best score hit 25 times out of 50.
+Best score (TBR): 7.10363.  1 trees retained. 
+Start swapping from 1 trees (score 7.10363)... 
+Repl. Algor.     Tree        Score       Best Score   Time       Rearrangs.
+---   TBR        0 of 1      ------      7.10363      0:01:24    56,495          
+Completed TBR branch-swapping.
+Total rearrangements examined: 56,495. 
+Best score (TBR): 7.10363.  1 trees found. 
+Tree lengths 
+       ÚÄÄÄÄÄÄÄÄ¿
+       ³    +0  ³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ´
+³     0³ 7.10363³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÙ 
+ 
+WARNING: 
+Ch. 0, landmark 20, user min. set to 1.089656, but found a tree with 0.715518
+Minimum will be updated (this may affect previous calculations). 
+ 
+ 
+WARNING: 
+Ch. 0, landmark 24, user min. set to 1.089656, but found a tree with 0.715518
+Minimum will be updated (this may affect previous calculations). 
+ 
+Adjusted homoplasy 
+       ÚÄÄÄÄÄÄÄÄ¿
+       ³    +0  ³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ´
+³     0³ 0.18376³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÙ 
+Tree 0, ch. 0 (score 7.103628) 
+       ÚÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄ¿
+       ³    +0  ³    +1  ³    +2  ³    +3  ³    +4  ³    +5  ³    +6  ³    +7  ³    +8  ³    +9  ³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ´
+³     0³ 0.21854³ 0.21748³ 0.26960³ 0.25295³ 0.22779³ 0.19455³ 0.22779³ 0.19455³ 0.20200³ 0.20216³
+³    10³ 0.20374³ 0.20375³ 0.19920³ 0.23677³ 0.23358³ 0.19919³ 0.23677³ 0.23364³ 0.16889³ 0.16896³
+³    20³ 0.16810³ 0.16757³ 0.15313³ 0.15557³ 0.16810³ 0.16757³ 0.15313³ 0.15557³ 0.21723³ 0.21723³
+³    30³ 0.23931³ 0.23931³ 0.30495³ 0.30495³        ³        ³        ³        ³        ³        ³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÙ 
+Reading from C:\WORKSPACE\Github_Projects\Mars_skull_phylosig\Data\Processed\TNT_files\GPA_Restmean\Stats_CI.run 
+Macro language is ON 
+Macros: 42.7 Kb in use, 59.6 Kb free
+Report is ON 
+Floating point printing uses 3 digits 
+Consistency index  
+       ÚÄÄÄÄÄÄ¿
+       ³    +0³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄ´
+³     0³ 0.249³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÙ 
+Again reading from C:\WORKSPACE\Github_Projects\Mars_skull_phylosig\Data\Processed\TNT_files\GPA_Restmean\Core_TNT_code_Restmean_1_20.run 

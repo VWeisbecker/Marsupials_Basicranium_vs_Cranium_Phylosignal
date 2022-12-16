@@ -1,0 +1,11 @@
+"","Patristic vs Procrustes distances","","Patristic vs molecular reference","","","Procrustes distances/Mol. distances vs molecular reference","NA"
+"","Statistic - GPA","Statistic- Residuals","Statistic - GPA","Statistic- Residuals","","Statistic - GPA","Statistic- Residuals"
+"Parsimony-Full","0.81","0.83","0.45","0.58","Full config.","0.46","0.5"
+"Parsimony-Basicr.","0.72","0.72","0.29","0.28","Basicranium","0.29","0.29"
+"Parsimony-Rest","0.77","0.79","0.59","0.59","Rest","0.5","0.51"
+"NJ-Full","0.91","0.94","0.47","0.46","Molecular, Parsimony","0.955058372250412",NA
+"NJ-Basicr.","0.91","0.92","0.22","0.2","Molecular, Raw Distances","0.564043225566019",NA
+"NJ-Rest","0.92","0.91","0.53","0.52","Molecular, GTR","0.564038373144762",NA
+"UPGMA-Full","0.83","0.86","0.57","0.59","Molecular, GTRig","0.571785562248276",NA
+"UPGMA-Basicr.","0.83","0.86","0.25","0.29","",NA,NA
+"UPGMA-Rest","0.83","0.8","0.63","0.64","",NA,NA

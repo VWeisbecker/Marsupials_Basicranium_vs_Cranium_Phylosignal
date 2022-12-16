@@ -1,0 +1,9 @@
+#NEXUS
+
+begin trees; 
+tree tagged_tree = [&U] 
+(Rhyncholestes_raphanurus,(Lestoros_inca,((((Sminthopsis_murina,(((Murexia_melanurus,(Planigale_ingrami,(Dromiciops_gliroides,((Acrobates_pygmaeus,Distoechurus_pennatus)37,(Notoryctes_caurinus,(Petaurus_australis,Petaurus_breviceps)57)58)38)39)40)41,(Antechinus_flavipes,Phascogale_tapoatafa)65)42,(node89,(Myrmecobius_fasciatus,((node76,(Trichosurus_vulpecula,(((Dactylopsila_trivirgata,Vombatus_ursinus)49,(Pseudocheirus_peregrinus,(Petauroides_volans,Hemibelideus_lemuroides)59)60)50,(Phalanger_mimicus,Phalanger_vestitus)64)51)52)53,(Aepyprymnus_rufescens,(Potorous_tridactylus,Hypsiprymnodon_moschatus)63)62)54)55)56)43)44,(node101,(node102,(Caluromys_derbianus,node97)68)69)70)45,(Tarsipes_rostratus,Thylacinus_cynocephalus)61)46,(node93,(Echymipera_kalubu,Macrotis_lagotis)66)67)47)48)36;
+tree tnt_1 = [&U] 
+(Rhyncholestes_raphanurus ,(Lestoros_inca ,((((Sminthopsis_murina ,(((Murexia_melanurus ,(Planigale_ingrami ,(Dromiciops_gliroides ,((Acrobates_pygmaeus ,Distoechurus_pennatus ),(Notoryctes_caurinus ,(Petaurus_australis ,Petaurus_breviceps )))))),(Antechinus_flavipes ,Phascogale_tapoatafa )),(node89 ,(Myrmecobius_fasciatus ,((node76 ,(Trichosurus_vulpecula ,(((Dactylopsila_trivirgata ,Vombatus_ursinus ),(Pseudocheirus_peregrinus ,(Petauroides_volans ,Hemibelideus_lemuroides ))),(Phalanger_mimicus ,Phalanger_vestitus )))),(Aepyprymnus_rufescens ,(Potorous_tridactylus ,Hypsiprymnodon_moschatus ))))))),(node101 ,(node102 ,(Caluromys_derbianus ,node97 )))),(Tarsipes_rostratus ,Thylacinus_cynocephalus )),(node93 ,(Echymipera_kalubu ,Macrotis_lagotis )))));
+
+end; 

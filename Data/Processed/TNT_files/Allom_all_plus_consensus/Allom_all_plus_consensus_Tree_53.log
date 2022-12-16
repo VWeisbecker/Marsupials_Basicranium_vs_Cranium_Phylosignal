@@ -1,0 +1,16 @@
+Can't open E:\github_Vera\Mars_skull_phylosig\Data\Processed\TNT_files\Allom_all_plus_consensus\Allom_all_plus_consensus_Tree_53.tnt 
+Error reading line 299 of E:\github_Vera\Mars_skull_phylosig\Data\Processed\TNT_files\Allom_all_plus_consensus\Allom_all_plus_consensus_41-54.run 
+
+
+ 
+Current directory is E:\github_Vera\Mars_skull_phylosig\Data\Processed\TNT_files\Allom_basi_plus_consensus 
+Reading from E:\github_Vera\Mars_skull_phylosig\Data\Processed\TNT_files\Allom_basi_plus_consensus\Core_TNT_code_Allom_basi_plus_consensus_41-54.run 
+The working directory must DIRECTLY contain this Batch300-50.run, Stats_CI.run and Datasets1,2 etc 
+Trees rooted using single outgroup due to TNT limitations, may need to re-root later
+Log file is a text file showing tree statistics for the MP tree(s) - usually single tree in GM - first tree is called Tree 0
+Adjusted homoplasy is based on default K=3, use PIWE = K to change
+Dataset1_ancestralConfigs.tps is a tps file has a table of ancestral configurations
+Dataset1_ancestralConfigs.txt is a text file that has a table of ancestral configurations at each node - the nodes labelled in Dataset1_MP_Tree_nodelabels.trees 
+Dataset1_MP_TNTformat.tree is a TNT readable tree
+Dataset1_MP_Tree_nodelabels.trees has ancestral nodes numbered, opens in most nexus tree viewers 
+Dataset1_MP_Tree1_BranchLengths.tre is a nexus file with branch lengths as annotations, opens in SOME nexus tree viewers eg FigTree1.4.4 

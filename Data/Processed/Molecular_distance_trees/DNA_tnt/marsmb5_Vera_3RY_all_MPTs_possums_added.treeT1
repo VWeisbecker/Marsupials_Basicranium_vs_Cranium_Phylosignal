@@ -1,0 +1,309 @@
+#NEXUS
+[written Fri Jul 01 09:47:36 ACST 2022 by Mesquite  version 3.61 (build 927) at JB2C5S2/10.24.67.29]
+
+BEGIN TAXA;
+	TITLE Taxa;
+	DIMENSIONS NTAX=63;
+	TAXLABELS
+		Rhyncholestes_raphanurus Lestoros_inca Caenolestes_fuliginosus Dromiciops_gliroides Acrobates_pygmaeus Distoechurus_pennatus Tarsipes_rostratus Dactylopsila_trivirgata Petaurus_breviceps Pseudocheirus_peregrinus Pseudochirops_cupreus Petauroides_volans Hemibelideus_lemuroides Hypsiprymnodon_moschatus Aepyprymnus_rufescens Potorous_tridactylus Thylogale_stigmatica Dendrolagus_dorianus Petrogale_xanthopus Osphranter_rufus Macropus_eugenii Cercartetus_nanus Trichosurus_vulpecula Phalanger_vestitus Vombatus_ursinus Phascolarctos_cinereus Notoryctes_typhlops Thylacinus_cynocephalus Myrmecobius_fasciatus Phascogale_tapoatafa Antechinus_flavipes Murexia_melanurus Dasyurus_viverrinus Sarcophilus_harrisii Planigale_ingrami Sminthopsis_murina Macrotis_lagotis Echymipera_kalubu Perameles_nasuta Isoodon_obesulus Isoodon_macrourus Caluromys_philander Chironectes_minimus Lutreolina_crassicaudata Didelphis_marsupialis Didelphis_virginiana Philander_opossum Philander_andersoni Gracilinanus_agilis Gracilinanus_microtarsus Thylamys_elegans Thylamys_pallidior Marmosops_incanus Marmosops_noctivagus Marmosa_murina Marmosa_demerarae Marmosa_alstoni Marmosa_mexicana Marmosa_robinsoni Monodelphis_brevicaudata Monodelphis_domestica Petaurus_australis Phalanger_mimicus 
+	;
+
+END;
+
+
+BEGIN TREES;
+	Title 'Trees from "marsmb5_Vera_3RY_all_MPTs.tree"';
+	ID 0181b717fd2b1;
+	LINK Taxa = Taxa;
+	TRANSLATE
+[0] 		n0 Rhyncholestes_raphanurus,
+[1] 		n1 Lestoros_inca,
+[2] 		n2 Caenolestes_fuliginosus,
+[3] 		n3 Dromiciops_gliroides,
+[4] 		n4 Acrobates_pygmaeus,
+[5] 		n5 Distoechurus_pennatus,
+[6] 		n6 Tarsipes_rostratus,
+[7] 		n7 Dactylopsila_trivirgata,
+[8] 		n8 Petaurus_breviceps,
+[9] 		n9 Pseudocheirus_peregrinus,
+[10] 		n10 Pseudochirops_cupreus,
+[11] 		n11 Petauroides_volans,
+[12] 		n12 Hemibelideus_lemuroides,
+[13] 		n13 Hypsiprymnodon_moschatus,
+[14] 		n14 Aepyprymnus_rufescens,
+[15] 		n15 Potorous_tridactylus,
+[16] 		n16 Thylogale_stigmatica,
+[17] 		n17 Dendrolagus_dorianus,
+[18] 		n18 Petrogale_xanthopus,
+[19] 		n19 Osphranter_rufus,
+[20] 		n20 Macropus_eugenii,
+[21] 		n21 Cercartetus_nanus,
+[22] 		n22 Trichosurus_vulpecula,
+[23] 		n23 Phalanger_vestitus,
+[24] 		n24 Vombatus_ursinus,
+[25] 		n25 Phascolarctos_cinereus,
+[26] 		n26 Notoryctes_typhlops,
+[27] 		n27 Thylacinus_cynocephalus,
+[28] 		n28 Myrmecobius_fasciatus,
+[29] 		n29 Phascogale_tapoatafa,
+[30] 		n30 Antechinus_flavipes,
+[31] 		n31 Murexia_melanurus,
+[32] 		n32 Dasyurus_viverrinus,
+[33] 		n33 Sarcophilus_harrisii,
+[34] 		n34 Planigale_ingrami,
+[35] 		n35 Sminthopsis_murina,
+[36] 		n36 Macrotis_lagotis,
+[37] 		n37 Echymipera_kalubu,
+[38] 		n38 Perameles_nasuta,
+[39] 		n39 Isoodon_obesulus,
+[40] 		n40 Isoodon_macrourus,
+[41] 		n41 Caluromys_philander,
+[42] 		n42 Chironectes_minimus,
+[43] 		n43 Lutreolina_crassicaudata,
+[44] 		n44 Didelphis_marsupialis,
+[45] 		n45 Didelphis_virginiana,
+[46] 		n46 Philander_opossum,
+[47] 		n47 Philander_andersoni,
+[48] 		n48 Gracilinanus_agilis,
+[49] 		n49 Gracilinanus_microtarsus,
+[50] 		n50 Thylamys_elegans,
+[51] 		n51 Thylamys_pallidior,
+[52] 		n52 Marmosops_incanus,
+[53] 		n53 Marmosops_noctivagus,
+[54] 		n54 Marmosa_murina,
+[55] 		n55 Marmosa_demerarae,
+[56] 		n56 Marmosa_alstoni,
+[57] 		n57 Marmosa_mexicana,
+[58] 		n58 Marmosa_robinsoni,
+[59] 		n59 Monodelphis_brevicaudata,
+[60] 		n60 Monodelphis_domestica,
+[61] 		n61 Petaurus_australis,
+[62] 		n62 Phalanger_mimicus;
+	TREE tnt_1 = (n0,(n1,(n2,((n3,((((((n4,n5),(n6,((n7,(n61,n8)),(n9,(n10,(n11,n12)))))),(n13,((n14,n15),((n16,(n17,n18)),(n19,n20))))),(n21,(n22,(n62,n23)))),(n24,n25)),(n26,((n27,(n28,(((n29,(n30,n31)),(n32,n33)),(n34,n35)))),(n36,(n37,(n38,(n39,n40)))))))),(n41,(((n42,(n43,((n44,n45),(n46,n47)))),(((n48,n49),(n50,n51)),(n52,n53))),(((n54,(n55,n56)),(n57,n58)),(n59,n60))))))))[% ] [% ] [%  setBetweenBits = selected ];
+
+END;
+
+
+Begin MESQUITE;
+		MESQUITESCRIPTVERSION 2;
+		TITLE AUTO;
+		tell ProjectCoordinator;
+		timeSaved 1656634656225;
+		getEmployee #mesquite.minimal.ManageTaxa.ManageTaxa;
+		tell It;
+			setID 0 8624344656581742608;
+		endTell;
+		getWindow;
+		tell It;
+			suppress;
+			setResourcesState false false 304;
+			setPopoutState 300;
+			setExplanationSize 0;
+			setAnnotationSize 0;
+			setFontIncAnnot 0;
+			setFontIncExp 0;
+			setSize 2560 1321;
+			setLocation -8 -8;
+			setFont SanSerif;
+			setFontSize 10;
+			getToolPalette;
+			tell It;
+			endTell;
+			desuppress;
+		endTell;
+		getEmployee  #mesquite.minimal.ManageTaxa.ManageTaxa;
+		tell It;
+			showTaxa #8624344656581742608 #mesquite.lists.TaxonList.TaxonList;
+			tell It;
+				setTaxa #8624344656581742608;
+				getWindow;
+				tell It;
+					useTargetValue off;
+					setTargetValue ;
+					newAssistant  #mesquite.lists.TaxonListCurrPartition.TaxonListCurrPartition;
+					setExplanationSize 30;
+					setAnnotationSize 20;
+					setFontIncAnnot 0;
+					setFontIncExp 0;
+					setSize 2256 1249;
+					setLocation -8 -8;
+					setFont SanSerif;
+					setFontSize 10;
+					getToolPalette;
+					tell It;
+						setTool mesquite.lists.TaxonList.TaxonListWindow.ibeam;
+					endTell;
+				endTell;
+				showWindow;
+				getEmployee #mesquite.lists.ColorTaxon.ColorTaxon;
+				tell It;
+					setColor Red;
+					removeColor off;
+				endTell;
+				getEmployee #mesquite.lists.TaxonListAnnotPanel.TaxonListAnnotPanel;
+				tell It;
+					togglePanel off;
+				endTell;
+			endTell;
+		endTell;
+		getEmployee  #mesquite.trees.ManageTrees.ManageTrees;
+		tell It;
+			showTrees 0 #mesquite.lists.TreesList.TreesList;
+			tell It;
+				setTreeBlock 1;
+				getWindow;
+				tell It;
+					useTargetValue off;
+					setTargetValue ;
+					newAssistant  #mesquite.lists.NumForTreeList.NumForTreeList;
+				tell It;
+					suppress;
+					setValueTask  #mesquite.trees.NumberOfTaxa.NumberOfTaxa;
+					desuppress;
+				endTell;
+					newAssistant  #mesquite.lists.TreeListRooted.TreeListRooted;
+					newAssistant  #mesquite.lists.TreeListPolys.TreeListPolys;
+					newAssistant  #mesquite.lists.TreeListPolyAssumption.TreeListPolyAssumption;
+					setExplanationSize 30;
+					setAnnotationSize 20;
+					setFontIncAnnot 0;
+					setFontIncExp 0;
+					setSize 2256 1249;
+					setLocation -8 -8;
+					setFont SanSerif;
+					setFontSize 10;
+					getToolPalette;
+					tell It;
+					endTell;
+					setActive;
+				endTell;
+				showWindow;
+			endTell;
+		endTell;
+		getEmployee  #mesquite.trees.BasicTreeWindowCoord.BasicTreeWindowCoord;
+		tell It;
+			makeTreeWindow #8624344656581742608  #mesquite.trees.BasicTreeWindowMaker.BasicTreeWindowMaker;
+			tell It;
+				suppressEPCResponse;
+				setTreeSource  #mesquite.trees.StoredTrees.StoredTrees;
+				tell It;
+					setTreeBlock 1;
+					setTreeBlockID 0181b717fd2b1;
+					toggleUseWeights off;
+				endTell;
+				setAssignedID 966.1656634400343.6034490000968073598;
+				getTreeWindow;
+				tell It;
+					setExplanationSize 30;
+					setAnnotationSize 20;
+					setFontIncAnnot 0;
+					setFontIncExp 0;
+					setSize 2256 1249;
+					setLocation -8 -8;
+					setFont SanSerif;
+					setFontSize 10;
+					getToolPalette;
+					tell It;
+					endTell;
+					getTreeDrawCoordinator #mesquite.trees.BasicTreeDrawCoordinator.BasicTreeDrawCoordinator;
+				tell It;
+					suppress;
+					setTreeDrawer  #mesquite.trees.SquareLineTree.SquareLineTree;
+					tell It;
+						setNodeLocs #mesquite.trees.NodeLocsStandard.NodeLocsStandard;
+						tell It;
+							branchLengthsToggle off;
+							toggleScale on;
+							toggleBroadScale off;
+							toggleCenter on;
+							toggleEven on;
+							setFixedTaxonDistance 0;
+						endTell;
+						setEdgeWidth 4;
+						showEdgeLines on;
+						orientRight;
+					endTell;
+					setBackground White;
+					setBranchColor Black;
+					showNodeNumbers off;
+					showBranchColors on;
+					labelBranchLengths off;
+					centerBrLenLabels on;
+					showBrLensUnspecified on;
+					showBrLenLabelsOnTerminals on;
+					setBrLenLabelColor 0 0 255;
+					setNumBrLenDecimals 6;
+					setSelectedTaxonHighlightMode 1;
+					desuppress;
+					getEmployee #mesquite.trees.BasicDrawTaxonNames.BasicDrawTaxonNames;
+					tell It;
+						setColor Black;
+						setTaxonNameStyler  #mesquite.trees.NoColorForTaxon.NoColorForTaxon;
+						toggleShadePartition off;
+						toggleShowFootnotes on;
+						toggleNodeLabels on;
+						toggleCenterNodeNames off;
+						toggleShowNames on;
+						namesAngle ?;
+					endTell;
+				endTell;
+					setTreeNumber 1;
+					setDrawingSizeMode 0;
+					toggleLegendFloat on;
+					scale 0;
+					toggleTextOnTree off;
+					togglePrintName off;
+					showWindow;
+				endTell;
+				desuppressEPCResponse;
+				getEmployee #mesquite.trees.ColorBranches.ColorBranches;
+				tell It;
+					setColor Red;
+					removeColor off;
+				endTell;
+				getEmployee #mesquite.ornamental.BranchNotes.BranchNotes;
+				tell It;
+					setAlwaysOn off;
+				endTell;
+				getEmployee #mesquite.ornamental.ColorTreeByPartition.ColorTreeByPartition;
+				tell It;
+					colorByPartition off;
+				endTell;
+				getEmployee #mesquite.ornamental.DrawTreeAssocDoubles.DrawTreeAssocDoubles;
+				tell It;
+					setOn on;
+					toggleShow consensusFrequency;
+					toggleShow bootstrapFrequency;
+					toggleShow posteriorProbability;
+					toggleShow consensusFrequency;
+					toggleShow posteriorProbability;
+					toggleShow bootstrapFrequency;
+					setDigits 4;
+					setThreshold ?;
+					writeAsPercentage off;
+					toggleCentred off;
+					toggleHorizontal on;
+					toggleWhiteEdges on;
+					toggleShowOnTerminals on;
+					setFontSize 10;
+					setOffset 0  0;
+				endTell;
+				getEmployee #mesquite.ornamental.DrawTreeAssocStrings.DrawTreeAssocStrings;
+				tell It;
+					setOn on;
+					toggleCentred on;
+					toggleHorizontal on;
+					setFontSize 10;
+					setOffset 0  0;
+					toggleShowOnTerminals on;
+				endTell;
+				getEmployee #mesquite.trees.TreeInfoValues.TreeInfoValues;
+				tell It;
+					panelOpen false;
+				endTell;
+			endTell;
+		endTell;
+		endTell;
+end;
+
+

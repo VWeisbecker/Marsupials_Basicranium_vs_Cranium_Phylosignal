@@ -1,0 +1,242 @@
+---
+title: "Allometry corrected dataset"
+author: "Vera Weisbecker"
+date: "09/04/2021"
+output: html_document
+---
+
+
+```{r}
+#this sets the directory to the source directory without having to manually click your way there
+library(rstudioapi) # Safely Access the RStudio API
+setwd(dirname(getActiveDocumentContext()$path))
+
+library(geomorph) # [github::geomorphR/geomorph] v4.0.4 # CRAN v4.0.4
+library(tibble)   # CRAN v3.1.8
+library(mvMORPH)  # CRAN v1.1.6
+
+load("../Data/Processed/processed_data_read_in_coordinates_phylo.rda")
+
+
+
+```
+
+
+#Making coordinate datasets with allometry correction. Adding the consensus means these residuals can be visualised if needs be.
+#A reviewer suggested basing these analyses on mvMorph instead to allow the inclusion of OU and EB models if these fit better. Leaving the pgls code in though :-). It made no difference at all.
+
+```{r }
+
+# 
+# #Make pgls of coords with size to get residuals (from the resulting pgls summary)
+# allom_all_pgls<-procD.pgls(coords~ as.vector(log(Csize)), tree, data=GPA_Allmean, iter=999)
+# summary(allom_all_pgls)
+# allom_all_lm <- procD.lm(coords~ as.vector(log(Csize)), data=GPA_Allmean, iter=999)
+# #Turn the residuals into an appropriate array
+# allom_res_all <-arrayspecs(allom_all_pgls$pgls.residuals,dim(GPA_Allmean$coords)[[1]],3)
+# 
+# #Add the consensus shape (from the GPA) to residuals if you want to understand the landmark variation in the residuals
+# Allom_all_plus_consensus <- allom_res_all + array(GPA_allmean_consensus, dim(allom_res_all))
+# 
+# #Same with Basicranium and Rest of Cranium, 
+# allom_basi_pgls<-procD.pgls(coords~log(Csize), tree, data=GPA_Basimean, iter=999)
+# allom_basi_lm <- procD.lm(coords~log(Csize), data=GPA_Basimean, iter=999)
+# 
+# allom_res_basi <-arrayspecs(allom_basi_pgls$pgls.residuals,dim(GPA_Basimean$coords)[[1]],3)
+# Allom_basi_plus_consensus <- allom_res_basi + array(GPA_Basimean_consensus, dim(allom_res_basi))
+# 
+# allom_rest_pgls<-procD.pgls(coords~log(Csize), tree, data=GPA_Restmean, iter=999)
+# allom_rest_lm <- procD.lm(coords~log(Csize),  data=GPA_Restmean, iter=999)
+# 
+# allom_res_rest <-arrayspecs(allom_rest_pgls$pgls.residuals,dim(GPA_Restmean$coords)[[1]],3)
+# 
+# Allom_rest_plus_consensus <- allom_res_rest + array(GPA_Restmean_consensus, dim(allom_res_rest))
+# 
+# #Just a little check
+# dimnames(Allom_rest_plus_consensus)[[3]] == tree$tip.label
+# 
+# #And checking that the residual and original configurations relate to each other symmetrically and without chaos - looks reasonable
+# plotRefToTarget(Allom_all_plus_consensus[,,10], GPA_Allmean$coords[,,10], method="vector", mag=2)
+# 
+# open3d()
+# plot3d(Allom_all_plus_consensus[,,10], asp=FALSE)
+# text3d(Allom_all_plus_consensus[,,10], texts=c(1:58))
+# 
+# #Now cleaning up by removing the consensus shape
+# remove(GPA_allmean_consensus, GPA_Basimean_consensus, GPA_Restmean_consensus)
+
+```
+
+LM analyses
+```{r}
+
+allom_all_lm <- procD.lm(coords~ as.vector(log(Csize)), data=GPA_Allmean, iter=999)
+allom_basi_lm <- procD.lm(coords~log(Csize), data=GPA_Basimean, iter=999)
+allom_rest_lm <- procD.lm(coords~log(Csize),  data=GPA_Restmean, iter=999)
+
+```
+
+#This sets up all the below analyses. Mv_temp_Size is overwritten a couple of times below as a temporary holder. It's important that MV_list has the order Full Cranium, Basicranium, Rest of Cranium - which sets the order for all analyses and outputs.
+```{r}
+
+Size_All <- list( array=two.d.array(GPA_Allmean$coords), Size= GPA_Allmean$Csize, tree=tree)
+Size_Basi<- list( array=two.d.array(GPA_Basimean$coords),Size= GPA_Allmean$Csize, tree=tree)
+Size_Rest<- list( array=two.d.array(GPA_Restmean$coords),Size= GPA_Allmean$Csize, tree=tree)
+
+
+# Prepare for  output loop. this is nearly as much code as just running each analysis separately :-). There is probably a better way to do it using the apply family. 
+MV_list <- list(Size_All=Size_All, Size_Basi=Size_Basi, Size_Rest=Size_Rest)
+
+MV_temp_Size <- list(Size_All=list(), Size_Basi=list(),  Size_Rest=list())
+
+MV_outputs_Size <- list( names (MV_list) )
+
+```
+
+#First determining which mode of evolution is most appropriate
+```{r}
+
+Evo_mode <- c("BM", "OU", "EB" )
+
+  for (Partition in (1:length(MV_list))){
+    
+    for (Evomode in (1:length(Evo_mode))){
+  
+              #there's no difference if I use a penalty term, letting it default
+      MV_temp_Size [[Partition]][Evomode] <- (GIC(mvgls(array ~ log(Size) , tree, data = MV_list [[Partition]],model=Evo_mode[Evomode] , method="PL-LOOCV")))$GIC 
+      
+      
+      }
+ 
+ }
+
+#Setting up the table     
+Model_comps <- rbind(  matrix (unlist(MV_temp_Size), nrow=length(MV_list), ncol=length(Evo_mode), byrow = TRUE)     )                     
+#Important that the row names match the order of partitions in the MV_list
+rownames(Model_comps) <- c( "Full configuration","Basicranium" ,"Rest of cranium")
+colnames(Model_comps) <- Evo_mode
+
+#Interesting how size has a much stronger OU signal for rest of cranium only, not full, not rest.
+
+write.csv(Model_comps, file="../Results/Size_Evomodels.csv")
+
+
+```
+
+#Re-running just the best model (OU) and deriving residuals
+
+```{r}
+
+Allom_res <- list()
+
+for (Partition in (1:length(MV_list))){
+    
+                
+      Allom_res [[Partition]] <- mvgls(array ~ log(Size) , tree, data = MV_list [[Partition]],model="OU" , method="PL-LOOCV")$residuals
+
+ }
+
+names(Allom_res)<- c(paste(names(MV_list), "_res", sep=""))
+
+#Residuals plus raw data consensus shape so the visualisation makes sense; easier without a loop. Just to dissect this, this is turning the 2d array of the residuals into 3d (first term), then adding an array to each residual configuration where each "array slice" is just the consensus shape. That's why we need dim(GPA_Allmean$coords) .
+
+Allom_all_plus_consensus <- arrayspecs(Allom_res$Size_All_res,dim(GPA_Allmean$coords)[[1]],3) + 
+  array(GPA_allmean_consensus, dim(GPA_Allmean$coords))
+
+Allom_basi_plus_consensus <- arrayspecs(Allom_res$Size_Basi_res,dim(GPA_Basimean$coords)[[1]],3) + 
+  array(GPA_Basimean_consensus, dim(GPA_Basimean$coords))
+
+Allom_rest_plus_consensus <- arrayspecs(Allom_res$Size_Rest_res,dim(GPA_Restmean$coords)[[1]],3) + 
+  array(GPA_Restmean_consensus, dim(GPA_Restmean$coords))
+
+
+#Checking that it all worked 
+#Looks like the protocol
+plot3d(Allom_all_plus_consensus[,,5], aspect = FALSE)
+#Symmetric differences between the residual + consensus and the coords with size in, exaggerated by 5
+plotRefToTarget(Allom_all_plus_consensus[,,5], GPA_Allmean$coords[,,5], method="vector", mag = 5)
+
+
+# Still able to talk to the tree?
+dimnames(Allom_rest_plus_consensus)[[3]] == tree$tip.label
+
+
+
+```
+
+
+
+#Now running the OU model MANOVAS to obtain statistics tables. This takes a long time and I tend to run it on my fastest computers.
+  
+```{r}  
+
+  
+#The outputs take a long time, therefore only running the MANOVA if the output isn't there. 
+if(!("MANOVA_OU_outputs_size.rda" %in% list.files("../Results/"))) {
+  
+for (i in (1:length(MV_list))){
+  
+   MV_temp_Size <- mvgls(array ~ log(Size) , tree, data = MV_list [[i]],model="OU" , method="PL-LOOCV")
+  
+    MV_outputs_Size [[i]]   <- manova.gls(MV_temp_Size, nperm=10000, test="Pillai", verbose=TRUE)
+
+ 
+  
+  }
+
+names(MV_outputs_Size) <- names (MV_list)
+save(MV_outputs_Size, file="../Results/MANOVA_OU_outputs_size.rda")
+
+} else {
+  
+  load("../Results/MANOVA_OU_outputs_size.rda")
+  
+}
+
+#extract table 
+
+Size_output_table <- matrix(ncol=2,nrow= (length(names (MV_list))))
+rownames(Size_output_table) <- c( "Full Cranium","Basicranium" ,"Rest of cranium")
+colnames(Size_output_table) <- c(  "Pillai Statistic", "p")
+
+
+
+#Somehow the outputs have to be in matrix form to be feed-able into the table, no idea why
+
+for (Dataset in (1: length(names(MV_list)))) {
+    
+    #Size outputs    
+    Size_output_table[Dataset,] <-  c(MV_outputs_Size[[Dataset]]$stat, MV_outputs_Size[[Dataset]]$pvalue)
+   
+    
+  }
+  
+#Always a good idea to go back to the first analysis and cross check the values in a random spot check.
+
+#Now adding the linear model output from above
+
+
+Allometry_lm_table <- as.data.frame(rbind(summary(allom_all_lm)$table[1,c(2,4,5,7)], summary(allom_basi_lm)$table[1,c(2,4,5,7)],summary(allom_rest_lm)$table[1,c(2,4,5,7)]))
+
+
+rownames(Allometry_lm_table)<- c("Full Cranium","Basicranium" ,"Rest of cranium")
+
+#It's interesting that the total dataset has more allometry than the sub-datasets.
+cbind(Size_output_table[,1:2], Allometry_lm_table)
+
+write.csv(cbind(Size_output_table[,1:2], Allometry_lm_table), "../Results/Allometry_table.csv")
+
+
+#save(Size_output_table, file = "../Results/MANOVA_OU_outputs.rda")
+
+```
+
+
+
+```{r}
+
+
+save.image("../Data/Processed/processed_data_incl_allometry.rda")
+
+
+```

@@ -1,0 +1,7 @@
+#NEXUS
+
+begin trees; 
+tree tagged_tree = [&U] 
+(Rhyncholestes_raphanurus:0.00000,(Lestoros_inca:0.11831,((Thylacinus_cynocephalus:0.11972,(Murexia_melanurus:0.06519,((Sminthopsis_murina:0.07140,((Dromiciops_gliroides:0.10842,((Acrobates_pygmaeus:0.09302,Distoechurus_pennatus:0.11621):0.04539,((Trichosurus_vulpecula:0.05769,(((Pseudocheirus_peregrinus:0.07377,(Dactylopsila_trivirgata:0.15347,(Vombatus_ursinus:0.18662,(Petaurus_australis:0.12182,Petaurus_breviceps:0.05016):0.07004):0.05875):0.05425):0.03391,(Petauroides_volans:0.07905,Hemibelideus_lemuroides:0.12933):0.05903):0.04531,(Phalanger_mimicus:0.05495,Phalanger_vestitus:0.10536):0.02579):0.04947):0.04833,(Aepyprymnus_rufescens:0.12021,(node76:0.06991,(Potorous_tridactylus:0.09820,Hypsiprymnodon_moschatus:0.15634):0.03932):0.03603):0.03649):0.04322):0.06544):0.06024,(node101:0.05047,(((Marmosa_murina:0.03122,(Caluromys_derbianus:0.11436,node100:0.02039):0.01479):0.01757,(node99:0.02027,node108:0.05807):0.02235):0.01624,(node104:0.03259,(Marmosops_incanus:0.05242,Marmosops_noctivagus:0.06077):0.01880):0.02221):0.04102):0.07143):0.04227):0.02992,((node89:0.03964,(Antechinus_flavipes:0.07567,Phascogale_tapoatafa:0.05968):0.04670):0.04265,(Planigale_ingrami:0.08329,(Myrmecobius_fasciatus:0.13637,Notoryctes_caurinus:0.22266):0.05940):0.03402):0.02743):0.04166):0.06849):0.07198,(Tarsipes_rostratus:0.27970,(node93:0.04955,(Echymipera_kalubu:0.07701,Macrotis_lagotis:0.11883):0.03363):0.07096):0.04297):0.05103):0.07600);
+
+end; 

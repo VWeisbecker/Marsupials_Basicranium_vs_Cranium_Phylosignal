@@ -1,0 +1,9 @@
+#NEXUS
+
+begin trees ; 
+tree tagged_tree = [&U] 
+(Rhyncholestes_raphanurus,(Vombatus_ursinus,(node66,(((Notoryctes_caurinus,node91)13,(node83,(Dromiciops_gliroides,node94)17)18)14,(node67,(node79,node73)19)20)15)16)12)11;
+tree tnt_1 = [&U] 
+(Rhyncholestes_raphanurus ,(Vombatus_ursinus ,(node66 ,(((Notoryctes_caurinus ,node91 ),(node83 ,(Dromiciops_gliroides ,node94 ))),(node67 ,(node79 ,node73 ))))));
+
+end ; 

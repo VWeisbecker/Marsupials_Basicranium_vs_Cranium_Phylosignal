@@ -1,0 +1,388 @@
+---
+title: "02_04 cophenetic tree comparisons"
+author: "Vera Weisbecker"
+date: "2022-12-08"
+output: html_document
+---
+
+```{r}
+
+library(ape)      # CRAN v5.6-2 
+library(vegan)    # CRAN v2.6-2
+library(geomorph) # [github::geomorphR/geomorph] v4.0.4 # CRAN v4.0.4 
+library(TreeDist) # CRAN v2.5.0 
+
+# My rmd file for some reason won't recognise it s local file, so this sets the wd to local
+library(rstudioapi) # Safely Access the RStudio API
+setwd(dirname(getActiveDocumentContext()$path))
+
+
+source(file="0_2_Utilities.r")
+
+load(file="../Data/Processed/Trees_collapsed.Rda")
+
+```
+
+#Here is the code for mantel test-based matrix correlation of distance matrices. Note that I checked and re-rooting the TNT trees isn't necessary, the results are the same. Note also that the cophenetic matrices of the non- NJ/UPGMA trees are not in the same order as the specimens in the morph datasets.
+
+```{r}
+
+Reference_cophen <- cophenetic(Full_tree)
+
+Trees_for_cophen <- c( Mol_based_trees, 
+                       TNT_full = list(reduced_TNT_trees[[1]]$GPA_Allmean), 
+                       TNT_basi= list(reduced_TNT_trees[[1]]$GPA_basi),
+                       TNT_Rest = list (reduced_TNT_trees[[1]]$GPA_Restmean),
+                       NJ_full = list(reduced_morph_clusters[[1]][[2]]$GPA_Allmean),
+                       NJ_basi = list(reduced_morph_clusters[[1]][[2]]$GPA_basi),
+                       NJ_Rest = list(reduced_morph_clusters[[1]][[2]]$GPA_Restmean),
+                       UPGMA_full = list(reduced_morph_clusters[[1]][[1]]$GPA_Allmean),
+                       UPGMA_basi = list(reduced_morph_clusters[[1]][[1]]$GPA_basi),
+                       UPGMA_Rest = list(reduced_morph_clusters[[1]][[1]]$GPA_Restmean)
+                       
+                       )
+
+Trees_for_cophen_res <- c( Mol_based_trees, 
+                       TNT_full = list(reduced_TNT_trees[[1]]$Allom_all_plus_consensus), 
+                       TNT_basi= list(reduced_TNT_trees[[1]]$Allom_basi_plus_consensus),
+                       TNT_Rest = list (reduced_TNT_trees[[1]]$Allom_rest_plus_consensus),
+                       NJ_full = list(reduced_morph_clusters[[1]][[2]]$Allom_all_plus_consensus),
+                       NJ_basi = list(reduced_morph_clusters[[1]][[2]]$Allom_basi_plus_consensus),
+                       NJ_Rest = list(reduced_morph_clusters[[1]][[2]]$Allom_rest_plus_consensus),
+                       UPGMA_full = list(reduced_morph_clusters[[1]][[1]]$Allom_all_plus_consensus),
+                       UPGMA_basi = list(reduced_morph_clusters[[1]][[1]]$Allom_basi_plus_consensus),
+                       UPGMA_Rest = list(reduced_morph_clusters[[1]][[1]]$Allom_rest_plus_consensus)
+                       
+                       )
+
+```
+
+
+# David Polly's suggestion for drilling into the detail of how the Morph clusters relate to their euclidean distances
+
+```{r}
+
+#"First calculate the pairwise morphometric distances between the taxa (A-B, A-C, B-C).  This distance is usually a Euclidean distance, and in geometric morphometrics that is the same as the pairwise Procrustes distances. "
+
+
+Procdist_matrices <- vector("list", 6)
+
+names(Procdist_matrices) <- names(Partitions)
+
+for (i in 1:length(names(Partitions))){
+
+    Procdist_matrices[[i]] <- as.matrix(dist(two.d.array( Partitions[[i]])))
+
+
+}
+
+#Check that colnames and rownames are in the same order throughout
+
+rownames(Procdist_matrices$GPA_Allmean)==colnames(Procdist_matrices$GPA_Basimean==rownames(Procdist_matrices$GPA_Restmean==colnames(Procdist_matrices$Allom_all_plus_consensus)))
+
+#"Then measure the patristic distances on one of the trees (i.e., the sum of the branch lengths connecting them) in the same order (A-B, A-C, B-C).  "
+#this is just using the cophenetic trees from the analysis above, and we need to make sure that the matrix has the same order
+
+
+#This makes it easier to run the code in one hit - assemble just the morphological trees from chunk 12
+Trees_for_patristic <- append(Trees_for_cophen[-c(1:length(Mol_based_trees))],Trees_for_cophen_res[-c(1:length(Mol_based_trees))])
+
+
+#Hard coding the numbers of trees here for distinguishing between just GPA and residuals
+names(Trees_for_patristic) <- c(names(Trees_for_patristic[1:9]),paste(names(Trees_for_patristic[1:9]), "_res", sep=""))
+
+#A little check to ensure the co-phenetic trees have been taken into the right position in their list
+TreeDistance(Trees_for_patristic$UPGMA_Rest, Trees_for_cophen$UPGMA_Rest)
+TreeDistance(Trees_for_patristic$UPGMA_full_res, Trees_for_cophen_res$UPGMA_full)
+
+
+#Creating list of patristic (co-phenetic) matrices
+Patristic_matrices <-  vector("list", length(Trees_for_patristic))
+
+names(Patristic_matrices) <- names(Trees_for_patristic)
+
+for (i in 1: length(names(Trees_for_patristic))){
+  
+  Patristic_matrices[[i]] <- cophenetic.phylo(Trees_for_patristic[[i]])
+  
+  
+}
+
+
+#But now the matrix columns are not all in order - they have to be for correct comparison with each other. This affects the TNT trees but not the UPGMA/NJ trees but running it all here
+
+colnames(Procdist_matrices$GPA_Allmean)==colnames(Patristic_matrices$TNT_full)
+
+#We need to standardise the matrix using match(). I'm jusing GPA_Allmean as standard because it reflects the order of all morphological data, but it doesn't matter as long as the matrices all have the same row/column names
+
+for (i in 1: length(Trees_for_patristic)){
+  
+  Patristic_matrices[[i]] <- Patristic_matrices[[i]] [match(rownames(Procdist_matrices$GPA_Allmean), rownames(Patristic_matrices [[i]] )),
+                                                    match(colnames(Procdist_matrices$GPA_Allmean), colnames(Patristic_matrices [[i]] ))]
+  
+}
+
+#column names are now OK
+
+colnames(Procdist_matrices$GPA_Allmean) == colnames(Patristic_matrices$TNT_full)
+colnames(Procdist_matrices$GPA_Allmean) == colnames(Patristic_matrices$TNT_Rest)
+
+# Also, individual cells have the correct values in them - this is just a random spot check where different cells. 
+
+Matrix_for_checking <- Patristic_matrices$TNT_full
+
+unordered_cophen_matrix <- cophenetic.phylo(Trees_for_patristic$TNT_full)
+
+#If the below is TRUE, the distance values in the re-arranged patristic matrices are identical despite being in different rows/columns relative to the original, unordered cophenetic matrix
+
+unordered_cophen_matrix[which(colnames(unordered_cophen_matrix)=="Macrotis_lagotis"), 
+     which(rownames(unordered_cophen_matrix)=="Hypsiprymnodon_moschatus")]  ==
+  
+Matrix_for_checking[which(colnames(Matrix_for_checking)=="Macrotis_lagotis"),
+                    which(rownames(Matrix_for_checking)=="Hypsiprymnodon_moschatus")]
+  
+
+remove(Matrix_for_checking, unordered_cophen_matrix)
+
+```
+
+#First set up a list of multiple Procdist matrices, of which there are only 6, so that they will run according to the 18 trees we're comparing against. First 9 non-size adjusted, then 9 size-adjusted trees
+
+```{r}
+
+
+
+Procdist_matrices <-list( Procdist_matrices[1:3], Procdist_matrices[1:3], Procdist_matrices[1:3], Procdist_matrices[4:6], Procdist_matrices[4:6], Procdist_matrices[4:6])
+
+Procdist_matrices <- unlist(Procdist_matrices, recursive=FALSE)
+
+
+#Making sure the order of Procdist matrices and Patristic matrices to be compared matches, just checking visually
+rbind(names(Procdist_matrices), names(Patristic_matrices))
+
+#The below runs the vector correlations, but this is just for double checking that the mantel test below works. Good to do it two ways I guess ;-)
+
+#vector_correlations <- vector()
+#
+# for (i in 1:length(Procdist_matrices)){
+#
+# vector_correlations[i] <- cor(c(Procdist_matrices[[i]]), c( Patristic_matrices[[i]]) )
+#
+# }
+
+# names(vector_correlations)<- names(Patristic_matrices)
+#
+# vector_correlations
+# vector_correl_matrix <- matrix(vector_correlations, nrow=9)
+# vector_correl_matrix <- as.data.frame(vector_correl_matrix)
+# rownames(vector_correl_matrix)<- c("Parsimony-Full", "Parsimony-Basicr.", "Parsimony-Rest","NJ-Full", "NJ-Basicr.", "NJ-Rest","UPGMA-Full", "UPGMA-Basicr.", "UPGMA-Rest" )
+# colnames(vector_correl_matrix) <- c("GPA", "Residuals")
+
+
+#write.csv(vector_correl_matrix, file="../Results/Patristic_cophenetic_vector_correls.csv ")
+
+```
+
+#make cophenetic matrices for molecular-based vs reference (1-4) and procdist matrices:
+
+```{r}
+
+cophen_matrices <- list()
+
+#cophen.phylo an cophen do the same thing
+
+for (i in 1: length(Trees_for_cophen[1:4])){
+  
+ cophen_matrices[[i]] <- cophenetic.phylo(Trees_for_cophen[[i]])
+  
+}
+
+
+names(cophen_matrices) <- names( Trees_for_cophen[1:4])
+
+#The column names don't match up
+
+colnames(Reference_cophen) == colnames(cophen_matrices$Molecular_TNT_raw)
+
+
+for (i in 1: length(cophen_matrices)){
+  
+ cophen_matrices[[i]] <- cophen_matrices[[i]] [match(rownames(Reference_cophen), rownames(cophen_matrices [[i]] )),
+                                                    match(colnames(Reference_cophen), colnames(cophen_matrices [[i]] ))]
+  
+}
+
+#Now the columns and rows are correct
+colnames(Reference_cophen) == colnames(cophen_matrices$Molecular_TNT_raw)
+rownames(Reference_cophen) == rownames(cophen_matrices$Molecular_TNT_raw)
+
+
+Mantel_temp <- list()
+Mantel_corrs <- matrix(nrow=4, ncol=2)
+rownames(Mantel_corrs)<- names(cophen_matrices) 
+colnames(Mantel_corrs)<- c("Mantel statistic", "p")
+
+for (i in (1: length (cophen_matrices))){
+  
+  Mantel_temp<- mantel(Reference_cophen,cophen_matrices[[i]], permutations=10000 )
+  
+  Mantel_corrs[i,] <- c(Mantel_temp$statistic, Mantel_temp$signif)
+  
+}
+
+
+
+
+
+
+
+rownames(Mantel_corrs)<- c("Molecular, Parsimony", "Molecular, Raw Distances", "Molecular, GTR", "Molecular, GTRig")
+Mantel_corrs
+
+write.csv(Mantel_corrs, file= "../Results/Matrix_correls_Mol_Ref.csv")
+
+```
+
+
+
+#Mantel test of distance matrices. Note that the first matrices in the Mantel tests are the ones being permuted (i.e. they are the reference matrices)
+
+```{r}
+
+#Starting with patristic versus procrustes distance
+
+Mantel_correls_patr_procd <- list()
+
+for (i in 1:length(Patristic_matrices)){
+  
+ Mantel_correls_patr_procd [[i]] <- mantel(Patristic_matrices[[i]], Procdist_matrices[[i]], permutations = 10000)
+  
+  
+}
+
+
+#"As a point of comparison, one could also calculate cophenetic correlation between pairwise morphometric distances and molecular phylogeny, which would be a measure of how closely the morphometric structure matches the “real” phylogeny."
+
+
+#First check that the column names of the reference cophenetic matrix and the patristic matrices are matching
+
+colnames(Patristic_matrices$TNT_full)==colnames(Reference_cophen)
+
+Mantel_reference_patr <- list()
+
+for (i in 1: length(Patristic_matrices)){
+  
+  Mantel_reference_patr [[i]] <- mantel(Reference_cophen, Patristic_matrices[[i]],  permutations = 10000)
+  
+  
+}
+
+#I am here also adding the procrustes distances vs reference phylogeny to have it all in one table. This repeats the same analyses three times but is easier to tabulate below.
+
+#again, just checking
+
+colnames(Procdist_matrices$GPA_Allmean)==colnames(Reference_cophen)
+
+Mantel_reference_procd <- list()
+
+for (i in 1: length(Procdist_matrices)){
+  
+  Mantel_reference_procd [[i]] <- mantel(Reference_cophen, Procdist_matrices[[i]],  permutations = 10000)
+  
+  
+}
+
+```
+
+
+#Now make table. A lot of work but you never have to do it again.
+
+```{r}
+
+#First, set up matrix
+
+matrix_Mantel <- matrix(ncol = 13, nrow=9)
+
+#enter the patristic vs proc distance tests
+
+for (i in 1:(length(Mantel_correls_patr_procd)/2)){
+  
+  matrix_Mantel[i,1:2] <- c(Mantel_correls_patr_procd[[i]]$statistic, Mantel_correls_patr_procd[[i]]$signif)
+  
+}
+
+for (i in 1:(length(Mantel_correls_patr_procd)/2)){
+  
+  matrix_Mantel[i,3:4] <- c(Mantel_correls_patr_procd[[i+9]]$statistic, Mantel_correls_patr_procd[[i+9]]$signif)
+  
+}
+
+#enter the patristic vs. reference
+
+
+for (i in 1:(length(Mantel_correls_patr_procd)/2)){
+  
+  matrix_Mantel[i,5:6] <- c(Mantel_reference_patr[[i]]$statistic, Mantel_reference_patr[[i]]$signif)
+  
+}
+
+for (i in 1:(length(Mantel_correls_patr_procd)/2)){
+  
+  matrix_Mantel[i,7:8] <- c(Mantel_reference_patr[[i+9]]$statistic, Mantel_reference_patr[[i+9]]$signif)
+  
+}
+
+
+#enter procrustes distances vs reference, leaving one column blank because the last column is a bit different
+
+for (i in 1:3){
+  
+  matrix_Mantel[i,10:11] <- c(Mantel_reference_procd[[i]]$statistic, Mantel_reference_procd[[i]]$signif)
+  
+}
+
+for (i in 1:3){
+  
+  matrix_Mantel[i,12:13] <- c(Mantel_reference_procd[[i+9]]$statistic, Mantel_reference_procd[[i+9]]$signif)
+  
+}
+
+
+#Actually all significances are at 0.0000 so I can save a column
+
+matrix_Mantel <- matrix_Mantel[,-c(2,4,6,8,11,13)]
+
+#And we can round all the numbers to 2 decimals
+matrix_Mantel <-round(matrix_Mantel, digits=2)
+
+#Also add in the molecular comparison and label these
+matrix_Mantel[4:7,6] <- Mantel_corrs[,1]
+  
+#To allow naming everything, take to data frame
+
+matrix_Mantel <- as.data.frame(matrix_Mantel)
+
+rownames(matrix_Mantel)<- c("Parsimony-Full", "Parsimony-Basicr.", "Parsimony-Rest","NJ-Full", "NJ-Basicr.", "NJ-Rest","UPGMA-Full", "UPGMA-Basicr.", "UPGMA-Rest" )
+colnames(matrix_Mantel) <- c("Patristic vs Procrustes distances", "","Patristic vs molecular reference", "","", "Procrustes distances/Mol. distances vs molecular reference")
+#Label the last column differently
+matrix_Mantel[,5]<- c("Full config.","Basicranium","Rest","Molecular, Parsimony", "Molecular, Raw Distances", "Molecular, GTR", "Molecular, GTRig", "","")
+
+
+
+matrix_Mantel
+
+matrix_Mantel <- rbind (c("Statistic - GPA", "Statistic- Residuals","Statistic - GPA", "Statistic- Residuals","","Statistic - GPA", "Statistic- Residuals"), matrix_Mantel)
+
+rownames(matrix_Mantel)[1]<-""
+#looking good?
+
+matrix_Mantel
+
+#save it!
+
+write.csv(matrix_Mantel, file="../Results/Patristic_cophenetic_mantel_correls.csv ")
+
+```
+
+
+Again, this code requires no saving 

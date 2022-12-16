@@ -1,0 +1,23 @@
+TNT - max. ram = 4000.00 Mbytes 
+No ram used yet 
+Gaps will be read as missing 
+Matrix (33767x61, 16 states). Memory required for data:  42.84 Mbytes 
+Outgroup is taxon 40  -  Rhyncholestes_raphanurus 
+search settings hold 1000 trees, 10 random addition replicates, search on best trees from all 10 
+Space for 1000 trees in memory 
+Repl. Algor.     Tree        Score       Best Score   Time       Rearrangs.
+10    SPR        3 of 3      ------      40484        0:00:01    431,126       
+Completed 10 random addition sequences.
+Total rearrangements examined: 431,126. 
+Best score hit 9 times out of 10.
+Best score (TBR): 40484.  2 trees retained. 
+Start swapping from 2 trees (score 40484)... 
+Repl. Algor.     Tree        Score       Best Score   Time       Rearrangs.
+---   TBR        1 of 2      ------      40484        0:00:00    117,150       
+Completed TBR branch-swapping.
+Total rearrangements examined: 117,150. 
+Best score (TBR): 40484.  2 trees found. 
+use taxon names not numbers when printing or saving trees 
+Taxon names is ON 
+export mpt or mpts 
+Saved trees (Nexus format) to file marsmb5_Vera_3RY_all_MPTs.tree 

@@ -1,0 +1,9 @@
+#NEXUS
+
+begin trees; 
+tree tagged_tree = [&U] 
+(Rhyncholestes_raphanurus,((Myrmecobius_fasciatus,(node85,(((Acrobates_pygmaeus,Distoechurus_pennatus)19,(Notoryctes_caurinus,Dromiciops_gliroides)33)20,(node68,(node79,(node74,(Hypsiprymnodon_moschatus,Vombatus_ursinus)28)29)30)31)21)22)23,(((Tarsipes_rostratus,Thylacinus_cynocephalus)25,(Caluromys_derbianus,node95)34)26,(Macrotis_lagotis,node92)32)27)24)18;
+tree tnt_1 = [&U] 
+(Rhyncholestes_raphanurus ,((Myrmecobius_fasciatus ,(node85 ,(((Acrobates_pygmaeus ,Distoechurus_pennatus ),(Notoryctes_caurinus ,Dromiciops_gliroides )),(node68 ,(node79 ,(node74 ,(Hypsiprymnodon_moschatus ,Vombatus_ursinus ))))))),(((Tarsipes_rostratus ,Thylacinus_cynocephalus ),(Caluromys_derbianus ,node95 )),(Macrotis_lagotis ,node92 ))));
+
+end; 

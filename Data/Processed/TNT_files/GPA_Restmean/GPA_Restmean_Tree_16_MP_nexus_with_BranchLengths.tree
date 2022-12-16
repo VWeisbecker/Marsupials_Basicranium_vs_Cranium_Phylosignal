@@ -1,0 +1,7 @@
+#NEXUS
+
+begin trees; 
+tree tagged_tree = [&U] 
+(Rhyncholestes_raphanurus:0.00000,((Lestoros_inca:0.06922,((((Dromiciops_gliroides:0.09912,(Acrobates_pygmaeus:0.09751,Distoechurus_pennatus:0.10663):0.07105):0.06066,(node101:0.04520,(Marmosops_noctivagus:0.05597,(((node99:0.01951,(Caluromys_derbianus:0.09623,node108:0.06936):0.02993):0.01956,(Marmosa_murina:0.03387,node100:0.02803):0.01818):0.02629,(Marmosops_incanus:0.05192,node104:0.03767):0.02245):0.01557):0.04231):0.07693):0.03117,(Sminthopsis_murina:0.06220,((Antechinus_flavipes:0.05275,Phascogale_tapoatafa:0.06974):0.04744,(Murexia_melanurus:0.08188,Planigale_ingrami:0.09076):0.03377):0.03982):0.03094):0.04008,((((Aepyprymnus_rufescens:0.10253,(Trichosurus_vulpecula:0.06575,(((Pseudocheirus_peregrinus:0.06756,(Vombatus_ursinus:0.23867,(Dactylopsila_trivirgata:0.14555,(Petaurus_australis:0.10222,Petaurus_breviceps:0.06600):0.09500):0.05049):0.05115):0.03372,(Petauroides_volans:0.07918,Hemibelideus_lemuroides:0.12807):0.05593):0.04262,(Phalanger_mimicus:0.05579,Phalanger_vestitus:0.10246):0.03592):0.03899):0.07237):0.02922,(Potorous_tridactylus:0.08460,(Hypsiprymnodon_moschatus:0.13899,node76:0.06274):0.05783):0.02953):0.09198,(Myrmecobius_fasciatus:0.14624,(Sarcophilus_harrisii:0.13903,Notoryctes_caurinus:0.18101):0.06755):0.03873):0.05275,(Dasyurus_viverrinus:0.05592,Thylacinus_cynocephalus:0.19699):0.04858):0.04559):0.07759):0.08468,(Macrotis_lagotis:0.10333,(Echymipera_kalubu:0.07318,(Tarsipes_rostratus:0.28153,node93:0.05632):0.02621):0.04416):0.08057):0.05840);
+
+end; 

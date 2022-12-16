@@ -1,0 +1,493 @@
+QUOTE The working directory must DIRECTLY contain this Batch300-50.run, Stats_CI.run and Datasets1,2 etc ;
+QUOTE Trees rooted using single outgroup due to TNT limitations, may need to re-root later;
+QUOTE Log file is a text file showing tree statistics for the MP tree(s) - usually single tree in GM - first tree is called Tree 0;
+QUOTE Adjusted homoplasy is based on default K=3, use PIWE = K to change;
+QUOTE Dataset1_ancestralConfigs.tps is a tps file has a table of ancestral configurations;
+QUOTE Dataset1_ancestralConfigs.txt is a text file that has a table of ancestral configurations at each node - the nodes labelled in Dataset1_MP_Tree_nodelabels.trees ;
+QUOTE Dataset1_MP_TNTformat.tree is a TNT readable tree;
+QUOTE Dataset1_MP_Tree_nodelabels.trees has ancestral nodes numbered, opens in most nexus tree viewers ;
+QUOTE Dataset1_MP_Tree1_BranchLengths.tre is a nexus file with branch lengths as annotations, opens in SOME nexus tree viewers eg FigTree1.4.4 ;
+
+
+LOG	Allom_basi_plus_consensus_Tree_21.log
+PROC Allom_basi_plus_consensus_Tree_21.tnt;
+LMARK noconfsample;
+LMARK options;
+TAXNAME= ;
+OUTGROUP Rhyncholestes_raphanurus ;
+HOLD	500;	MULT=REPLIC	50;	BBREAK=TBR;	
+LENGTH; FIT;
+LMARK lscores ;
+PROC Stats_CI.run;
+LOG /;
+CLBUFFER;
+LOG Allom_basi_plus_consensus_Tree_21_ancestralConfigs.txt; 
+LMARK showhtu; LMARK map; 
+LOG/;
+EXPORT | Allom_basi_plus_consensus_Tree_21_ancestralConfigs.tps 0 0 ;
+TSAVE * AAllom_basi_plus_consensus_Tree_21_MP_TNTformat.tree ; SAVE 0; TSAVE /;
+NAKED-; TTAG=; TPLOT 0;
+EXPORT	-	Allom_basi_plus_consensus_Tree_21_MP_nexus_with_NodeLabels.tree	;	
+TTAG-; TTAG=; BLENGTH * 0 ;
+EXPORT > Allom_basi_plus_consensus_Tree_21_MP_nexus_with_BranchLengths.tree ;
+TTAG -;
+
+
+LOG	Allom_basi_plus_consensus_Tree_22.log
+PROC Allom_basi_plus_consensus_Tree_22.tnt;
+LMARK noconfsample;
+LMARK options;
+TAXNAME= ;
+OUTGROUP Rhyncholestes_raphanurus ;
+HOLD	500;	MULT=REPLIC	50;	BBREAK=TBR;	
+LENGTH; FIT;
+LMARK lscores ;
+PROC Stats_CI.run;
+LOG /;
+CLBUFFER;
+LOG Allom_basi_plus_consensus_Tree_22_ancestralConfigs.txt; 
+LMARK showhtu; LMARK map; 
+LOG/;
+EXPORT | Allom_basi_plus_consensus_Tree_22_ancestralConfigs.tps 0 0 ;
+TSAVE * AAllom_basi_plus_consensus_Tree_22_MP_TNTformat.tree ; SAVE 0; TSAVE /;
+NAKED-; TTAG=; TPLOT 0;
+EXPORT	-	Allom_basi_plus_consensus_Tree_22_MP_nexus_with_NodeLabels.tree	;	
+TTAG-; TTAG=; BLENGTH * 0 ;
+EXPORT > Allom_basi_plus_consensus_Tree_22_MP_nexus_with_BranchLengths.tree ;
+TTAG -;
+
+
+LOG	Allom_basi_plus_consensus_Tree_23.log
+PROC Allom_basi_plus_consensus_Tree_23.tnt;
+LMARK noconfsample;
+LMARK options;
+TAXNAME= ;
+OUTGROUP Rhyncholestes_raphanurus ;
+HOLD	500;	MULT=REPLIC	50;	BBREAK=TBR;	
+LENGTH; FIT;
+LMARK lscores ;
+PROC Stats_CI.run;
+LOG /;
+CLBUFFER;
+LOG Allom_basi_plus_consensus_Tree_23_ancestralConfigs.txt; 
+LMARK showhtu; LMARK map; 
+LOG/;
+EXPORT | Allom_basi_plus_consensus_Tree_23_ancestralConfigs.tps 0 0 ;
+TSAVE * AAllom_basi_plus_consensus_Tree_23_MP_TNTformat.tree ; SAVE 0; TSAVE /;
+NAKED-; TTAG=; TPLOT 0;
+EXPORT	-	Allom_basi_plus_consensus_Tree_23_MP_nexus_with_NodeLabels.tree	;	
+TTAG-; TTAG=; BLENGTH * 0 ;
+EXPORT > Allom_basi_plus_consensus_Tree_23_MP_nexus_with_BranchLengths.tree ;
+TTAG -;
+
+LOG	Allom_basi_plus_consensus_Tree_24.log
+PROC Allom_basi_plus_consensus_Tree_24.tnt;
+LMARK noconfsample;
+LMARK options;
+TAXNAME= ;
+OUTGROUP Rhyncholestes_raphanurus ;
+HOLD	500;	MULT=REPLIC	50;	BBREAK=TBR;	
+LENGTH; FIT;
+LMARK lscores ;
+PROC Stats_CI.run;
+LOG /;
+CLBUFFER;
+LOG Allom_basi_plus_consensus_Tree_24_ancestralConfigs.txt; 
+LMARK showhtu; LMARK map; 
+LOG/;
+EXPORT | Allom_basi_plus_consensus_Tree_24_ancestralConfigs.tps 0 0 ;
+TSAVE * AAllom_basi_plus_consensus_Tree_24_MP_TNTformat.tree ; SAVE 0; TSAVE /;
+NAKED-; TTAG=; TPLOT 0;
+EXPORT	-	Allom_basi_plus_consensus_Tree_24_MP_nexus_with_NodeLabels.tree	;	
+TTAG-; TTAG=; BLENGTH * 0 ;
+EXPORT > Allom_basi_plus_consensus_Tree_24_MP_nexus_with_BranchLengths.tree ;
+TTAG -;
+
+
+LOG	Allom_basi_plus_consensus_Tree_25.log
+PROC Allom_basi_plus_consensus_Tree_25.tnt;
+LMARK noconfsample;
+LMARK options;
+TAXNAME= ;
+OUTGROUP Rhyncholestes_raphanurus ;
+HOLD	500;	MULT=REPLIC	50;	BBREAK=TBR;	
+LENGTH; FIT;
+LMARK lscores ;
+PROC Stats_CI.run;
+LOG /;
+CLBUFFER;
+LOG Allom_basi_plus_consensus_Tree_25_ancestralConfigs.txt; 
+LMARK showhtu; LMARK map; 
+LOG/;
+EXPORT | Allom_basi_plus_consensus_Tree_25_ancestralConfigs.tps 0 0 ;
+TSAVE * AAllom_basi_plus_consensus_Tree_25_MP_TNTformat.tree ; SAVE 0; TSAVE /;
+NAKED-; TTAG=; TPLOT 0;
+EXPORT	-	Allom_basi_plus_consensus_Tree_25_MP_nexus_with_NodeLabels.tree	;	
+TTAG-; TTAG=; BLENGTH * 0 ;
+EXPORT > Allom_basi_plus_consensus_Tree_25_MP_nexus_with_BranchLengths.tree ;
+TTAG -;
+
+
+
+LOG	Allom_basi_plus_consensus_Tree_26.log
+PROC Allom_basi_plus_consensus_Tree_26.tnt;
+LMARK noconfsample;
+LMARK options;
+TAXNAME= ;
+OUTGROUP Rhyncholestes_raphanurus ;
+HOLD	500;	MULT=REPLIC	50;	BBREAK=TBR;	
+LENGTH; FIT;
+LMARK lscores ;
+PROC Stats_CI.run;
+LOG /;
+CLBUFFER;
+LOG Allom_basi_plus_consensus_Tree_26_ancestralConfigs.txt; 
+LMARK showhtu; LMARK map; 
+LOG/;
+EXPORT | Allom_basi_plus_consensus_Tree_26_ancestralConfigs.tps 0 0 ;
+TSAVE * AAllom_basi_plus_consensus_Tree_26_MP_TNTformat.tree ; SAVE 0; TSAVE /;
+NAKED-; TTAG=; TPLOT 0;
+EXPORT	-	Allom_basi_plus_consensus_Tree_26_MP_nexus_with_NodeLabels.tree	;	
+TTAG-; TTAG=; BLENGTH * 0 ;
+EXPORT > Allom_basi_plus_consensus_Tree_26_MP_nexus_with_BranchLengths.tree ;
+TTAG -;
+
+
+LOG	Allom_basi_plus_consensus_Tree_27.log
+PROC Allom_basi_plus_consensus_Tree_27.tnt;
+LMARK noconfsample;
+LMARK options;
+TAXNAME= ;
+OUTGROUP Rhyncholestes_raphanurus ;
+HOLD	500;	MULT=REPLIC	50;	BBREAK=TBR;	
+LENGTH; FIT;
+LMARK lscores ;
+PROC Stats_CI.run;
+LOG /;
+CLBUFFER;
+LOG Allom_basi_plus_consensus_Tree_27_ancestralConfigs.txt; 
+LMARK showhtu; LMARK map; 
+LOG/;
+EXPORT | Allom_basi_plus_consensus_Tree_27_ancestralConfigs.tps 0 0 ;
+TSAVE * AAllom_basi_plus_consensus_Tree_27_MP_TNTformat.tree ; SAVE 0; TSAVE /;
+NAKED-; TTAG=; TPLOT 0;
+EXPORT	-	Allom_basi_plus_consensus_Tree_27_MP_nexus_with_NodeLabels.tree	;	
+TTAG-; TTAG=; BLENGTH * 0 ;
+EXPORT > Allom_basi_plus_consensus_Tree_27_MP_nexus_with_BranchLengths.tree ;
+TTAG -;
+
+
+LOG	Allom_basi_plus_consensus_Tree_28.log
+PROC Allom_basi_plus_consensus_Tree_28.tnt;
+LMARK noconfsample;
+LMARK options;
+TAXNAME= ;
+OUTGROUP Rhyncholestes_raphanurus ;
+HOLD	500;	MULT=REPLIC	50;	BBREAK=TBR;	
+LENGTH; FIT;
+LMARK lscores ;
+PROC Stats_CI.run;
+LOG /;
+CLBUFFER;
+LOG Allom_basi_plus_consensus_Tree_28_ancestralConfigs.txt; 
+LMARK showhtu; LMARK map; 
+LOG/;
+EXPORT | Allom_basi_plus_consensus_Tree_28_ancestralConfigs.tps 0 0 ;
+TSAVE * AAllom_basi_plus_consensus_Tree_28_MP_TNTformat.tree ; SAVE 0; TSAVE /;
+NAKED-; TTAG=; TPLOT 0;
+EXPORT	-	Allom_basi_plus_consensus_Tree_28_MP_nexus_with_NodeLabels.tree	;	
+TTAG-; TTAG=; BLENGTH * 0 ;
+EXPORT > Allom_basi_plus_consensus_Tree_28_MP_nexus_with_BranchLengths.tree ;
+TTAG -;
+
+LOG	Allom_basi_plus_consensus_Tree_29.log
+PROC Allom_basi_plus_consensus_Tree_29.tnt;
+LMARK noconfsample;
+LMARK options;
+TAXNAME= ;
+OUTGROUP Rhyncholestes_raphanurus ;
+HOLD	500;	MULT=REPLIC	50;	BBREAK=TBR;	
+LENGTH; FIT;
+LMARK lscores ;
+PROC Stats_CI.run;
+LOG /;
+CLBUFFER;
+LOG Allom_basi_plus_consensus_Tree_29_ancestralConfigs.txt; 
+LMARK showhtu; LMARK map; 
+LOG/;
+EXPORT | Allom_basi_plus_consensus_Tree_29_ancestralConfigs.tps 0 0 ;
+TSAVE * AAllom_basi_plus_consensus_Tree_29_MP_TNTformat.tree ; SAVE 0; TSAVE /;
+NAKED-; TTAG=; TPLOT 0;
+EXPORT	-	Allom_basi_plus_consensus_Tree_29_MP_nexus_with_NodeLabels.tree	;	
+TTAG-; TTAG=; BLENGTH * 0 ;
+EXPORT > Allom_basi_plus_consensus_Tree_29_MP_nexus_with_BranchLengths.tree ;
+TTAG -;
+
+
+LOG	Allom_basi_plus_consensus_Tree_30.log
+PROC Allom_basi_plus_consensus_Tree_30.tnt;
+LMARK noconfsample;
+LMARK options;
+TAXNAME= ;
+OUTGROUP Rhyncholestes_raphanurus ;
+HOLD	500;	MULT=REPLIC	50;	BBREAK=TBR;	
+LENGTH; FIT;
+LMARK lscores ;
+PROC Stats_CI.run;
+LOG /;
+CLBUFFER;
+LOG Allom_basi_plus_consensus_Tree_30_ancestralConfigs.txt; 
+LMARK showhtu; LMARK map; 
+LOG/;
+EXPORT | Allom_basi_plus_consensus_Tree_30_ancestralConfigs.tps 0 0 ;
+TSAVE * AAllom_basi_plus_consensus_Tree_30_MP_TNTformat.tree ; SAVE 0; TSAVE /;
+NAKED-; TTAG=; TPLOT 0;
+EXPORT	-	Allom_basi_plus_consensus_Tree_30_MP_nexus_with_NodeLabels.tree	;	
+TTAG-; TTAG=; BLENGTH * 0 ;
+EXPORT > Allom_basi_plus_consensus_Tree_30_MP_nexus_with_BranchLengths.tree ;
+TTAG -;
+
+LOG	Allom_basi_plus_consensus_Tree_31.log
+PROC Allom_basi_plus_consensus_Tree_31.tnt;
+LMARK noconfsample;
+LMARK options;
+TAXNAME= ;
+OUTGROUP Rhyncholestes_raphanurus ;
+HOLD	500;	MULT=REPLIC	50;	BBREAK=TBR;	
+LENGTH; FIT;
+LMARK lscores ;
+PROC Stats_CI.run;
+LOG /;
+CLBUFFER;
+LOG Allom_basi_plus_consensus_Tree_31_ancestralConfigs.txt; 
+LMARK showhtu; LMARK map; 
+LOG/;
+EXPORT | Allom_basi_plus_consensus_Tree_31_ancestralConfigs.tps 0 0 ;
+TSAVE * AAllom_basi_plus_consensus_Tree_31_MP_TNTformat.tree ; SAVE 0; TSAVE /;
+NAKED-; TTAG=; TPLOT 0;
+EXPORT	-	Allom_basi_plus_consensus_Tree_31_MP_nexus_with_NodeLabels.tree	;	
+TTAG-; TTAG=; BLENGTH * 0 ;
+EXPORT > Allom_basi_plus_consensus_Tree_31_MP_nexus_with_BranchLengths.tree ;
+TTAG -;
+
+
+LOG	Allom_basi_plus_consensus_Tree_32.log
+PROC Allom_basi_plus_consensus_Tree_32.tnt;
+LMARK noconfsample;
+LMARK options;
+TAXNAME= ;
+OUTGROUP Rhyncholestes_raphanurus ;
+HOLD	500;	MULT=REPLIC	50;	BBREAK=TBR;	
+LENGTH; FIT;
+LMARK lscores ;
+PROC Stats_CI.run;
+LOG /;
+CLBUFFER;
+LOG Allom_basi_plus_consensus_Tree_32_ancestralConfigs.txt; 
+LMARK showhtu; LMARK map; 
+LOG/;
+EXPORT | Allom_basi_plus_consensus_Tree_32_ancestralConfigs.tps 0 0 ;
+TSAVE * AAllom_basi_plus_consensus_Tree_32_MP_TNTformat.tree ; SAVE 0; TSAVE /;
+NAKED-; TTAG=; TPLOT 0;
+EXPORT	-	Allom_basi_plus_consensus_Tree_32_MP_nexus_with_NodeLabels.tree	;	
+TTAG-; TTAG=; BLENGTH * 0 ;
+EXPORT > Allom_basi_plus_consensus_Tree_32_MP_nexus_with_BranchLengths.tree ;
+TTAG -;
+
+
+
+LOG	Allom_basi_plus_consensus_Tree_33.log
+PROC Allom_basi_plus_consensus_Tree_33.tnt;
+LMARK noconfsample;
+LMARK options;
+TAXNAME= ;
+OUTGROUP Rhyncholestes_raphanurus ;
+HOLD	500;	MULT=REPLIC	50;	BBREAK=TBR;	
+LENGTH; FIT;
+LMARK lscores ;
+PROC Stats_CI.run;
+LOG /;
+CLBUFFER;
+LOG Allom_basi_plus_consensus_Tree_33_ancestralConfigs.txt; 
+LMARK showhtu; LMARK map; 
+LOG/;
+EXPORT | Allom_basi_plus_consensus_Tree_33_ancestralConfigs.tps 0 0 ;
+TSAVE * AAllom_basi_plus_consensus_Tree_33_MP_TNTformat.tree ; SAVE 0; TSAVE /;
+NAKED-; TTAG=; TPLOT 0;
+EXPORT	-	Allom_basi_plus_consensus_Tree_33_MP_nexus_with_NodeLabels.tree	;	
+TTAG-; TTAG=; BLENGTH * 0 ;
+EXPORT > Allom_basi_plus_consensus_Tree_33_MP_nexus_with_BranchLengths.tree ;
+TTAG -;
+
+
+LOG	Allom_basi_plus_consensus_Tree_34.log
+PROC Allom_basi_plus_consensus_Tree_34.tnt;
+LMARK noconfsample;
+LMARK options;
+TAXNAME= ;
+OUTGROUP Rhyncholestes_raphanurus ;
+HOLD	500;	MULT=REPLIC	50;	BBREAK=TBR;	
+LENGTH; FIT;
+LMARK lscores ;
+PROC Stats_CI.run;
+LOG /;
+CLBUFFER;
+LOG Allom_basi_plus_consensus_Tree_34_ancestralConfigs.txt; 
+LMARK showhtu; LMARK map; 
+LOG/;
+EXPORT | Allom_basi_plus_consensus_Tree_34_ancestralConfigs.tps 0 0 ;
+TSAVE * AAllom_basi_plus_consensus_Tree_34_MP_TNTformat.tree ; SAVE 0; TSAVE /;
+NAKED-; TTAG=; TPLOT 0;
+EXPORT	-	Allom_basi_plus_consensus_Tree_34_MP_nexus_with_NodeLabels.tree	;	
+TTAG-; TTAG=; BLENGTH * 0 ;
+EXPORT > Allom_basi_plus_consensus_Tree_34_MP_nexus_with_BranchLengths.tree ;
+TTAG -;
+
+
+LOG	Allom_basi_plus_consensus_Tree_35.log
+PROC Allom_basi_plus_consensus_Tree_35.tnt;
+LMARK noconfsample;
+LMARK options;
+TAXNAME= ;
+OUTGROUP Rhyncholestes_raphanurus ;
+HOLD	500;	MULT=REPLIC	50;	BBREAK=TBR;	
+LENGTH; FIT;
+LMARK lscores ;
+PROC Stats_CI.run;
+LOG /;
+CLBUFFER;
+LOG Allom_basi_plus_consensus_Tree_35_ancestralConfigs.txt; 
+LMARK showhtu; LMARK map; 
+LOG/;
+EXPORT | Allom_basi_plus_consensus_Tree_35_ancestralConfigs.tps 0 0 ;
+TSAVE * AAllom_basi_plus_consensus_Tree_35_MP_TNTformat.tree ; SAVE 0; TSAVE /;
+NAKED-; TTAG=; TPLOT 0;
+EXPORT	-	Allom_basi_plus_consensus_Tree_35_MP_nexus_with_NodeLabels.tree	;	
+TTAG-; TTAG=; BLENGTH * 0 ;
+EXPORT > Allom_basi_plus_consensus_Tree_35_MP_nexus_with_BranchLengths.tree ;
+TTAG -;
+
+
+LOG	Allom_basi_plus_consensus_Tree_36.log
+PROC Allom_basi_plus_consensus_Tree_36.tnt;
+LMARK noconfsample;
+LMARK options;
+TAXNAME= ;
+OUTGROUP Rhyncholestes_raphanurus ;
+HOLD	500;	MULT=REPLIC	50;	BBREAK=TBR;	
+LENGTH; FIT;
+LMARK lscores ;
+PROC Stats_CI.run;
+LOG /;
+CLBUFFER;
+LOG Allom_basi_plus_consensus_Tree_36_ancestralConfigs.txt; 
+LMARK showhtu; LMARK map; 
+LOG/;
+EXPORT | Allom_basi_plus_consensus_Tree_36_ancestralConfigs.tps 0 0 ;
+TSAVE * AAllom_basi_plus_consensus_Tree_36_MP_TNTformat.tree ; SAVE 0; TSAVE /;
+NAKED-; TTAG=; TPLOT 0;
+EXPORT	-	Allom_basi_plus_consensus_Tree_36_MP_nexus_with_NodeLabels.tree	;	
+TTAG-; TTAG=; BLENGTH * 0 ;
+EXPORT > Allom_basi_plus_consensus_Tree_36_MP_nexus_with_BranchLengths.tree ;
+TTAG -;
+
+
+LOG	Allom_basi_plus_consensus_Tree_37.log
+PROC Allom_basi_plus_consensus_Tree_37.tnt;
+LMARK noconfsample;
+LMARK options;
+TAXNAME= ;
+OUTGROUP Rhyncholestes_raphanurus ;
+HOLD	500;	MULT=REPLIC	50;	BBREAK=TBR;	
+LENGTH; FIT;
+LMARK lscores ;
+PROC Stats_CI.run;
+LOG /;
+CLBUFFER;
+LOG Allom_basi_plus_consensus_Tree_37_ancestralConfigs.txt; 
+LMARK showhtu; LMARK map; 
+LOG/;
+EXPORT | Allom_basi_plus_consensus_Tree_37_ancestralConfigs.tps 0 0 ;
+TSAVE * AAllom_basi_plus_consensus_Tree_37_MP_TNTformat.tree ; SAVE 0; TSAVE /;
+NAKED-; TTAG=; TPLOT 0;
+EXPORT	-	Allom_basi_plus_consensus_Tree_37_MP_nexus_with_NodeLabels.tree	;	
+TTAG-; TTAG=; BLENGTH * 0 ;
+EXPORT > Allom_basi_plus_consensus_Tree_37_MP_nexus_with_BranchLengths.tree ;
+TTAG -;
+
+
+
+LOG	Allom_basi_plus_consensus_Tree_38.log
+PROC Allom_basi_plus_consensus_Tree_38.tnt;
+LMARK noconfsample;
+LMARK options;
+TAXNAME= ;
+OUTGROUP Rhyncholestes_raphanurus ;
+HOLD	500;	MULT=REPLIC	50;	BBREAK=TBR;	
+LENGTH; FIT;
+LMARK lscores ;
+PROC Stats_CI.run;
+LOG /;
+CLBUFFER;
+LOG Allom_basi_plus_consensus_Tree_38_ancestralConfigs.txt; 
+LMARK showhtu; LMARK map; 
+LOG/;
+EXPORT | Allom_basi_plus_consensus_Tree_38_ancestralConfigs.tps 0 0 ;
+TSAVE * AAllom_basi_plus_consensus_Tree_38_MP_TNTformat.tree ; SAVE 0; TSAVE /;
+NAKED-; TTAG=; TPLOT 0;
+EXPORT	-	Allom_basi_plus_consensus_Tree_38_MP_nexus_with_NodeLabels.tree	;	
+TTAG-; TTAG=; BLENGTH * 0 ;
+EXPORT > Allom_basi_plus_consensus_Tree_38_MP_nexus_with_BranchLengths.tree ;
+TTAG -;
+
+
+LOG	Allom_basi_plus_consensus_Tree_39.log
+PROC Allom_basi_plus_consensus_Tree_39.tnt;
+LMARK noconfsample;
+LMARK options;
+TAXNAME= ;
+OUTGROUP Rhyncholestes_raphanurus ;
+HOLD	500;	MULT=REPLIC	50;	BBREAK=TBR;	
+LENGTH; FIT;
+LMARK lscores ;
+PROC Stats_CI.run;
+LOG /;
+CLBUFFER;
+LOG Allom_basi_plus_consensus_Tree_39_ancestralConfigs.txt; 
+LMARK showhtu; LMARK map; 
+LOG/;
+EXPORT | Allom_basi_plus_consensus_Tree_39_ancestralConfigs.tps 0 0 ;
+TSAVE * AAllom_basi_plus_consensus_Tree_39_MP_TNTformat.tree ; SAVE 0; TSAVE /;
+NAKED-; TTAG=; TPLOT 0;
+EXPORT	-	Allom_basi_plus_consensus_Tree_39_MP_nexus_with_NodeLabels.tree	;	
+TTAG-; TTAG=; BLENGTH * 0 ;
+EXPORT > Allom_basi_plus_consensus_Tree_39_MP_nexus_with_BranchLengths.tree ;
+TTAG -;
+
+
+LOG	Allom_basi_plus_consensus_Tree_40.log
+PROC Allom_basi_plus_consensus_Tree_40.tnt;
+LMARK noconfsample;
+LMARK options;
+TAXNAME= ;
+OUTGROUP Rhyncholestes_raphanurus ;
+HOLD	500;	MULT=REPLIC	50;	BBREAK=TBR;	
+LENGTH; FIT;
+LMARK lscores ;
+PROC Stats_CI.run;
+LOG /;
+CLBUFFER;
+LOG Allom_basi_plus_consensus_Tree_40_ancestralConfigs.txt; 
+LMARK showhtu; LMARK map; 
+LOG/;
+EXPORT | Allom_basi_plus_consensus_Tree_40_ancestralConfigs.tps 0 0 ;
+TSAVE * AAllom_basi_plus_consensus_Tree_40_MP_TNTformat.tree ; SAVE 0; TSAVE /;
+NAKED-; TTAG=; TPLOT 0;
+EXPORT	-	Allom_basi_plus_consensus_Tree_40_MP_nexus_with_NodeLabels.tree	;	
+TTAG-; TTAG=; BLENGTH * 0 ;
+EXPORT > Allom_basi_plus_consensus_Tree_40_MP_nexus_with_BranchLengths.tree ;
+TTAG -;
+
+PROC /;
+
+

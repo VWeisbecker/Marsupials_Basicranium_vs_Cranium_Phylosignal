@@ -1,0 +1,9 @@
+#NEXUS
+
+begin trees; 
+tree tagged_tree = [&U] 
+(Rhyncholestes_raphanurus,(Notoryctes_caurinus,(node62,(node82,(Dromiciops_gliroides,node94)8)9)10)7)6;
+tree tnt_1 = [&U] 
+(Rhyncholestes_raphanurus ,(Notoryctes_caurinus ,(node62 ,(node82 ,(Dromiciops_gliroides ,node94 )))));
+
+end; 

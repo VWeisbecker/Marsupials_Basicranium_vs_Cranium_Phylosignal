@@ -1,0 +1,82 @@
+#NEXUS 
+
+Begin trees;  [Treefile saved Wed Jun 29 20:50:37 2022]
+[!
+>Data file = marsmb5_Vera_3RY_distances.nex
+>UPGMA search settings:
+>  Ties (if encountered) will be broken systematically
+>  Distance measure = general time-reversible
+>  Proportion of sites assumed to be invariable = 0.31; identical sites removed proportionally to
+>    base frequencies estimated from all sites (distances represent mean number of substitutions over
+>    all sites)
+>  Rates (for variable sites) assumed to follow gamma distribution with shape parameter = 0.78
+>  All characters have equal weight
+>  (Tree is rooted)
+]
+	Translate
+		1 Acrobates_pygmaeus,
+		2 Aepyprymnus_rufescens,
+		3 Antechinus_flavipes,
+		4 Murexia_melanurus,
+		5 Caluromys_philander,
+		6 Chironectes_minimus,
+		7 Dactylopsila_trivirgata,
+		8 Dasyurus_viverrinus,
+		9 Dendrolagus_dorianus,
+		10 Didelphis_marsupialis,
+		11 Didelphis_virginiana,
+		12 Distoechurus_pennatus,
+		13 Dromiciops_gliroides,
+		14 Echymipera_kalubu,
+		15 Gracilinanus_agilis,
+		16 Gracilinanus_microtarsus,
+		17 Hypsiprymnodon_moschatus,
+		18 Isoodon_obesulus,
+		19 Lutreolina_crassicaudata,
+		20 Osphranter_rufus,
+		21 Macrotis_lagotis,
+		22 Marmosa_demerarae,
+		23 Marmosa_mexicana,
+		24 Marmosa_murina,
+		25 Marmosa_robinsoni,
+		26 Marmosops_incanus,
+		27 Marmosops_noctivagus,
+		28 Monodelphis_brevicaudata,
+		29 Monodelphis_domestica,
+		30 Myrmecobius_fasciatus,
+		31 Notoryctes_typhlops,
+		32 Perameles_nasuta,
+		33 Petauroides_volans,
+		34 Petaurus_breviceps,
+		35 Petrogale_xanthopus,
+		36 Phascogale_tapoatafa,
+		37 Philander_opossum,
+		38 Planigale_ingrami,
+		39 Potorous_tridactylus,
+		40 Pseudocheirus_peregrinus,
+		41 Rhyncholestes_raphanurus,
+		42 Sarcophilus_harrisii,
+		43 Sminthopsis_murina,
+		44 Tarsipes_rostratus,
+		45 Thylacinus_cynocephalus,
+		46 Thylamys_elegans,
+		47 Thylamys_pallidior,
+		48 Thylogale_stigmatica,
+		49 Trichosurus_vulpecula,
+		50 Vombatus_ursinus,
+		51 Caenolestes_fuliginosus,
+		52 Phascolarctos_cinereus,
+		53 Cercartetus_nanus,
+		54 Pseudochirops_cupreus,
+		55 Macropus_eugenii,
+		56 Isoodon_macrourus,
+		57 Hemibelideus_lemuroides,
+		58 Lestoros_inca,
+		59 Marmosa_alstoni,
+		60 Phalanger_vestitus,
+		61 Philander_andersoni
+		62 Phalanger_mimicus
+		63 Petaurus_australis
+		;
+tree 'PAUP_1' = [&R] (((((((((((1,12),(((7,(34,63)),54),((33,((53,59),(57,58))),40))),((((2,39),(9,(((20,55),48),35))),17),(49,(60,62)))),(50,52)),44),13),31),((14,((18,56),32)),21)),((((((3,36),4),(8,42)),(38,43)),30),45)),(41,51)),((5,(((22,(23,25)),24),(28,29))),((6,(((10,11),(37,61)),19)),(((15,16),(46,47)),(26,27)))));
+End;

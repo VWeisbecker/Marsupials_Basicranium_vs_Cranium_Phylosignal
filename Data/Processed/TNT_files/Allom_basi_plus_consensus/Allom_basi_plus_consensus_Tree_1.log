@@ -1,0 +1,115 @@
+<<<<<<< Updated upstream
+Reading from C:\WORKSPACE\Github_Projects\Mars_skull_phylosig\Data\Processed\TNT_files\Allom_basi_plus_consensus\Allom_basi_plus_consensus_Tree_1.tnt 
+=======
+Reading from E:\github_Vera\Mars_skull_phylosig\Data\Processed\TNT_files\Allom_basi_plus_consensus\Allom_basi_plus_consensus_Tree_1.tnt 
+ 
+WARNING: 
+Re-setting data type will cause
+current data to be lost 
+ 
+>>>>>>> Stashed changes
+Matrices will be read as continuous data 
+Matrix space: allocate for up to 32 states 
+'TNT file generated with the R function `writeland.tnt` on Thu Dec  8 19:30:57 2022.'
+Matrix (1x57, 32 states). Memory required for data: 0.06 Mbytes 
+<<<<<<< Updated upstream
+Again reading from C:\WORKSPACE\Github_Projects\Mars_skull_phylosig\Data\Processed\TNT_files\Allom_basi_plus_consensus\Core_TNT_code_Allom_basi_plus_consensus_1_20.run 
+=======
+Again reading from E:\github_Vera\Mars_skull_phylosig\Data\Processed\TNT_files\Allom_basi_plus_consensus\Core_TNT_code_Allom_basi_plus_consensus_7_20.run 
+>>>>>>> Stashed changes
+Considering individual landmarks for resampling and relative supports
+ 
+   Settings for landmark optimization:  
+      Initially approximmating landmark positions with a 6x6 grid 
+      Adding terminal points to initial grid 
+      Not shrinking frame when approximmating landmark positions 
+      Not skipping cells when approximmating landmark positions 
+      Not shaking grid 
+      Nesting sankoff 1 times (window: 1.0000 cells) 
+      Using iterative-pass (max. iters. 100000, cut 0.00000100) 
+
+   Settings for searches:
+      Using a tolerance margin of 15.00% maximum.
+      Error stages:
+           - 0.00 for 0 to 15% of swapping,
+           - 5.00 from 15% to 66%,
+           - 15.00 from 66% to completion 
+      Refining first guess with incremental fermat recalculation, 5 nodes
+      from point of reinsertion, with up to 2 iterations 
+ 
+   To calculate total score, all landmarks within a character equally weighted 
+   For resampling and support, using individual landmarks 
+ 
+Taxon names is ON 
+Outgroup is taxon 55  -  Rhyncholestes_raphanurus 
+Space for 500 trees in memory 
+<<<<<<< Updated upstream
+Note: setting number of threads to 10 (i.e. the recommended number
+for 28 CPUs). This can be changed with "lmark threads N".
+ 
+WARNING: 
+Landmark optimization will use low-mem algorithms 
+ 
+Repl. Algor.     Tree        Score       Best Score   Time       Rearrangs.
+50    TBR       43 of 44     ------      7.82172      4:49:08    19,467,650          
+Completed 50 random addition sequences.
+Total rearrangements examined: 19,467,650. 
+Best score hit 1 times out of 50.
+Best score (TBR): 7.82172.  1 trees retained. 
+Start swapping from 1 trees (score 7.82172)... 
+Repl. Algor.     Tree        Score       Best Score   Time       Rearrangs.
+---   TBR        0 of 1      ------      7.82172      0:01:10    59,479          
+Completed TBR branch-swapping.
+Total rearrangements examined: 59,479. 
+Best score (TBR): 7.82172.  1 trees found. 
+Tree lengths 
+       ÚÄÄÄÄÄÄÄÄ¿
+       ³    +0  ³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ´
+³     0³ 7.82172³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÙ 
+Adjusted homoplasy 
+       ÚÄÄÄÄÄÄÄÄ¿
+       ³    +0  ³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ´
+³     0³ 0.23032³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÙ 
+Tree 0, ch. 0 (score 7.821719) 
+       ÚÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄ¿
+       ³    +0  ³    +1  ³    +2  ³    +3  ³    +4  ³    +5  ³    +6  ³    +7  ³    +8  ³    +9  ³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ´
+³     0³ 0.38299³ 0.38423³ 0.33295³ 0.33295³ 0.23025³ 0.23073³ 0.32106³ 0.32052³ 0.29887³ 0.35544³
+³    10³ 0.26656³ 0.29692³ 0.35523³ 0.26658³ 0.31727³ 0.45117³ 0.31744³ 0.45047³ 0.35837³ 0.35795³
+³    20³ 0.26146³ 0.26041³ 0.33713³ 0.33477³        ³        ³        ³        ³        ³        ³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÙ 
+Reading from C:\WORKSPACE\Github_Projects\Mars_skull_phylosig\Data\Processed\TNT_files\Allom_basi_plus_consensus\Stats_CI.run 
+Macro language is ON 
+Macros: 42.7 Kb in use, 59.6 Kb free
+Report is ON 
+Floating point printing uses 3 digits 
+Consistency index  
+       ÚÄÄÄÄÄÄ¿
+       ³    +0³
+ÚÄÄÄÄÄÄÅÄÄÄÄÄÄ´
+³     0³ 0.184³
+ÀÄÄÄÄÄÄÁÄÄÄÄÄÄÙ 
+Again reading from C:\WORKSPACE\Github_Projects\Mars_skull_phylosig\Data\Processed\TNT_files\Allom_basi_plus_consensus\Core_TNT_code_Allom_basi_plus_consensus_1_20.run 
+=======
+Repl. Algor.     Tree        Score       Best Score   Time       Rearrangs.
+1     TBR        0 of 1      ------      7.82795      0:02:49    245,977          
+ 
+Search was interrupted... 
+Total rearrangements examined: 245,977. 
+Best score hit 1 times out of 1.
+Best score (TBR): 7.82795.  1 trees retained. 
+Reading from E:\github_Vera\Mars_skull_phylosig\Data\Processed\TNT_files\Allom_basi_plus_consensus\Core_TNT_code_Allom_basi_plus_consensus_3_8.run 
+The working directory must DIRECTLY contain this Batch300-50.run, Stats_CI.run and Datasets1,2 etc 
+Trees rooted using single outgroup due to TNT limitations, may need to re-root later
+Log file is a text file showing tree statistics for the MP tree(s) - usually single tree in GM - first tree is called Tree 0
+Adjusted homoplasy is based on default K=3, use PIWE = K to change
+Dataset1_ancestralConfigs.tps is a tps file has a table of ancestral configurations
+Dataset1_ancestralConfigs.txt is a text file that has a table of ancestral configurations at each node - the nodes labelled in Dataset1_MP_Tree_nodelabels.trees 
+Dataset1_MP_TNTformat.tree is a TNT readable tree
+Dataset1_MP_Tree_nodelabels.trees has ancestral nodes numbered, opens in most nexus tree viewers 
+Dataset1_MP_Tree1_BranchLengths.tre is a nexus file with branch lengths as annotations, opens in SOME nexus tree viewers eg FigTree1.4.4 
+>>>>>>> Stashed changes
