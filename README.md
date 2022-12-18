@@ -1,7 +1,7 @@
 
 Code authors: Vera Weisbecker, supported by Thomas Guillerme
 
-This code runs all R- based analyses for the manuscript "Multiple modes of inference reveal less phylogenetic signal in marsupial basicranial shape compared to the rest of the cranium" by Vera Weisbecker, Leonie Lange-Hodgson, Robin M D Beck, Arianna Harrington, Michael S Y Lee, Thomas Guillerme, and Matthew Phillips, submitted to Philosophical Transactions of the Royal Society B
+This code runs all R- based analyses for the manuscript "Multiple modes of inference reveal less phylogenetic signal in marsupial basicranial shape compared to the rest of the cranium" by Vera Weisbecker, Leonie Lange-Hodgson, Robin M D Beck, Arianna Harrington, Michael S Y Lee, Thomas Guillerme, and Matthew Phillips, accepted at the Mammalian Skull Special Issue of the Philosophical Transactions of the Royal Society B
 
 
 *All scripts are in RMarkdown format (.Rmd) and can be opened in RStudio. There, you can edit and run code chunks as normal or use the Knit button to create HTML versions with both code and output. After cloning this repo, remember to either set your working directory to this folder on your computer or open an RStudio project from that folder.*
@@ -10,7 +10,7 @@ This code runs all R- based analyses for the manuscript "Multiple modes of infer
 
 ## Data
 **Raw data:**
-The [Raw Data](/Data/Raw/) folder in this repository contains all original data required to run the analyses. On the top level, it contains a [specimen data file](/Data/Species_classifier) for information associated with each specimen, as well as auxiliary files for removal of bilateral symmetry, landmark partitions, and a [single small .ply file](/Data/Marmosa_murina_MVZ197429_downsampled.ply) which represents the specimen on which the mean shape and PACA shapes are warped. In addition, it holds the following folders:
+The [Raw Data](/Data/Raw/) folder in this repository contains all original data required to run the analyses. On the top level, it contains a [specimen data file](/Data/Raw/Species_classifier) for information associated with each specimen, as well as auxiliary files for removal of bilateral symmetry, landmark partitions, and a [single small .ply file](/Data/Raw/Marmosa_murina_MVZ197429_downsampled.ply) which represents the specimen on which the mean shape and PACA shapes are warped. In addition, it holds the following folders:
 
 * [Coordinates](/Data/Raw/Coordinates/) contains the coordinates required to run all analyses. For the original surface meshes and associated Stratovan Checkpoint files, please go to the [figshare repository associated with this study](https://figshare.com/s/6b8027a0f0e7df492d09).
 * [Reference phylogeny](/Data/Raw/Reference_phylogeny/) contains the reference phylogeny and files related to its construction.
@@ -32,7 +32,7 @@ This folder contains all R code required (in Rmarkdown format) to replicate the 
 * [02_01_Standard_Allom_Physig_Analyses.Rmd](/Analyses/02_01_Standard_Allom_Physig_Analyses.Rmd) performs all conventional analyses within the geomorph package (PGLS, Phylogenetic signal, PACA)
 * [02_02_generating_reduced_trees.Rmd](/Analyses/02_02_generating_reduced_trees.Rmd) contains the operations for obtaining successively pruned molecular reference trees and landmark dataset matching the pruned phylogenies. It also contains the code for exporting the landmark data into a format read by TNT, and the creation of 10,000 random trees.
 * [02_03_distance_computations.Rmd](/Analyses/02_03_distance_computations.Rmd)  is code to compute distances between trees (including reference, GMM, and alternative molecular trees relative to the random trees. It also contains the code for output in Figures 4 and 5 of the manuscript (it was easier to leave here for workflow reasons).
-* [02_04_cophenetic_tree_comparsions.Rmd](/Analyses/02_04_cophenetic_tree_comparsions.Rmd) has computations of co-phenetic matrix comparisons.
+* [02_04_cophenetic_tree_comparsions.Rmd](/Analyses/02_04_cophenetic_tree_comparisons.Rmd) has computations of co-phenetic matrix comparisons.
 * [03_01_Figures_plots.Rmd](/Analyses/03_01_Figures_plots.Rmd) includes the code for most figures in the manuscript and supplementary files. It outputs into the [Figures](/Figures) folder
 
 ## Results
@@ -41,5 +41,5 @@ The [Results](/Results/) folder contains tabular outputs from the analyses for e
 
 ## Figures 
 
-[Figures](/Figures/) contains outputs from [03_01_Figures_plots.Rmd](/Analyses/03_01_Figures_plots.Rmd) and other components required for making figures. It includes sub-folders for particular figures and a Usrmats folder which contains coordinates for ensuring that meshes are oriented appropriately for screenshotting. 
+[Figures](/Figures/) contains outputs from [03_01_Figures_plots.Rmd](/Analyses/03_01_Figures_plots.Rmd) and other components required for making figures. It requirese creation of sub-folders for particular figures as outlined in the code, and a Usrmats folder which contains coordinates for ensuring that meshes are oriented appropriately for screenshotting. 
  
