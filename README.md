@@ -1,4 +1,6 @@
 
+<a href="https://zenodo.org/badge/latestdoi/578834231"><img src="https://zenodo.org/badge/578834231.svg" alt="DOI"></a>
+
 Code authors: Vera Weisbecker, supported by Thomas Guillerme
 
 This code runs all R- based analyses for the manuscript "Multiple modes of inference reveal less phylogenetic signal in marsupial basicranial shape compared to the rest of the cranium" by Vera Weisbecker, Leonie Lange-Hodgson, Robin M D Beck, Arianna Harrington, Michael S Y Lee, Thomas Guillerme, and Matthew Phillips, accepted at the Mammalian Skull Special Issue of the Philosophical Transactions of the Royal Society B
